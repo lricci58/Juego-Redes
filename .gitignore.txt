@@ -1,7 +1,5 @@
 **/.vs
-**/Assets
 **/Library
 **/Logs
 **/Packages
-**/ProjectSettings
 **/UserSettings
