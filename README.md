@@ -11,5 +11,8 @@ Wars Of Titania: Total Conquest es un juego de estrategia por turnos basado en e
 ## Autores
 -
 
+## Agradecimientos Especiales
+- 
+
 ## Estado del Proyecto
 -
