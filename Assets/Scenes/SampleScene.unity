@@ -217,8 +217,9 @@ GameObject:
   - component: {fileID: 618254328}
   - component: {fileID: 618254327}
   - component: {fileID: 618254326}
+  - component: {fileID: 618254329}
   m_Layer: 0
-  m_Name: Soldado1
+  m_Name: Unidad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,10 +289,10 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.56, y: 2.5616643}
+  m_Size: {x: 256, y: 256}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &618254328
@@ -302,12 +303,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618254325}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 44, y: -19, z: 687}
+  m_LocalPosition: {x: -334, y: 95, z: 687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &618254329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618254325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca080415d33840f488cc282eb734d160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &741971555
 GameObject:
   m_ObjectHideFlags: 0
