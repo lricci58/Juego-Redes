@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Unidad
+  - Unidades
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mapa
+    uniqueID: 1076338677
+    locked: 0
+  - name: Props
+    uniqueID: 3236898403
+    locked: 0
+  - name: Grilla
+    uniqueID: 4011211383
+    locked: 0
+  - name: Unidades
+    uniqueID: 4136913117
     locked: 0
