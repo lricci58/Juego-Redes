@@ -45,7 +45,7 @@ TagManager:
   - name: Mapa
     uniqueID: 1076338677
     locked: 0
-  - name: Props
+  - name: Obstaculos
     uniqueID: 3236898403
     locked: 0
   - name: Grilla
