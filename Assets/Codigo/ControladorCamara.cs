@@ -2,20 +2,20 @@
 
 public class ControladorCamara : MonoBehaviour
 {
-    public float VelocidadMovimientoCam = 500f;
-    public float FactorZoom = 400f;
+    public float velocidadMovimientoCam = 500f;
+    public float factorZoom = 400f;
     
 
-    private Camera Cam;
-    private float FinZoom;
-    private float VelocidadZoom = 10f;
+    private Camera cam;
+    private float finZoom;
+    private float velocidadZoom = 10f;
     private float minZoom = 200f;
     private float maxZoom = 450f;
 
     void Start()
     {
-        Cam = Camera.main;
-        FinZoom = Cam.orthographicSize;
+        cam = Camera.main;
+        finZoom = cam.orthographicSize;
     }
 
     void Update()
@@ -30,19 +30,19 @@ public class ControladorCamara : MonoBehaviour
 
         if (Input.GetKey("w"))
         {
-            pos.y += VelocidadMovimientoCam * Time.deltaTime;
+            pos.y += velocidadMovimientoCam * Time.deltaTime;
         }
         if (Input.GetKey("s"))
         {
-            pos.y -= VelocidadMovimientoCam * Time.deltaTime;
+            pos.y -= velocidadMovimientoCam * Time.deltaTime;
         }
         if (Input.GetKey("a"))
         {
-            pos.x -= VelocidadMovimientoCam * Time.deltaTime;
+            pos.x -= velocidadMovimientoCam * Time.deltaTime;
         }
         if (Input.GetKey("d"))
         {
-            pos.x += VelocidadMovimientoCam * Time.deltaTime;
+            pos.x += velocidadMovimientoCam * Time.deltaTime;
         }
 
         transform.position = pos;
@@ -54,10 +54,10 @@ public class ControladorCamara : MonoBehaviour
         float CantidadScroll = Input.GetAxis("Mouse ScrollWheel");
 
         // calcula la cantidad de zoom a la que debe mover la camara
-        FinZoom -= CantidadScroll * FactorZoom;
+        finZoom -= CantidadScroll * factorZoom;
         // limita el zoom a los valores ingresados
-        FinZoom = Mathf.Clamp(FinZoom, minZoom, maxZoom);
+        finZoom = Mathf.Clamp(finZoom, minZoom, maxZoom);
         // hace el movimiento de la camara en la velocidad indicada
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, FinZoom, Time.deltaTime * VelocidadZoom);
+        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, finZoom, Time.deltaTime * velocidadZoom);
     }
 }

@@ -315,8 +315,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1df92669346cb24ab2ca9d9a649f52e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VelocidadMovimientoCam: 500
-  FactorZoom: 400
+  velocidadMovimientoCam: 500
+  factorZoom: 400
+--- !u!114 &1223581288 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6740839087820435264, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
+  m_PrefabInstance: {fileID: 8355632833705267889}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca080415d33840f488cc282eb734d160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1694608026
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapa: {fileID: 1694608027}
+  objUnidad: {fileID: 1223581288}
 --- !u!4 &1694608029
 Transform:
   m_ObjectHideFlags: 0

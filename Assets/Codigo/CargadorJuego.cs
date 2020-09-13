@@ -5,11 +5,11 @@ using UnityEngine.PlayerLoop;
 
 public class CargadorJuego : MonoBehaviour
 {
-    public ManagerJuego juego;
+    public Juego juego;
 
     void Awake()
     {
-        // @TODO: comprobar que no este einstanciado antes de instanciar
-        Instantiate(juego);
+        if (Juego.instancia == null)
+            Instantiate(juego);
     }
 }

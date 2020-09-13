@@ -55,11 +55,12 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Codigo\ManagerUnidad.cs" />
-    <Compile Include="Assets\Codigo\ManagerJuego.cs" />
-    <Compile Include="Assets\Codigo\ManagerMapa.cs" />
-    <Compile Include="Assets\Codigo\CargadorJuego.cs" />
+    <Compile Include="Assets\Codigo\Unidad.cs" />
     <Compile Include="Assets\Codigo\ControladorCamara.cs" />
+    <Compile Include="Assets\Codigo\CargadorJuego.cs" />
+    <Compile Include="Assets\Codigo\Juego.cs" />
+    <Compile Include="Assets\Codigo\ControladorMapa.cs" />
+    <Compile Include="Assets\Codigo\Grilla.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
