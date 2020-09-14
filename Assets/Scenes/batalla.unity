@@ -620,6 +620,10 @@ PrefabInstance:
       propertyPath: tiempoMov
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 6740839087820435264, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
+      propertyPath: offsetPosicionY
+      value: 115
+      objectReference: {fileID: 0}
     - target: {fileID: 8355632834170199364, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
       propertyPath: m_Name
       value: InfanteriaHacha
@@ -630,11 +634,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8355632834170199369, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -315
       objectReference: {fileID: 0}
     - target: {fileID: 8355632834170199369, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 8355632834170199369, guid: c29b5be3f7a820e46ade354f791ecaac, type: 3}
       propertyPath: m_LocalPosition.z

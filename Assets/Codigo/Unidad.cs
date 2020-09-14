@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditorInternal;
+using UnityEngine;
 
 public class Unidad : MonoBehaviour 
 {
@@ -12,7 +13,7 @@ public class Unidad : MonoBehaviour
     public int radioMov = 4;
 
     public float offsetPosicionX = 70f;
-    public float offsetPosicionY = 100f;
+    public float offsetPosicionY = 115f;
     private bool seleccionada = false;
 
     void Start()
@@ -24,10 +25,12 @@ public class Unidad : MonoBehaviour
     public void Mover(Vector3 posicion)
     {
         animador.SetBool("moviendo", true);
+
         Vector3 pos = transform.position;
         pos.x = posicion.x + offsetPosicionX;
         pos.y = posicion.y + offsetPosicionY;
         transform.position = pos;
+
         animador.SetBool("moviendo", false);
     }
 

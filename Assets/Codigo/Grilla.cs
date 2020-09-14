@@ -19,17 +19,18 @@ public class Grilla
 
         listaTiles = new int[ancho, alto];
 
-        for (int x = 0; x < listaTiles.GetLength(0); x++)
-        {
-            for (int y = 0; y < listaTiles.GetLength(1); y++)
-            {
-                // dibuja la grilla
-                Debug.DrawLine(ObtenerPosMundo(x,y), ObtenerPosMundo(x, y + 1), Color.white, 100f);
-                Debug.DrawLine(ObtenerPosMundo(x, y), ObtenerPosMundo(x + 1, y), Color.white, 100f);
-            }
-        }
-        Debug.DrawLine(ObtenerPosMundo(ancho, 0), ObtenerPosMundo(ancho, alto), Color.white, 100f);
-        Debug.DrawLine(ObtenerPosMundo(0, alto), ObtenerPosMundo(ancho, alto), Color.white, 100f);
+        // ctrl + k + u
+        //for (int x = 0; x < listaTiles.GetLength(0); x++)
+        //{
+        //    for (int y = 0; y < listaTiles.GetLength(1); y++)
+        //    {
+        //        // dibuja la grilla
+        //        Debug.DrawLine(ObtenerPosMundo(x,y), ObtenerPosMundo(x, y + 1), Color.white, 100f);
+        //        Debug.DrawLine(ObtenerPosMundo(x, y), ObtenerPosMundo(x + 1, y), Color.white, 100f);
+        //    }
+        //}
+        //Debug.DrawLine(ObtenerPosMundo(ancho, 0), ObtenerPosMundo(ancho, alto), Color.white, 100f);
+        //Debug.DrawLine(ObtenerPosMundo(0, alto), ObtenerPosMundo(ancho, alto), Color.white, 100f);
     }
 
     public Vector3 ObtenerPosMundo(int x, int y)
