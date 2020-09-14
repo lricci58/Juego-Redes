@@ -5,11 +5,11 @@ using UnityEngine.PlayerLoop;
 
 public class CargadorJuego : MonoBehaviour
 {
-    public Juego juego;
+    public ControladorJuego juego;
 
     void Awake()
     {
-        if (Juego.instancia == null)
+        if (ControladorJuego.instancia == null)
             Instantiate(juego);
     }
 }
