@@ -9,7 +9,9 @@ public class ControladorJuego : MonoBehaviour
     public Unidad objUnidad;
     private Grilla grilla;
 
+    private Vector3 posMundo;
     private bool unidadSeleccionada;
+    private bool unidadEstaMoviendo;
 
     void Awake()
     {
@@ -25,7 +27,7 @@ public class ControladorJuego : MonoBehaviour
         // @TODO: obtener estos parametros del objeto mapa
         grilla = new Grilla(16, 12, 128f, new Vector3(-128f*8,-128*6));
 
-        Vector3 posMundo = grilla.ObtenerPosMundo(5, 5);
+        Vector3 posMundo = grilla.ObtenerPosMundo(7, 5);
         objUnidad.SetPosicion(posMundo);
         
         IniciarJuego();
@@ -40,8 +42,12 @@ public class ControladorJuego : MonoBehaviour
     {
         unidadSeleccionada = objUnidad.EstaSeleccionada();
 
-        if (unidadSeleccionada)
-            SeleccionarTile();
+        if(!objUnidad.EstaMoviendo())
+            if (unidadSeleccionada)
+                SeleccionarTile();
+
+        if (objUnidad.EstaMoviendo())
+            objUnidad.Mover(posMundo);
     }
 
     void SeleccionarTile()
@@ -58,9 +64,8 @@ public class ControladorJuego : MonoBehaviour
             
             if (clickeoEnGrilla)
             {
-                Vector3 posMundo = grilla.ObtenerPosMundo(xTile, yTile);
-
-                objUnidad.Mover(posMundo);
+                posMundo = grilla.ObtenerPosMundo(xTile, yTile);
+                objUnidad.DebeMover(posMundo);
             }
         }
     }
