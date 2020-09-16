@@ -1,11 +1,83 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ControladorMapa : MonoBehaviour
 {
-    // Esta clase es para setear cada mapa (el mapa que se usa, las colisiones, zonas de despliegue, etc)
+    // almacenan las listas de prefabs
+    public GameObject[] unidades;
+    public GameObject[] mapas;
+    public GameObject[] rios;
+    public GameObject[] obstaculos;
 
-    public void setearEscena()
+    // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
+    private Transform contenedorMapa;
+
+    public void CrearEscenario()
     {
-        // deberia setear todo el mapa
+        // @TO keep DOing: setear los obstaculos del mapa, la grilla y las zonas de despliegue
+
+        // crea el contenedor, un objeto con el nombre "ContenedorDePrefabsDeMapa"
+        contenedorMapa = new GameObject("ContenedorDePrefabsDeMapa").transform;
+
+        // obtiene un conjunto random de objetos del escenario
+        ObtenerEscenario();
+
+        // esta lista de unidades vendria desde la escena de mapa general
+        string[] unidadesEjercito = new string[1];
+        unidadesEjercito[0] = "InfanteriaHacha";
+
+        // instancia las unidades de cada ejercito
+        InstanciarUnidades(unidadesEjercito);
+    }
+
+    private void ObtenerEscenario()
+    {
+        // elije (random) que conjunto de elementos se va a cargar
+        int indiceRandom = Random.Range(0, mapas.GetLength(0));
+
+        // crea el escenario con objetos random (temporal)
+        InstanciarDesdeArray(mapas, indiceRandom);
+        InstanciarDesdeArray(rios, indiceRandom);
+        InstanciarDesdeArray(obstaculos, indiceRandom);
+    }
+
+    public void InstanciarUnidades(string[] listaNombresUnidad)
+    {
+        // recorre la lista de nombres, instanciando las unidades segun el nombre
+        for (int i = 0; i < listaNombresUnidad.GetLength(0); i++)
+        {
+            int posicionTipoUnidad = -1;
+
+            if (listaNombresUnidad[i] == "InfanteriaHacha")
+                posicionTipoUnidad = 0;
+            
+            else if (listaNombresUnidad[i] == "Infanteria_1")
+                posicionTipoUnidad = 1;
+            
+            else if (listaNombresUnidad[i] == "Infanteria_2")
+                posicionTipoUnidad = 2;
+
+            try {
+                GameObject unidadInstanciada = InstanciarDesdeArray(unidades, posicionTipoUnidad);
+            }
+            // en caso de que el argumento no sea valido
+            catch {
+                Debug.LogError("No se encontro la unidad (" + listaNombresUnidad[i] + ") que se desea instanciar... Controlador Mapa -> InstanciarUnidad() : GameObject");
+            }
+        }
+    }
+
+    private GameObject InstanciarDesdeArray(GameObject[] arrayObjetos, int indice)
+    {
+        // instancia el objeto en la posicion random elejida
+        GameObject objetoAInstanciar = arrayObjetos[indice];
+        GameObject instancia = Instantiate(objetoAInstanciar, objetoAInstanciar.transform.position, Quaternion.identity);
+
+        // convierte a la instancia en hija del contenedor
+        instancia.transform.SetParent(contenedorMapa);
+        
+        return instancia;
     }
 }

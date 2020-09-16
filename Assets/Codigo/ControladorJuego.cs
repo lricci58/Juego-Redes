@@ -1,72 +1,80 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ControladorJuego : MonoBehaviour
 {
     public static ControladorJuego instancia = null;
     public ControladorMapa mapa;
     
-    // en un futuro, la lista de prefabs de unidades se añadiran al mapa, no al juego
-    public Unidad objUnidad;
-    private Grilla grilla;
 
+    private Grilla grilla;
+    private List<Unidad> ejercito;
+    
     private Vector3 posMundo;
-    private bool unidadSeleccionada;
-    private bool unidadEstaMoviendo;
+    private bool clickeoEnGrilla;
 
     void Awake()
     {
+        // se asegura que solo exista una instancia del controlador de juego
         if (instancia == null)
             instancia = this;
         else if (instancia != this)
             Destroy(gameObject);
 
-        mapa = GetComponent<ControladorMapa>();
-
-        objUnidad.GetComponent<Unidad>();
-
         // @TODO: obtener estos parametros del objeto mapa
-        grilla = new Grilla(16, 12, 128f, new Vector3(-128f*8,-128*6));
+        grilla = new Grilla(16, 12, 128f, new Vector3(-128f * 8, -128 * 6));
 
-        Vector3 posMundo = grilla.ObtenerPosMundo(7, 5);
-        objUnidad.SetPosicion(posMundo);
-        
+        // crea la lista de unidades
+        ejercito = new List<Unidad>();
+
+        // obtiene el script del mapa
+        mapa = GetComponent<ControladorMapa>();
         IniciarJuego();
     }
 
     void IniciarJuego()
     {
-        mapa.setearEscena();
+        // este metodo deberia cargar el mapa, la grilla, los GameObjects, etc
+        mapa.CrearEscenario();
+    }
+
+    public void AgregarUnidad(Unidad componenteScript)
+    {
+        ejercito.Add(componenteScript);
     }
 
     void Update()
     {
-        unidadSeleccionada = objUnidad.EstaSeleccionada();
+        // @TODO: spawnear la unidad en el tile seleccionado
 
-        if(!objUnidad.EstaMoviendo())
-            if (unidadSeleccionada)
-                SeleccionarTile();
+        // comprueba si la unidad se selecciono
+        bool estaSeleccionada = ejercito[0].EstaSeleccionada();
 
-        if (objUnidad.EstaMoviendo())
-            objUnidad.Mover(posMundo);
+        if (estaSeleccionada)
+            // comprueba si se hizo click en un tile
+            TileSeleccionado();
+
+        if (clickeoEnGrilla && estaSeleccionada)
+            ejercito[0].DebeMover(posMundo);
+
+        // el metodo mueve a la unidad si esta debe hacerlo
+        ejercito[0].Mover(posMundo);
     }
 
-    void SeleccionarTile()
+    void TileSeleccionado()
     {
+        // detecta cualquier click del mouse
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 mousePos = Input.mousePosition;
             // obtiene la posicion del mouse dentro del juego
-            Vector3 mousePosMundo = Camera.main.ScreenToWorldPoint(mousePos);
+            Vector3 mousePosMundo = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            int xTile, yTile;
-            // obtiene
-            bool clickeoEnGrilla = grilla.DetectarClick(mousePosMundo, out xTile, out yTile);
+            // detecta el click sobre algun tile y devuelve su posicion
+            clickeoEnGrilla = grilla.DetectarClick(mousePosMundo, out int xTile, out int yTile);
             
             if (clickeoEnGrilla)
-            {
+                // obtiene la posicion del tile en el mundo
                 posMundo = grilla.ObtenerPosMundo(xTile, yTile);
-                objUnidad.DebeMover(posMundo);
-            }
         }
     }
 }
