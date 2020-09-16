@@ -11,7 +11,8 @@ public class ControladorJuego : MonoBehaviour
     private List<Unidad> ejercito;
     
     private Vector3 posMundo;
-    private bool clickeoEnGrilla;
+    private bool clickeoEnGrilla = false;
+    private bool disponible = false;
 
     void Awake()
     {
@@ -71,10 +72,16 @@ public class ControladorJuego : MonoBehaviour
 
             // detecta el click sobre algun tile y devuelve su posicion
             clickeoEnGrilla = grilla.DetectarClick(mousePosMundo, out int xTile, out int yTile);
-            
-            if (clickeoEnGrilla)
+
+            disponible = ComprobarColision();
+            if (clickeoEnGrilla && disponible)
                 // obtiene la posicion del tile en el mundo
                 posMundo = grilla.ObtenerPosMundo(xTile, yTile);
         }
+    }
+
+    bool ComprobarColision()
+    {
+        return true;
     }
 }

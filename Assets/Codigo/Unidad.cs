@@ -3,15 +3,14 @@ using UnityEngine;
 
 public class Unidad : MonoBehaviour 
 {
-    public float tiempoMov = 300f;
+    [SerializeField] private float tiempoMov = 300f;
+    [SerializeField] private float offsetPosicionX = 70f;
+    [SerializeField] private float offsetPosicionY = 115f;
 
-    public float offsetPosicionX = 70f;
-    public float offsetPosicionY = 115f;
-
-    public float vida = 0;
-    public float armadura = 0;
-    public float ataque = 0;
-    public int radioMov = 4;
+    [SerializeField] private float vida = 0;
+    [SerializeField] private float armadura = 0;
+    [SerializeField] private float ataque = 0;
+    [SerializeField] private int radioMov = 4;
 
     private Animator animador;
     private SpriteRenderer sprite;
@@ -105,6 +104,8 @@ public class Unidad : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // @TODO: pintar las casillas segun el radio de movimiento
+
         if (!moviendo)
             // comprueba que se haya hecho click sobre el collider
             seleccionada = true;

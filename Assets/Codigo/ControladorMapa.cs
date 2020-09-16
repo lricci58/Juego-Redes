@@ -9,7 +9,7 @@ public class ControladorMapa : MonoBehaviour
     public GameObject[] unidades;
     public GameObject[] mapas;
     public GameObject[] rios;
-    public GameObject[] obstaculos;
+    public GameObject[] muros;
 
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform contenedorMapa;
@@ -40,7 +40,7 @@ public class ControladorMapa : MonoBehaviour
         // crea el escenario con objetos random (temporal)
         InstanciarDesdeArray(mapas, indiceRandom);
         InstanciarDesdeArray(rios, indiceRandom);
-        InstanciarDesdeArray(obstaculos, indiceRandom);
+        InstanciarDesdeArray(muros, indiceRandom);
     }
 
     public void InstanciarUnidades(string[] listaNombresUnidad)
@@ -60,7 +60,7 @@ public class ControladorMapa : MonoBehaviour
                 posicionTipoUnidad = 2;
 
             try {
-                GameObject unidadInstanciada = InstanciarDesdeArray(unidades, posicionTipoUnidad);
+                InstanciarDesdeArray(unidades, posicionTipoUnidad);
             }
             // en caso de que el argumento no sea valido
             catch {
@@ -69,15 +69,13 @@ public class ControladorMapa : MonoBehaviour
         }
     }
 
-    private GameObject InstanciarDesdeArray(GameObject[] arrayObjetos, int indice)
+    private void InstanciarDesdeArray(GameObject[] arrayObjetos, int indice)
     {
-        // instancia el objeto en la posicion random elejida
+        // instancia el objeto en la posicion elejida
         GameObject objetoAInstanciar = arrayObjetos[indice];
         GameObject instancia = Instantiate(objetoAInstanciar, objetoAInstanciar.transform.position, Quaternion.identity);
 
-        // convierte a la instancia en hija del contenedor
+        // establece al contenedor como padre del objeto
         instancia.transform.SetParent(contenedorMapa);
-        
-        return instancia;
     }
 }

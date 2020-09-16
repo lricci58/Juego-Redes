@@ -317,3 +317,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidadMovimientoCam: 500
   factorZoom: 400
+  velocidadZoom: 100
+  limAlto: 310
+  limAncho: 210

@@ -63,5 +63,5 @@ MonoBehaviour:
   - {fileID: 3015861569040667396, guid: 765c11f6c5a14864c8cd38acfba2c9c9, type: 3}
   rios:
   - {fileID: 6740432586300481072, guid: b16c9eaf1bb50a44ca6789049b05402d, type: 3}
-  obstaculos:
+  muros:
   - {fileID: 1600334720837731498, guid: 73d9048ad0ba3524db8ffe49b8c72435, type: 3}
