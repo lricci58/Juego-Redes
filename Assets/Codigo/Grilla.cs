@@ -2,11 +2,9 @@
 
 public class Grilla
 {
-    // En este script se debe crear la grilla y detectar la posicion en la que el mouse presiona
-
-    private int ancho;
-    private int alto;
-    private float dimensionTile = 128f;
+    private int ancho = 16;
+    private int alto = 12;
+    private float dimensionTile = 127f;
     private Vector3 posicionOriginal;
     private int[,] listaTiles;
 
@@ -42,14 +40,14 @@ public class Grilla
         return new Vector3(x, y) * dimensionTile + posicionOriginal;
     }
 
-    public bool DetectarClick(Vector3 mousePosMundo, out int x, out int y)
+    public bool ObtenerPosGrilla(Vector3 posMundo, out int x, out int y)
     {
-        x = Mathf.FloorToInt((mousePosMundo - posicionOriginal).x / dimensionTile);
-        y = Mathf.FloorToInt((mousePosMundo - posicionOriginal).y / dimensionTile);
+        x = Mathf.FloorToInt((posMundo - posicionOriginal).x / dimensionTile);
+        y = Mathf.FloorToInt((posMundo - posicionOriginal).y / dimensionTile);
 
         if (x >= 0 && y >= 0 && x < ancho && y < alto)
             return true;
-        
+
         return false;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditorInternal;
+﻿using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Unidad : MonoBehaviour 
@@ -7,14 +8,15 @@ public class Unidad : MonoBehaviour
     [SerializeField] private float offsetPosicionX = 70f;
     [SerializeField] private float offsetPosicionY = 115f;
 
+    [SerializeField] private int radioMov = 2;
     [SerializeField] private float vida = 0;
     [SerializeField] private float armadura = 0;
     [SerializeField] private float ataque = 0;
-    [SerializeField] private int radioMov = 4;
 
     private Animator animador;
     private SpriteRenderer sprite;
 
+    private List<Vector2> tilesDisponibles;
     private bool seleccionada = false;
     private bool moviendo = false;
     private string direccionX = "";
@@ -28,6 +30,8 @@ public class Unidad : MonoBehaviour
         // instancia los componentes del objeto
         animador = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+
+        tilesDisponibles = new List<Vector2>();
     }
 
     public void Mover(Vector3 posicion)
@@ -97,18 +101,52 @@ public class Unidad : MonoBehaviour
         }
     }
 
-    public bool EstaSeleccionada()
+    public bool EstaSeleccionada() 
     {
         return seleccionada;
     }
 
     private void OnMouseDown()
     {
-        // @TODO: pintar las casillas segun el radio de movimiento
-
         if (!moviendo)
             // comprueba que se haya hecho click sobre el collider
             seleccionada = true;
+    }
+
+    public List<Vector2> DeterminarMovimiento(int posUnidadX, int posUnidadY)
+    {
+        // determina la posicion inicial de la matriz
+        int posInicialX = posUnidadX - radioMov;
+        int posInicialY = posUnidadY - radioMov;
+
+        // determina cuantos tiles tiene cada fila y columna de la matriz
+        int cantTilesFilas = ((radioMov * 2) + 1) + posInicialX;
+        int cantTilesCols = ((radioMov * 2) + 1) + posInicialY;
+
+        for (int posX = posInicialX; posX < cantTilesFilas; posX++)
+        {
+            for (int posY = posInicialY; posY < cantTilesCols; posY++)
+            {
+                // no guarda la posicion del jugador, solo las adyacentes
+                if (posX == posUnidadX && posY == posUnidadY)
+                    continue;
+
+                tilesDisponibles.Add(new Vector2(posX, posY));
+            }
+        }
+
+        return tilesDisponibles;
+    }
+
+    public bool ClickTileEsValido(int x, int y)
+    {
+        foreach (Vector2 posTile in tilesDisponibles)
+        {
+            if (posTile.x == x && posTile.y == y)
+                return true;
+        }
+
+        return false;
     }
 
     public void DebeMover(Vector3 posicion)
@@ -142,6 +180,11 @@ public class Unidad : MonoBehaviour
         pos.x = posMundo.x + offsetPosicionX;
         pos.y = posMundo.y + offsetPosicionY;
         transform.position = pos;
+    }
+
+    public Vector3 GetPosicion()
+    {
+        return transform.position;
     }
 
     // crear metodos de ataque, ser golpeado, morir, etc

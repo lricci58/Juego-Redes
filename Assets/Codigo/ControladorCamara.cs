@@ -11,6 +11,9 @@ public class ControladorCamara : MonoBehaviour
     [SerializeField] private float limAncho = 310;
 
     private Camera cam;
+    private float altoCamara;
+    private float anchoCamara;
+
     private float finZoom;
     private float minZoom = 200f;
     private float maxZoom = 450f;
@@ -27,8 +30,10 @@ public class ControladorCamara : MonoBehaviour
     }
 
     void Update()
-    {      
-        MoverCamara();
+    {
+        MoverTemporal();
+
+        // MoverCamara();
         ZoomCamara();
     }
 
@@ -58,6 +63,38 @@ public class ControladorCamara : MonoBehaviour
 
         // @TODO: corregir el clamp al hacer zoom, este debe depender directamente del tamaño de la camara
         posicionCamara.x = Mathf.Clamp(posicionCamara.x, -limMapa.x, limMapa.x);
+        posicionCamara.y = Mathf.Clamp(posicionCamara.y, -limMapa.y, limMapa.y + 100f);
+
+        // actualiza la posicion de la camara
+        transform.position = posicionCamara;
+    }
+
+    void MoverTemporal()
+    {
+        Vector3 posicionCamara = transform.position;
+
+        // al mantener tecla
+        if (Input.GetKey("w"))
+        {
+            // modifica el vector temporal que contiene la posicion de la camara
+            posicionCamara.y += velocidadMovimientoCam * Time.deltaTime;
+        }
+        else if (Input.GetKey("s"))
+        {
+            posicionCamara.y -= velocidadMovimientoCam * Time.deltaTime;
+        }
+
+        if (Input.GetKey("a"))
+        {
+            posicionCamara.x -= velocidadMovimientoCam * Time.deltaTime;
+        }
+        else if (Input.GetKey("d"))
+        {
+            posicionCamara.x += velocidadMovimientoCam * Time.deltaTime;
+        }
+
+        // @TODO: corregir el clamp al hacer zoom, este debe depender directamente del tamaño de la camara
+        posicionCamara.x = Mathf.Clamp(posicionCamara.x, -limMapa.x, limMapa.x);
         posicionCamara.y = Mathf.Clamp(posicionCamara.y, -limMapa.y, limMapa.y + 150f);
 
         // actualiza la posicion de la camara
@@ -75,5 +112,9 @@ public class ControladorCamara : MonoBehaviour
         finZoom = Mathf.Clamp(finZoom, minZoom, maxZoom);
         // ejecuta el movimiento suave
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, finZoom, velocidadZoom * Time.deltaTime);
+
+        // sin uso
+        altoCamara = 2f * cam.orthographicSize;
+        anchoCamara = altoCamara * cam.aspect;
     }
 }

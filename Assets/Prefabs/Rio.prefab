@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6740432586084838419}
   - component: {fileID: 6740432586084838416}
   - component: {fileID: 2574271402854551560}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6740432586300481086}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Rio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6740432586300481072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 850}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6740432586767950642}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 6740432586767950643}
   - component: {fileID: 6740432586767950640}
   - component: {fileID: 2637504110823824857}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 6740432586777431591}
   - component: {fileID: 6740432586777431588}
   - component: {fileID: 1105205957288989786}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 6740432587086524452}
   - component: {fileID: 6740432587086524453}
   - component: {fileID: 7039743193787919052}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 6740432587426434100}
   - component: {fileID: 6740432587426434101}
   - component: {fileID: 741495144820576978}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -735,7 +735,7 @@ GameObject:
   - component: {fileID: 6740432587937345547}
   - component: {fileID: 6740432587937345544}
   - component: {fileID: 8253455257885247189}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -866,7 +866,7 @@ GameObject:
   - component: {fileID: 6740432587988783411}
   - component: {fileID: 6740432587988783408}
   - component: {fileID: 6076685651395047190}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tramo6
   m_TagString: Untagged
   m_Icon: {fileID: 0}

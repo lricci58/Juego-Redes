@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 257572482466048490}
   - component: {fileID: 9102031753293968450}
   - component: {fileID: 3947387780648881614}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MuroDerecha
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4303645752496320490}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: "MurosMonta\xF1a"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600334720837731498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 850}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4816693595335140544}
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 4816693595335140544}
   - component: {fileID: 8674216666804352406}
   - component: {fileID: 4167859119202531735}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MuroIzquierda
   m_TagString: Untagged
   m_Icon: {fileID: 0}

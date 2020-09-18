@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7095623940222644402}
   - component: {fileID: 5868938520429365582}
   - component: {fileID: 8610739376307277964}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: InfanteriaHacha
   m_TagString: InfanteriaHacha
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4397710435679192565}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -58, y: -13, z: 600}
+  m_LocalPosition: {x: -57, y: -12, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -145,7 +145,7 @@ MonoBehaviour:
   tiempoMov: 200
   offsetPosicionX: 70
   offsetPosicionY: 115
+  radioMov: 2
   vida: 0
   armadura: 0
   ataque: 0
-  radioMov: 4
