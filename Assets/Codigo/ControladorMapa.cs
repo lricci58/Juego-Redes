@@ -13,34 +13,51 @@ public class ControladorMapa : MonoBehaviour
 
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform contenedorMapa;
+    private Transform contenedorUnidades;
+    private Transform contenedorTiles;
+
+    [SerializeField] private GameObject tileMovimiento;
+    private List<GameObject> listaTilesDeMovimiento;
+
+    [SerializeField] private int ancho = 16;
+    [SerializeField] private int alto = 12;
+    [SerializeField] private float dimensionTile = 127f;
+    private Vector3 posicionOriginal;
+
+    // @NOTE: esta lista de unidades vendria desde la escena de mapa general
+    private string[] unidadesEjercito;
 
     public void CrearEscenario()
     {
-        // @TO keep DOing: setear los obstaculos del mapa, la grilla y las zonas de despliegue
+        // @TODO: setear los obstaculos del mapa y las zonas de despliegue
 
-        // crea el contenedor, un objeto con el nombre "ContenedorDePrefabsDeMapa"
-        contenedorMapa = new GameObject("ContenedorDePrefabsDeMapa").transform;
+        contenedorMapa = new GameObject("ContenedorDeMapa").transform;
+        InstanciarEscenario();
 
-        // obtiene un conjunto random de objetos del escenario
-        ObtenerEscenario();
+        listaTilesDeMovimiento = new List<GameObject>();
+        contenedorTiles = new GameObject("ContenedorDeTilesDisponibles").transform;
+        contenedorTiles.SetParent(contenedorMapa);
+        
+        // setea el offset de la grilla
+        posicionOriginal = new Vector3(-dimensionTile*8, -dimensionTile*6);
 
-        // esta lista de unidades vendria desde la escena de mapa general
-        string[] unidadesEjercito = new string[1];
+        contenedorUnidades = new GameObject("ContenedorDeUnidades").transform;
+        contenedorUnidades.SetParent(contenedorMapa);
+        
+        unidadesEjercito = new string[1];
         unidadesEjercito[0] = "InfanteriaHacha";
-
-        // instancia las unidades de cada ejercito
         InstanciarUnidades(unidadesEjercito);
     }
 
-    private void ObtenerEscenario()
+    private void InstanciarEscenario()
     {
         // elije (random) que conjunto de elementos se va a cargar
         int indiceRandom = Random.Range(0, mapas.GetLength(0));
 
         // crea el escenario con objetos random (temporal)
-        InstanciarDesdeArray(mapas, indiceRandom);
-        InstanciarDesdeArray(rios, indiceRandom);
-        InstanciarDesdeArray(muros, indiceRandom);
+        InstanciarDesdeArray(mapas, indiceRandom, contenedorMapa);
+        InstanciarDesdeArray(rios, indiceRandom, contenedorMapa);
+        InstanciarDesdeArray(muros, indiceRandom, contenedorMapa);
     }
 
     public void InstanciarUnidades(string[] listaNombresUnidad)
@@ -60,7 +77,7 @@ public class ControladorMapa : MonoBehaviour
                 posicionTipoUnidad = 2;
 
             try {
-                InstanciarDesdeArray(unidades, posicionTipoUnidad);
+                InstanciarDesdeArray(unidades, posicionTipoUnidad, contenedorUnidades);
             }
             // en caso de que el argumento no sea valido
             catch {
@@ -69,13 +86,57 @@ public class ControladorMapa : MonoBehaviour
         }
     }
 
-    private void InstanciarDesdeArray(GameObject[] arrayObjetos, int indice)
+    private void InstanciarDesdeArray(GameObject[] arrayObjetos, int indice, Transform contenedorPadre)
     {
         // instancia el objeto en la posicion elejida
         GameObject objetoAInstanciar = arrayObjetos[indice];
         GameObject instancia = Instantiate(objetoAInstanciar, objetoAInstanciar.transform.position, Quaternion.identity);
 
         // establece al contenedor como padre del objeto
-        instancia.transform.SetParent(contenedorMapa);
+        instancia.transform.SetParent(contenedorPadre);
+    }
+
+    public void InstanciarTilesDeMovimiento(List<Vector2> listaPosicionesTiles)
+    {
+        // Instancia los tiles disponibles en las posiciones del parametro
+
+        foreach (Vector2 posTile in listaPosicionesTiles)
+        {
+            // obtiene la posicion en el mundo del tile
+            Vector3 posTileEnMundo = ObtenerPosMundo((int)posTile.x, (int)posTile.y);
+            posTileEnMundo.x += 64;
+            posTileEnMundo.y += 64;
+            posTileEnMundo.z = tileMovimiento.transform.position.z;
+
+            GameObject instancia = Instantiate(tileMovimiento, posTileEnMundo, Quaternion.identity);
+            listaTilesDeMovimiento.Add(instancia);
+            
+            instancia.transform.SetParent(contenedorTiles);
+        }
+    }
+
+    public void DestruirTilesDeMovimiento(List<Vector2> listaPosicionesTiles)
+    {
+        foreach (GameObject tileDeMovimiento in listaTilesDeMovimiento)
+            Destroy(tileDeMovimiento);
+
+        listaPosicionesTiles.Clear();
+        listaTilesDeMovimiento.Clear();
+    }
+
+    public Vector3 ObtenerPosMundo(int x, int y)
+    {
+        return new Vector3(x, y) * dimensionTile + posicionOriginal;
+    }
+
+    public bool ObtenerPosGrilla(Vector3 posMundo, out int x, out int y)
+    {
+        x = Mathf.FloorToInt((posMundo - posicionOriginal).x / dimensionTile);
+        y = Mathf.FloorToInt((posMundo - posicionOriginal).y / dimensionTile);
+
+        if (x >= 0 && y >= 0 && x < ancho && y < alto)
+            return true;
+
+        return false;
     }
 }

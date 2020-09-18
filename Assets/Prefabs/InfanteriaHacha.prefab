@@ -145,7 +145,7 @@ MonoBehaviour:
   tiempoMov: 200
   offsetPosicionX: 70
   offsetPosicionY: 115
-  radioMov: 2
+  radioMov: 3
   vida: 0
   armadura: 0
   ataque: 0

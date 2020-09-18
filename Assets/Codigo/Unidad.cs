@@ -8,7 +8,7 @@ public class Unidad : MonoBehaviour
     [SerializeField] private float offsetPosicionX = 70f;
     [SerializeField] private float offsetPosicionY = 115f;
 
-    [SerializeField] private int radioMov = 2;
+    [SerializeField] private int radioMov = 3;
     [SerializeField] private float vida = 0;
     [SerializeField] private float armadura = 0;
     [SerializeField] private float ataque = 0;
@@ -16,9 +16,11 @@ public class Unidad : MonoBehaviour
     private Animator animador;
     private SpriteRenderer sprite;
 
-    private List<Vector2> tilesDisponibles;
+    private List<Vector2> radioTiles;
+    
     private bool seleccionada = false;
     private bool moviendo = false;
+    
     private string direccionX = "";
     private string direccionY = "";
 
@@ -31,7 +33,7 @@ public class Unidad : MonoBehaviour
         animador = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
 
-        tilesDisponibles = new List<Vector2>();
+        radioTiles = new List<Vector2>();
     }
 
     public void Mover(Vector3 posicion)
@@ -101,11 +103,6 @@ public class Unidad : MonoBehaviour
         }
     }
 
-    public bool EstaSeleccionada() 
-    {
-        return seleccionada;
-    }
-
     private void OnMouseDown()
     {
         if (!moviendo)
@@ -113,34 +110,50 @@ public class Unidad : MonoBehaviour
             seleccionada = true;
     }
 
-    public List<Vector2> DeterminarMovimiento(int posUnidadX, int posUnidadY)
+    public List<Vector2> DeterminarRadioTiles(int posUnidadX, int posUnidadY)
     {
-        // determina la posicion inicial de la matriz
-        int posInicialX = posUnidadX - radioMov;
+        // Crea y devuelve la lista de las posiciones de los tiles de movimiento para la unidad
+
+        // determina la posicion del primer tile
+        int posInicialX = posUnidadX + 1;
         int posInicialY = posUnidadY - radioMov;
 
-        // determina cuantos tiles tiene cada fila y columna de la matriz
-        int cantTilesFilas = ((radioMov * 2) + 1) + posInicialX;
-        int cantTilesCols = ((radioMov * 2) + 1) + posInicialY;
+        // determina cuantos tiles tiene cada fila y columna de la lista
+        int cantFilas = ((radioMov * 2) + 1) + posInicialY;
+        int cantTilesPorFila = posInicialX - 1;
 
-        for (int posX = posInicialX; posX < cantTilesFilas; posX++)
+        for (int posY = posInicialY; posY < cantFilas; posY++)
         {
-            for (int posY = posInicialY; posY < cantTilesCols; posY++)
+            
+            if (posY <= posUnidadY)
             {
-                // no guarda la posicion del jugador, solo las adyacentes
+                cantTilesPorFila++;
+                posInicialX--;
+            }
+            else
+            {
+                cantTilesPorFila--;
+                posInicialX++;
+            }
+
+            for (int posX = posInicialX; posX < cantTilesPorFila; posX++)
+            {
+                // check si la posicion a guardar no es la de la unidad
                 if (posX == posUnidadX && posY == posUnidadY)
                     continue;
 
-                tilesDisponibles.Add(new Vector2(posX, posY));
+                radioTiles.Add(new Vector2(posX, posY));
             }
         }
-
-        return tilesDisponibles;
+        
+        return radioTiles;
     }
 
-    public bool ClickTileEsValido(int x, int y)
+    public bool ClickEnTileMovimiento(int x, int y)
     {
-        foreach (Vector2 posTile in tilesDisponibles)
+        // Comprueba que el tile clickeado este dentro de la lista de disponibles
+
+        foreach (Vector2 posTile in radioTiles)
         {
             if (posTile.x == x && posTile.y == y)
                 return true;
@@ -149,43 +162,50 @@ public class Unidad : MonoBehaviour
         return false;
     }
 
-    public void DebeMover(Vector3 posicion)
+    public void DeterminarDireccionMovimiento(Vector3 posicion)
     {
-        float posicionActualX = transform.position.x - offsetPosicionX;
-        float posicionActualY = transform.position.y - offsetPosicionY;
-        Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
-
-        if (posicionActual != posicion)
+        if (seleccionada)
         {
-            if (posicionActual.x < posicion.x)
-                direccionX = "derecha";
-            else if (posicionActual.x > posicion.x)
-                direccionX = "izquierda";
+            // Setea la direccion 'x' e 'y' segun su objetivo
 
-            if (posicionActual.y < posicion.y)
-                direccionY = "arriba";
-            else if (posicionActual.y > posicion.y)
-                direccionY = "abajo";
+            float posicionActualX = transform.position.x - offsetPosicionX;
+            float posicionActualY = transform.position.y - offsetPosicionY;
+            Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
 
-            moviendo = true;
-            seleccionada = false;
+            if (posicionActual != posicion)
+            {
+                if (posicionActual.x < posicion.x)
+                    direccionX = "derecha";
+                else if (posicionActual.x > posicion.x)
+                    direccionX = "izquierda";
+
+                if (posicionActual.y < posicion.y)
+                    direccionY = "arriba";
+                else if (posicionActual.y > posicion.y)
+                    direccionY = "abajo";
+
+                moviendo = true;
+                seleccionada = false;
+            }
+            else
+                moviendo = false;
         }
-        else
-            moviendo = false;
     }
 
-    public void SetPosicion(Vector3 posMundo)
+    public bool EstaSeleccionada()
     {
-        Vector3 pos = transform.position;
-        pos.x = posMundo.x + offsetPosicionX;
-        pos.y = posMundo.y + offsetPosicionY;
-        transform.position = pos;
+        return seleccionada;
     }
 
-    public Vector3 GetPosicion()
+    public void DesSeleccionar()
+    {
+        seleccionada = false;
+    }
+
+    public Vector3 ObtenerPosicion()
     {
         return transform.position;
     }
 
-    // crear metodos de ataque, ser golpeado, morir, etc
+    // @TODO: crear metodos de ataque, ser golpeado, morir, etc
 }

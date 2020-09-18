@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapa: {fileID: 5567406736467252949}
-  tileDisponible: {fileID: 2915198811722647901, guid: 0d38e2e6a1bed2b4db3cf3eacb5b4cdf, type: 3}
 --- !u!114 &5567406736467252949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,3 +65,7 @@ MonoBehaviour:
   - {fileID: 6740432586300481072, guid: b16c9eaf1bb50a44ca6789049b05402d, type: 3}
   muros:
   - {fileID: 1600334720837731498, guid: 73d9048ad0ba3524db8ffe49b8c72435, type: 3}
+  tileMovimiento: {fileID: 2915198811722647901, guid: 0d38e2e6a1bed2b4db3cf3eacb5b4cdf, type: 3}
+  ancho: 16
+  alto: 12
+  dimensionTile: 127

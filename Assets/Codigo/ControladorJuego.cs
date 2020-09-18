@@ -1,21 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class ControladorJuego : MonoBehaviour
 {
     public static ControladorJuego instancia = null;
-    public ControladorMapa mapa;
-    public GameObject tileDisponible;
+    [SerializeField] private ControladorMapa mapa;
 
-    private Grilla grilla;
     private List<Unidad> ejercito;
     private List<Obstaculo> obstaculos;
-    private List<GameObject> listaTilesDisponibles;
-    private Transform contenedorTiles;
 
     private Vector3 posMundo;
     private bool puedeMover = false;
-    private bool seleccionandoTile = false;
 
     void Awake()
     {
@@ -24,13 +20,6 @@ public class ControladorJuego : MonoBehaviour
             instancia = this;
         else if (instancia != this)
             Destroy(gameObject);
-
-        listaTilesDisponibles = new List<GameObject>();
-
-        contenedorTiles = new GameObject("ContenedorDeTilesDisponibles").transform;
-
-        // @TODO: obtener estos parametros del objeto mapa
-        grilla = new Grilla(16, 12, 127f, new Vector3(-127f * 8, -127 * 6));
 
         // crea la lista de unidades
         ejercito = new List<Unidad>();
@@ -58,96 +47,58 @@ public class ControladorJuego : MonoBehaviour
 
     void Update()
     {
-        // @TODO: spawnear la unidad en el tile seleccionado
+        // @TODO: spawnear la unidad en el tile seleccionado (crear zonas de despliegue)
 
-        // comprueba si la unidad se selecciono
-        bool estaSeleccionada = ejercito[0].EstaSeleccionada();
+        Unidad unidad = ejercito[0];
 
-        if (estaSeleccionada)
-            // comprueba si se hizo click en un tile
-            SeleccionarTile();
+        // check si la unidad se selecciono
+        if (unidad.EstaSeleccionada())
+            // para seleccionar en un tile disponible para mover
+            SeleccionarTile(unidad);
 
-        if (puedeMover && estaSeleccionada)
-            ejercito[0].DebeMover(posMundo);
-
-        // el metodo mueve a la unidad si esta debe hacerlo
-        ejercito[0].Mover(posMundo);
+        // mueve a la unidad si esta debe hacerlo
+        unidad.Mover(posMundo);
     }
 
-    void SeleccionarTile()
+    void SeleccionarTile(Unidad unidad)
     {
-        // detecta cualquier click del mouse
         if (Input.GetMouseButtonDown(0))
         {
             // obtiene la posicion del mouse dentro del juego
             Vector3 posMouseMundo = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            // devuelve el tile en el que se hizo click
-            bool clickEnGrilla = grilla.ObtenerPosGrilla(posMouseMundo, out int tileX, out int tileY);
+            // check si el click fue sobre la grilla, y sobre que tile
+            bool clickEnGrilla = mapa.ObtenerPosGrilla(posMouseMundo, out int tileX, out int tileY);
 
-            // obtiene el tile en el que esta la unidad
-            Vector3 posUnidad = ejercito[0].GetPosicion();
-            grilla.ObtenerPosGrilla(posUnidad, out int tileUnidadX, out int tileUnidadY);
-
-            // crea la matriz de tiles disponibles para la unidad
-            List<Vector2> tilesDisponibles = ejercito[0].DeterminarMovimiento(tileUnidadX, tileUnidadY);
-
-            // comprueba que el tile clickeado este dentro de la matriz de disponibles
-            bool clickEnTileValido = ejercito[0].ClickTileEsValido(tileX, tileY);
-
-            if (!seleccionandoTile)
+            if (clickEnGrilla)
             {
-                // instancia los tiles disponibles en las posiciones indicadas
-                InstanciarTilesDisponibles(tilesDisponibles);
+                // obtiene el tile (x, y) en el que esta la unidad
+                mapa.ObtenerPosGrilla(unidad.ObtenerPosicion(), out int tileUnidadX, out int tileUnidadY);
+                // obtiene la lista de las posiciones de los tiles de movimiento alrededor de la unidad
+                List<Vector2> posicionesTiles = unidad.DeterminarRadioTiles(tileUnidadX, tileUnidadY);
 
-                seleccionandoTile = true;
-            }
+                if (tileX != tileUnidadX || tileY != tileUnidadY)
+                {
+                    // check si hizo click sobre un tile de movimiento
+                    if (unidad.ClickEnTileMovimiento(tileX, tileY))
+                    {
+                        // obtiene la posicion del tile a la que mover
+                        posMundo = mapa.ObtenerPosMundo(tileX, tileY);
+                        unidad.DeterminarDireccionMovimiento(posMundo);
 
-            if (clickEnGrilla && clickEnTileValido)
-                puedeMover = true;
-            else
-                puedeMover = false;
-
-            if (puedeMover)
-            {
-                // obtiene la posicion del tile en el mundo
-                posMundo = grilla.ObtenerPosMundo(tileX, tileY);
-
-                // destruye los objetos
-                DestruirTilesDisponibles(tilesDisponibles);
-
-                seleccionandoTile = false;
+                        // destruye los tiles de radio de movimiento
+                        mapa.DestruirTilesDeMovimiento(posicionesTiles);
+                    }
+                    else
+                    {
+                        mapa.DestruirTilesDeMovimiento(posicionesTiles);
+                        unidad.DesSeleccionar();
+                    }
+                }
+                else
+                {
+                    mapa.InstanciarTilesDeMovimiento(posicionesTiles);
+                }
             }
         }
-    }
-
-    void InstanciarTilesDisponibles(List<Vector2> tilesDisponibles)
-    {
-        // instancia cada tile en su posicion
-        foreach (Vector2 posTile in tilesDisponibles)
-        {
-            // obtiene la posicion de los tiles en el mundo (x, y)
-            Vector3 posMundoTile = grilla.ObtenerPosMundo((int)posTile.x, (int)posTile.y);
-
-            posMundoTile.x += 64;
-            posMundoTile.y += 64;
-            // setea la posicion 'z' para que sea igual a la del prefab
-            posMundoTile.z = tileDisponible.transform.position.z;
-
-            // instancia el prefab con la posicion indicada
-            GameObject tileInstanciado = Instantiate(tileDisponible, posMundoTile, Quaternion.identity);
-            listaTilesDisponibles.Add(tileInstanciado);
-            // setea el padre de la instacia
-            tileInstanciado.transform.SetParent(contenedorTiles);
-        }
-    }
-
-    void DestruirTilesDisponibles(List<Vector2> tilesDisponibles)
-    {
-        foreach (GameObject tileDisponible in listaTilesDisponibles)
-            Destroy(tileDisponible);
-
-        tilesDisponibles.Clear();
-        listaTilesDisponibles.Clear();
     }
 }
