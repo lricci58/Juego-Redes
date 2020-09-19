@@ -11,7 +11,6 @@ public class ControladorJuego : MonoBehaviour
     private List<Obstaculo> obstaculos;
 
     private Vector3 posMundo;
-    private bool puedeMover = false;
 
     void Awake()
     {
@@ -51,6 +50,9 @@ public class ControladorJuego : MonoBehaviour
 
         Unidad unidad = ejercito[0];
 
+        // @TODO: hacer un check para todas las unidades del ejercito, y ver si se selecciona alguna
+        // en cuyo caso, esa sera la utilizada para 'SeleccionarTile()' y 'Mover()'
+
         // check si la unidad se selecciono
         if (unidad.EstaSeleccionada())
             // para seleccionar en un tile disponible para mover
@@ -73,9 +75,16 @@ public class ControladorJuego : MonoBehaviour
             {
                 // obtiene el tile (x, y) en el que esta la unidad
                 mapa.ObtenerPosGrilla(unidad.ObtenerPosicion(), out int tileUnidadX, out int tileUnidadY);
+
                 // obtiene la lista de las posiciones de los tiles de movimiento alrededor de la unidad
                 List<Vector2> posicionesTiles = unidad.DeterminarRadioTiles(tileUnidadX, tileUnidadY);
 
+                // check si alguna de las posiciones colisiona con un obstaculo, en cuyo caso se remueve la posicion
+                posicionesTiles = mapa.CheckColisiones(posicionesTiles);
+
+                // @TODO: solo permitir tilesDisponibles que esten dentro del rango de movimiento del jugador && no atraviese un obstaculos
+
+                // comprueba que el click no haya sido sobre el tile de la unidad
                 if (tileX != tileUnidadX || tileY != tileUnidadY)
                 {
                     // check si hizo click sobre un tile de movimiento

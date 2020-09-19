@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Unidad : MonoBehaviour 
 {
-    [SerializeField] private float tiempoMov = 300f;
-    [SerializeField] private float offsetPosicionX = 70f;
-    [SerializeField] private float offsetPosicionY = 115f;
+    [SerializeField] private float tiempoMov;
+    [SerializeField] private float offsetPosicionX;
+    [SerializeField] private float offsetPosicionY;
 
-    [SerializeField] private int radioMov = 3;
-    [SerializeField] private float vida = 0;
-    [SerializeField] private float armadura = 0;
-    [SerializeField] private float ataque = 0;
+    [SerializeField] private int radioMov;
+    [SerializeField] private float vida;
+    [SerializeField] private float armadura;
+    [SerializeField] private float ataque;
 
     private Animator animador;
     private SpriteRenderer sprite;

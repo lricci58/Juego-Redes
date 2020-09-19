@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7095623940222644402}
   - component: {fileID: 5868938520429365582}
   - component: {fileID: 8610739376307277964}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InfanteriaHacha
   m_TagString: InfanteriaHacha
   m_Icon: {fileID: 0}

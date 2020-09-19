@@ -6,10 +6,12 @@ using Random = UnityEngine.Random;
 public class ControladorMapa : MonoBehaviour
 {
     // almacenan las listas de prefabs
-    public GameObject[] unidades;
-    public GameObject[] mapas;
-    public GameObject[] rios;
-    public GameObject[] muros;
+    [SerializeField] private GameObject[] unidades;
+    [SerializeField] private GameObject[] mapas;
+    [SerializeField] private GameObject[] rios;
+    [SerializeField] private GameObject[] muros;
+
+    [SerializeField] private LayerMask layerColision;
 
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform contenedorMapa;
@@ -19,9 +21,9 @@ public class ControladorMapa : MonoBehaviour
     [SerializeField] private GameObject tileMovimiento;
     private List<GameObject> listaTilesDeMovimiento;
 
-    [SerializeField] private int ancho = 16;
-    [SerializeField] private int alto = 12;
-    [SerializeField] private float dimensionTile = 127f;
+    [SerializeField] private int ancho;
+    [SerializeField] private int alto;
+    [SerializeField] private float dimensionTile;
     private Vector3 posicionOriginal;
 
     // @NOTE: esta lista de unidades vendria desde la escena de mapa general
@@ -51,10 +53,12 @@ public class ControladorMapa : MonoBehaviour
 
     private void InstanciarEscenario()
     {
-        // elije (random) que conjunto de elementos se va a cargar
+        // @NOTE: revisar! puede que alguno de los conjuntos no lleve uno de los componentes (rios, muros, etc)
+
+        // elije (random) que conjunto de elementos se va a cargar (temp)
         int indiceRandom = Random.Range(0, mapas.GetLength(0));
 
-        // crea el escenario con objetos random (temporal)
+        // crea el escenario con objetos random (temp)
         InstanciarDesdeArray(mapas, indiceRandom, contenedorMapa);
         InstanciarDesdeArray(rios, indiceRandom, contenedorMapa);
         InstanciarDesdeArray(muros, indiceRandom, contenedorMapa);
@@ -124,6 +128,27 @@ public class ControladorMapa : MonoBehaviour
         listaTilesDeMovimiento.Clear();
     }
 
+    public List<Vector2> CheckColisiones(List<Vector2> posicionesTiles)
+    {
+        List<Vector2> listaInvalidos = new List<Vector2>();
+
+        foreach (Vector2 posTile in posicionesTiles)
+        {
+            Vector3 posMundo = ObtenerCentroTile((int)posTile.x, (int)posTile.y);
+
+            // check si la posicion colisiona con algun colider (solo comprueba con objetos que esten dentro de la layer Colision)
+            if (Physics2D.OverlapPoint(posMundo, layerColision))
+                // agrega a la lista de invalidos
+                listaInvalidos.Add(posTile);
+        }
+
+        // remueve cada elemento "marcado como invalido" de la lista de disponibles
+        foreach (Vector2 posTileInvalido in listaInvalidos)
+            posicionesTiles.Remove(posTileInvalido);
+
+        return posicionesTiles;
+    }
+
     public Vector3 ObtenerPosMundo(int x, int y)
     {
         return new Vector3(x, y) * dimensionTile + posicionOriginal;
@@ -138,5 +163,10 @@ public class ControladorMapa : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public Vector3 ObtenerCentroTile(int x, int y)
+    {
+        return ObtenerPosMundo(x, y) + new Vector3(dimensionTile, dimensionTile) * .5f;
     }
 }
