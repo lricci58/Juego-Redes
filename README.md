@@ -6,17 +6,10 @@ Wars Of Titania: Total Conquest es un juego de estrategia por turnos basado en e
 -
 
 ## Instalación
-- Para instalarlo, lo tenes que instalar.
+- 
 
 ## Autores
-- Castrilli Fausto
-- Castrilli Lucas (x2)
-- Castrilli Joaquin
-- Castrilli Celeste
-- Castrilli Julian
-- Castrilli Ivan
-- Castrilli Frino
-- Castrilli Lautaro
+-
 
 ## Agradecimientos Especiales
 - 
