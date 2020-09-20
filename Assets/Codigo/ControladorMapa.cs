@@ -20,6 +20,8 @@ public class ControladorMapa : MonoBehaviour
 
     [SerializeField] private GameObject tileMovimiento;
     private List<GameObject> listaTilesDeMovimiento;
+    // [SerializeField] private GameObject tileDespliegue;
+    // private List<GameObject> listaTilesDeDespliegue;
 
     [SerializeField] private int ancho;
     [SerializeField] private int alto;
@@ -31,7 +33,7 @@ public class ControladorMapa : MonoBehaviour
 
     public void CrearEscenario()
     {
-        // @TODO: setear los obstaculos del mapa y las zonas de despliegue
+        // @TODO: setear las zonas de despliegue
 
         contenedorMapa = new GameObject("ContenedorDeMapa").transform;
         InstanciarEscenario();
@@ -128,25 +130,46 @@ public class ControladorMapa : MonoBehaviour
         listaTilesDeMovimiento.Clear();
     }
 
-    public List<Vector2> CheckColisiones(List<Vector2> posicionesTiles)
+    /// <summary>
+    /// Remueve los tiles (que deberian ser invalidos) de la lista pasada por parametros
+    /// </summary>
+    public List<Vector2> DeterminarTilesInvalidos(List<Vector2> posicionesTiles, int posUnidadX, int posUnidadY, int pasosTotales)
     {
-        List<Vector2> listaInvalidos = new List<Vector2>();
+        Vector2 posUnidad = new Vector2(posUnidadX, posUnidadY);
+        List<Vector2> listaValidos = new List<Vector2>();
+        listaValidos.AddRange(posicionesTiles);
 
         foreach (Vector2 posTile in posicionesTiles)
         {
+            // @TODO: usar la posicion de la  unidad como "centro de tile"
             Vector3 posMundo = ObtenerCentroTile((int)posTile.x, (int)posTile.y);
 
-            // check si la posicion colisiona con algun colider (solo comprueba con objetos que esten dentro de la layer Colision)
+            // comprueba si la posicion colisiona con algun colider en la layer de colision
             if (Physics2D.OverlapPoint(posMundo, layerColision))
-                // agrega a la lista de invalidos
-                listaInvalidos.Add(posTile);
+            {
+                // @NOTE: ya se, esto es lo mas cutre que viste en la vida... tenemos que rehacerlo :/
+                if (listaValidos.Contains(posTile))
+                {
+                    if (posTile.y > posUnidad.y)
+                        for (float posY = posTile.y; posY <= posUnidad.y + pasosTotales; posY++)
+                            listaValidos.Remove(new Vector2(posTile.x, posY));
+                    
+                    if (posTile.y < posUnidad.y)
+                        for (float posY = posTile.y; posY >= posUnidad.y - pasosTotales; posY--)
+                            listaValidos.Remove(new Vector2(posTile.x, posY));
+                    
+                    if (posTile.x > posUnidad.x)
+                        for (float posX = posTile.x; posX <= posUnidad.x + pasosTotales; posX++)
+                            listaValidos.Remove(new Vector2(posX, posTile.y));
+                    
+                    if (posTile.x < posUnidad.x)
+                        for (float posX = posTile.x; posX >= posUnidad.x - pasosTotales; posX--)
+                            listaValidos.Remove(new Vector2(posX, posTile.y));
+                }
+            }
         }
 
-        // remueve cada elemento "marcado como invalido" de la lista de disponibles
-        foreach (Vector2 posTileInvalido in listaInvalidos)
-            posicionesTiles.Remove(posTileInvalido);
-
-        return posicionesTiles;
+        return listaValidos;
     }
 
     public Vector3 ObtenerPosMundo(int x, int y)

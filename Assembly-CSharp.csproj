@@ -58,7 +58,6 @@
     <Compile Include="Assets\Codigo\Unidad.cs" />
     <Compile Include="Assets\Codigo\ControladorJuego.cs" />
     <Compile Include="Assets\Codigo\ControladorCamara.cs" />
-    <Compile Include="Assets\Codigo\Obstaculo.cs" />
     <Compile Include="Assets\Codigo\CargadorJuego.cs" />
     <Compile Include="Assets\Codigo\ControladorMapa.cs" />
   </ItemGroup>

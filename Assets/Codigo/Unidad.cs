@@ -1,38 +1,45 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class Unidad : MonoBehaviour 
 {
-    [SerializeField] private float tiempoMov;
-    [SerializeField] private float offsetPosicionX;
-    [SerializeField] private float offsetPosicionY;
-
-    [SerializeField] private int radioMov;
+    [SerializeField] private int pasosTotales;
     [SerializeField] private float vida;
     [SerializeField] private float armadura;
     [SerializeField] private float ataque;
+
+    [SerializeField] private float tiempoMov;
+    [SerializeField] private float offsetPosicionX;
+    [SerializeField] private float offsetPosicionY;
 
     private Animator animador;
     private SpriteRenderer sprite;
 
     private List<Vector2> radioTiles;
-    
     private bool seleccionada = false;
+
     private bool moviendo = false;
-    
     private string direccionX = "";
     private string direccionY = "";
+    private int pasosDisponibles;
 
     void Start()
     {
         // agrega automaticamente el script a la lista de unidades
         ControladorJuego.instancia.AgregarUnidad(this);
 
-        // instancia los componentes del objeto
         animador = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
 
         radioTiles = new List<Vector2>();
+    }
+
+    private void OnMouseDown()
+    {
+        if (!moviendo)
+            // comprueba que se haya hecho click sobre el collider
+            seleccionada = true;
     }
 
     public void Mover(Vector3 posicion)
@@ -43,11 +50,8 @@ public class Unidad : MonoBehaviour
             float posicionActualY = transform.position.y - offsetPosicionY;
             Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
 
-            // inicia la animacion de movimiento
             animador.SetBool("moviendo", true);
 
-            // comprueba la direccion a la que va el personaje
-            // esto se hace entre los opuestos (arriba - abajo | izquierda - derecha)
             if (direccionX == "derecha")
             {
                 // comprueba que el eje no haya llegado a su destino
@@ -71,6 +75,7 @@ public class Unidad : MonoBehaviour
                     direccionX = "";
             }
 
+            // if (direccionX == "") // para que solo mueva en eje 'x' antes que 'y'
             if (direccionY == "arriba")
             {
                 if (posicionActual.y < posicion.y)
@@ -93,72 +98,13 @@ public class Unidad : MonoBehaviour
             // compueba que ambos ejes hayan llegado a su destino
             if (direccionX == "" && direccionY == "")
             {
-                // deja de animar al personaje
                 animador.SetBool("moviendo", false);
                 moviendo = false;
-                // posiciona al personaje en su lugar, ya que puede que se haya pasado de su destino
+
+                // posiciona al personaje en su lugar, ya que puede (most likely) que se haya pasado de su destino
                 transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
             }
         }
-    }
-
-    private void OnMouseDown()
-    {
-        if (!moviendo)
-            // comprueba que se haya hecho click sobre el collider
-            seleccionada = true;
-    }
-
-    public List<Vector2> DeterminarRadioTiles(int posUnidadX, int posUnidadY)
-    {
-        // Crea y devuelve la lista de las posiciones de los tiles de movimiento para la unidad
-
-        // determina la posicion del primer tile
-        int posInicialX = posUnidadX + 1;
-        int posInicialY = posUnidadY - radioMov;
-
-        // determina cuantos tiles tiene cada fila y columna de la lista
-        int cantFilas = ((radioMov * 2) + 1) + posInicialY;
-        int cantTilesPorFila = posInicialX - 1;
-
-        for (int posY = posInicialY; posY < cantFilas; posY++)
-        {
-            
-            if (posY <= posUnidadY)
-            {
-                cantTilesPorFila++;
-                posInicialX--;
-            }
-            else
-            {
-                cantTilesPorFila--;
-                posInicialX++;
-            }
-
-            for (int posX = posInicialX; posX < cantTilesPorFila; posX++)
-            {
-                // check si la posicion a guardar no es la de la unidad
-                if (posX == posUnidadX && posY == posUnidadY)
-                    continue;
-
-                radioTiles.Add(new Vector2(posX, posY));
-            }
-        }
-        
-        return radioTiles;
-    }
-
-    public bool ClickEnTileMovimiento(int x, int y)
-    {
-        // Comprueba que el tile clickeado este dentro de la lista de disponibles
-
-        foreach (Vector2 posTile in radioTiles)
-        {
-            if (posTile.x == x && posTile.y == y)
-                return true;
-        }
-
-        return false;
     }
 
     public void DeterminarDireccionMovimiento(Vector3 posicion)
@@ -191,20 +137,86 @@ public class Unidad : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Crea una lista de las posiciones de los tiles de movimiento para la posicion pasada por parametros
+    /// </summary>
+    public void DeterminarRadioTiles(int posUnidadX, int posUnidadY)
+    {
+        // determina la posicion del primer tile de iteracion
+        int posInicialX = posUnidadX + 1;
+        int posInicialY = posUnidadY - pasosTotales;
+
+        // determina cuantas filas tiene el radio
+        int cantFilas = ((pasosTotales * 2) + 1) + posInicialY;
+        int cantTilesPorFila = posInicialX - 1;
+
+        for (int posY = posInicialY; posY < cantFilas; posY++)
+        {
+            // dependiendo de posY, setea cuantos tiles debe tener la fila
+            if (posY <= posUnidadY)
+            {
+                cantTilesPorFila++;
+                posInicialX--;
+            }
+            else
+            {
+                cantTilesPorFila--;
+                posInicialX++;
+            }
+
+            for (int posX = posInicialX; posX < cantTilesPorFila; posX++)
+            {
+                // evita guardar la posicion del jugador
+                if (posX == posUnidadX && posY == posUnidadY)
+                    continue;
+
+                radioTiles.Add(new Vector2(posX, posY));
+            }
+        }
+    }
+
+    public bool ClickEnTileMovimiento(int x, int y)
+    {
+        // Comprueba que el tile clickeado este dentro de la lista de disponibles
+
+        foreach (Vector2 posTile in radioTiles)
+        {
+            if (posTile.x == x && posTile.y == y)
+                return true;
+        }
+
+        return false;
+    }
+
+    // @TODO: crear metodos de ataque, ser golpeado, morir, etc
+
+    public List<Vector2> ObtenerRadioTiles()
+    {
+        return radioTiles;
+    }
+
+    public void CambiarRadioTiles(List<Vector2> nuevoRadioTiles)
+    {
+        radioTiles = nuevoRadioTiles;
+    }
+
+    public int ObtenerPasosTotales()
+    {
+        return pasosTotales;
+    }
+
     public bool EstaSeleccionada()
     {
         return seleccionada;
     }
 
-    public void DesSeleccionar()
+    public void ToggleSeleccion(bool estado)
     {
-        seleccionada = false;
+        seleccionada = estado;
     }
 
     public Vector3 ObtenerPosicion()
     {
         return transform.position;
     }
-
-    // @TODO: crear metodos de ataque, ser golpeado, morir, etc
 }
