@@ -48,8 +48,10 @@ public class ControladorMapa : MonoBehaviour
         contenedorUnidades = new GameObject("ContenedorDeUnidades").transform;
         contenedorUnidades.SetParent(contenedorMapa);
         
-        unidadesEjercito = new string[1];
+        unidadesEjercito = new string[3];
         unidadesEjercito[0] = "InfanteriaHacha";
+        unidadesEjercito[1] = "InfanteriaHacha";
+        unidadesEjercito[2] = "InfanteriaHacha";
         InstanciarUnidades(unidadesEjercito);
     }
 

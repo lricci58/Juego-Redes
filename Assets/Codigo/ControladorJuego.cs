@@ -8,8 +8,9 @@ public class ControladorJuego : MonoBehaviour
     [SerializeField] private ControladorMapa mapa;
 
     private List<Unidad> ejercito;
-
     private Vector3 posMundo;
+    private Unidad unidadElegida;
+    private bool seleccionandoTile = false;
 
     void Awake()
     {
@@ -39,15 +40,29 @@ public class ControladorJuego : MonoBehaviour
     void Update()
     {
         // @TODO: crear y manejar las zonas de despliegue
-        // @TODO: crear el bucle para los turnos
 
-        Unidad unidad = ejercito[0];
+        if (unidadElegida == null)
+        {
+            foreach (Unidad unidad in ejercito)
+            {
+                if (unidad.SeSelecciono())
+                {
+                    unidadElegida = unidad;
+                    break;
+                }
+            }
+        }
+        
+        if ((unidadElegida != null))
+        {
+            SeleccionarTile(unidadElegida);
 
-        if (unidad.EstaSeleccionada())
-            SeleccionarTile(unidad);
+            // mueve la unidad si debe hacerlo
+            unidadElegida.Mover(posMundo);
 
-        // mueve la unidad si debe hacerlo
-        unidad.Mover(posMundo);
+            if (!unidadElegida.EstaSeleccionada() && !unidadElegida.EstaMoviendo())
+                unidadElegida = null;
+        }
     }
 
     void SeleccionarTile(Unidad unidad)
@@ -83,10 +98,14 @@ public class ControladorJuego : MonoBehaviour
                         mapa.DestruirTilesDeMovimiento(radioTiles);
                         unidad.ToggleSeleccion(false);
                     }
+                    seleccionandoTile = false;
                 }
                 // @NOTE: solo deberia instanciar, la primera vez que se hace click sobre la unidad
-                else
+                else if (!seleccionandoTile)
+                {
                     mapa.InstanciarTilesDeMovimiento(radioTiles);
+                    seleccionandoTile = true;
+                }
             }
         }
     }

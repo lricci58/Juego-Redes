@@ -35,14 +35,28 @@ public class Unidad : MonoBehaviour
         radioTiles = new List<Vector2>();
     }
 
-    private void OnMouseDown()
+    //private void OnMouseDown()
+    //{
+    //    // comprueba que se haya hecho click sobre el collider
+    //    if (!moviendo)
+    //        seleccionada = true;
+    //}
+
+    public bool SeSelecciono()
     {
-        if (!moviendo)
-            // comprueba que se haya hecho click sobre el collider
-            seleccionada = true;
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+            if (hit.collider != null &&  hit.collider.transform == transform)
+                seleccionada = true;
+        }
+
+        return seleccionada;
     }
 
-    public void Mover(Vector3 posicion)
+public void Mover(Vector3 posicion)
     {
         if (moviendo)
         {
@@ -205,14 +219,19 @@ public class Unidad : MonoBehaviour
         return pasosTotales;
     }
 
+    public void ToggleSeleccion(bool estado)
+    {
+        seleccionada = estado;
+    }
+
     public bool EstaSeleccionada()
     {
         return seleccionada;
     }
 
-    public void ToggleSeleccion(bool estado)
+    public bool EstaMoviendo()
     {
-        seleccionada = estado;
+        return moviendo;
     }
 
     public Vector3 ObtenerPosicion()
