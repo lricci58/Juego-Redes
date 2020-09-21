@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Unidad : MonoBehaviour 
 {
-    [SerializeField] private int pasosTotales;
+    [SerializeField] private int radioMovimiento;
     [SerializeField] private float vida;
     [SerializeField] private float armadura;
     [SerializeField] private float ataque;
@@ -16,13 +16,13 @@ public class Unidad : MonoBehaviour
     private Animator animador;
     private SpriteRenderer sprite;
 
-    private List<Vector2> radioTiles;
+    private List<Vector2> tilesMovimiento;
+    private List<Vector2> tilesAtaque;
     private bool seleccionada = false;
 
     private bool moviendo = false;
     private string direccionX = "";
     private string direccionY = "";
-    private int pasosDisponibles;
 
     void Start()
     {
@@ -32,15 +32,9 @@ public class Unidad : MonoBehaviour
         animador = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
 
-        radioTiles = new List<Vector2>();
+        tilesMovimiento = new List<Vector2>();
+        tilesAtaque = new List<Vector2>();
     }
-
-    //private void OnMouseDown()
-    //{
-    //    // comprueba que se haya hecho click sobre el collider
-    //    if (!moviendo)
-    //        seleccionada = true;
-    //}
 
     public bool SeSelecciono()
     {
@@ -49,14 +43,14 @@ public class Unidad : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 
-            if (hit.collider != null &&  hit.collider.transform == transform)
+            if (hit.collider != null && hit.collider.transform == transform)
                 seleccionada = true;
         }
 
         return seleccionada;
     }
 
-public void Mover(Vector3 posicion)
+    public void Mover(Vector3 posicion)
     {
         if (moviendo)
         {
@@ -152,16 +146,16 @@ public void Mover(Vector3 posicion)
     }
 
     /// <summary>
-    /// Crea una lista de las posiciones de los tiles de movimiento para la posicion pasada por parametros
+    /// Agrega posiciones de movimiento segun el radio de movimiento de la unidad
     /// </summary>
     public void DeterminarRadioTiles(int posUnidadX, int posUnidadY)
     {
         // determina la posicion del primer tile de iteracion
         int posInicialX = posUnidadX + 1;
-        int posInicialY = posUnidadY - pasosTotales;
+        int posInicialY = posUnidadY - radioMovimiento;
 
         // determina cuantas filas tiene el radio
-        int cantFilas = ((pasosTotales * 2) + 1) + posInicialY;
+        int cantFilas = ((radioMovimiento * 2) + 1) + posInicialY;
         int cantTilesPorFila = posInicialX - 1;
 
         for (int posY = posInicialY; posY < cantFilas; posY++)
@@ -184,7 +178,7 @@ public void Mover(Vector3 posicion)
                 if (posX == posUnidadX && posY == posUnidadY)
                     continue;
 
-                radioTiles.Add(new Vector2(posX, posY));
+                tilesMovimiento.Add(new Vector2(posX, posY));
             }
         }
     }
@@ -193,7 +187,20 @@ public void Mover(Vector3 posicion)
     {
         // Comprueba que el tile clickeado este dentro de la lista de disponibles
 
-        foreach (Vector2 posTile in radioTiles)
+        foreach (Vector2 posTile in tilesMovimiento)
+        {
+            if (posTile.x == x && posTile.y == y)
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool ClickEnTileAtaque(int x, int y)
+    {
+        // Comprueba que el tile clickeado este dentro de la lista de disponibles
+
+        foreach (Vector2 posTile in tilesAtaque)
         {
             if (posTile.x == x && posTile.y == y)
                 return true;
@@ -204,38 +211,42 @@ public void Mover(Vector3 posicion)
 
     // @TODO: crear metodos de ataque, ser golpeado, morir, etc
 
-    public List<Vector2> ObtenerRadioTiles()
+    public List<Vector2> ObtenerTilesMovimiento()
     {
-        return radioTiles;
+        return tilesMovimiento;
     }
 
-    public void CambiarRadioTiles(List<Vector2> nuevoRadioTiles)
+    public List<Vector2> ObtenerTilesAtaque()
     {
-        radioTiles = nuevoRadioTiles;
+        return tilesAtaque;
     }
 
-    public int ObtenerPasosTotales()
+    public void CambiarTilesMovimiento(List<Vector2> nuevosTilesMovimiento)
     {
-        return pasosTotales;
+        tilesMovimiento = nuevosTilesMovimiento;
     }
 
-    public void ToggleSeleccion(bool estado)
-    {
+    public void CambiarTilesAtaque(List<Vector2> nuevosTilesAtaque) {
+        tilesAtaque = nuevosTilesAtaque;
+    }
+
+    public int ObtenerRadioMovimiento() {
+        return radioMovimiento;
+    }
+
+    public void ToggleSeleccion(bool estado) {
         seleccionada = estado;
     }
 
-    public bool EstaSeleccionada()
-    {
+    public bool EstaSeleccionada() {
         return seleccionada;
     }
 
-    public bool EstaMoviendo()
-    {
+    public bool EstaMoviendo() {
         return moviendo;
     }
 
-    public Vector3 ObtenerPosicion()
-    {
+    public Vector3 ObtenerPosicion()  {
         return transform.position;
     }
 }

@@ -12,6 +12,7 @@ public class ControladorMapa : MonoBehaviour
     [SerializeField] private GameObject[] muros;
 
     [SerializeField] private LayerMask layerColision;
+    [SerializeField] private LayerMask layerUnidades;
 
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform contenedorMapa;
@@ -19,9 +20,9 @@ public class ControladorMapa : MonoBehaviour
     private Transform contenedorTiles;
 
     [SerializeField] private GameObject tileMovimiento;
-    private List<GameObject> listaTilesDeMovimiento;
-    // [SerializeField] private GameObject tileDespliegue;
-    // private List<GameObject> listaTilesDeDespliegue;
+    private List<GameObject> listaTilesMovimiento;
+    [SerializeField] private GameObject tileAtaque;
+    private List<GameObject> listaTilesAtaque;
 
     [SerializeField] private int ancho;
     [SerializeField] private int alto;
@@ -38,7 +39,9 @@ public class ControladorMapa : MonoBehaviour
         contenedorMapa = new GameObject("ContenedorDeMapa").transform;
         InstanciarEscenario();
 
-        listaTilesDeMovimiento = new List<GameObject>();
+        listaTilesMovimiento = new List<GameObject>();
+        listaTilesAtaque = new List<GameObject>();
+
         contenedorTiles = new GameObject("ContenedorDeTilesDisponibles").transform;
         contenedorTiles.SetParent(contenedorMapa);
         
@@ -104,38 +107,7 @@ public class ControladorMapa : MonoBehaviour
         instancia.transform.SetParent(contenedorPadre);
     }
 
-    public void InstanciarTilesDeMovimiento(List<Vector2> listaPosicionesTiles)
-    {
-        // Instancia los tiles disponibles en las posiciones del parametro
-
-        foreach (Vector2 posTile in listaPosicionesTiles)
-        {
-            // obtiene la posicion en el mundo del tile
-            Vector3 posTileEnMundo = ObtenerPosMundo((int)posTile.x, (int)posTile.y);
-            posTileEnMundo.x += 64;
-            posTileEnMundo.y += 64;
-            posTileEnMundo.z = tileMovimiento.transform.position.z;
-
-            GameObject instancia = Instantiate(tileMovimiento, posTileEnMundo, Quaternion.identity);
-            listaTilesDeMovimiento.Add(instancia);
-            
-            instancia.transform.SetParent(contenedorTiles);
-        }
-    }
-
-    public void DestruirTilesDeMovimiento(List<Vector2> listaPosicionesTiles)
-    {
-        foreach (GameObject tileDeMovimiento in listaTilesDeMovimiento)
-            Destroy(tileDeMovimiento);
-
-        listaPosicionesTiles.Clear();
-        listaTilesDeMovimiento.Clear();
-    }
-
-    /// <summary>
-    /// Remueve los tiles (que deberian ser invalidos) de la lista pasada por parametros
-    /// </summary>
-    public List<Vector2> DeterminarTilesInvalidos(List<Vector2> posicionesTiles, int posUnidadX, int posUnidadY, int pasosTotales)
+    public List<Vector2> DeterminarTilesInvalidos(List<Vector2> posicionesTiles, int posUnidadX, int posUnidadY, int radioMovimiento)
     {
         Vector2 posUnidad = new Vector2(posUnidadX, posUnidadY);
         List<Vector2> listaValidos = new List<Vector2>();
@@ -153,25 +125,102 @@ public class ControladorMapa : MonoBehaviour
                 if (listaValidos.Contains(posTile))
                 {
                     if (posTile.y > posUnidad.y)
-                        for (float posY = posTile.y; posY <= posUnidad.y + pasosTotales; posY++)
+                        for (float posY = posTile.y; posY <= posUnidad.y + radioMovimiento; posY++)
                             listaValidos.Remove(new Vector2(posTile.x, posY));
                     
                     if (posTile.y < posUnidad.y)
-                        for (float posY = posTile.y; posY >= posUnidad.y - pasosTotales; posY--)
+                        for (float posY = posTile.y; posY >= posUnidad.y - radioMovimiento; posY--)
                             listaValidos.Remove(new Vector2(posTile.x, posY));
                     
                     if (posTile.x > posUnidad.x)
-                        for (float posX = posTile.x; posX <= posUnidad.x + pasosTotales; posX++)
+                        for (float posX = posTile.x; posX <= posUnidad.x + radioMovimiento; posX++)
                             listaValidos.Remove(new Vector2(posX, posTile.y));
                     
                     if (posTile.x < posUnidad.x)
-                        for (float posX = posTile.x; posX >= posUnidad.x - pasosTotales; posX--)
+                        for (float posX = posTile.x; posX >= posUnidad.x - radioMovimiento; posX--)
                             listaValidos.Remove(new Vector2(posX, posTile.y));
                 }
             }
         }
 
         return listaValidos;
+    }
+
+    public List<Vector2> DeterminarTilesAtaque(List<Vector2> posicionesTiles, int posUnidadX, int posUnidadY)
+    {
+        Vector2 posUnidad = new Vector2(posUnidadX, posUnidadY);
+        List<Vector2> tilesAtaque = new List<Vector2>();
+
+        foreach (Vector2 posTile in posicionesTiles)
+        {
+            Vector2 tileAComprobar;
+
+            tileAComprobar = new Vector2(posTile.x + 1, posTile.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                tilesAtaque.Add(tileAComprobar);
+
+            tileAComprobar = new Vector2(posTile.x - 1, posTile.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                tilesAtaque.Add(tileAComprobar);
+
+            tileAComprobar = new Vector2(posTile.x, posTile.y + 1);
+            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                tilesAtaque.Add(tileAComprobar);
+
+            tileAComprobar = new Vector2(posTile.x, posTile.y - 1);
+            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                tilesAtaque.Add(tileAComprobar);
+        }
+
+        tilesAtaque.Remove(posUnidad);
+
+        return tilesAtaque;
+    }
+
+    public void InstanciarTilesMovimiento(List<Vector2> listaPosicionesTiles)
+    {
+        foreach (Vector2 posTile in listaPosicionesTiles)
+        {
+            // obtiene la posicion en el mundo del tile
+            Vector3 posTileEnMundo = ObtenerPosMundo((int)posTile.x, (int)posTile.y);
+            posTileEnMundo.x += 64;
+            posTileEnMundo.y += 64;
+            posTileEnMundo.z = tileMovimiento.transform.position.z;
+
+            GameObject instancia = Instantiate(tileMovimiento, posTileEnMundo, Quaternion.identity);
+            listaTilesMovimiento.Add(instancia);
+
+            instancia.transform.SetParent(contenedorTiles);
+        }
+    }
+
+    public void InstanciarTilesAtaque(List<Vector2> listaPosicionesTiles)
+    {
+        foreach (Vector2 posTile in listaPosicionesTiles)
+        {
+            // obtiene la posicion en el mundo del tile
+            Vector3 posTileEnMundo = ObtenerPosMundo((int)posTile.x, (int)posTile.y);
+            posTileEnMundo.x += 64;
+            posTileEnMundo.y += 64;
+            posTileEnMundo.z = tileAtaque.transform.position.z;
+
+            GameObject instancia = Instantiate(tileAtaque, posTileEnMundo, Quaternion.identity);
+            listaTilesAtaque.Add(instancia);
+
+            instancia.transform.SetParent(contenedorTiles);
+        }
+    }
+
+    public void DestruirTiles()
+    {
+        foreach (GameObject tileMovimiento in listaTilesMovimiento)
+            Destroy(tileMovimiento);
+
+        foreach (GameObject tileAtaque in listaTilesAtaque)
+            Destroy(tileAtaque);
+
+        listaTilesMovimiento.Clear();
+        listaTilesAtaque.Clear();
     }
 
     public Vector3 ObtenerPosMundo(int x, int y)

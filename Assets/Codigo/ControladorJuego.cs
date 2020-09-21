@@ -55,7 +55,8 @@ public class ControladorJuego : MonoBehaviour
         
         if ((unidadElegida != null))
         {
-            SeleccionarTile(unidadElegida);
+            if(!unidadElegida.EstaMoviendo())
+                SeleccionarTile(unidadElegida);
 
             // mueve la unidad si debe hacerlo
             unidadElegida.Mover(posMundo);
@@ -79,8 +80,10 @@ public class ControladorJuego : MonoBehaviour
                 mapa.ObtenerPosGrilla(unidad.ObtenerPosicion(), out int tileUnidadX, out int tileUnidadY);
 
                 unidad.DeterminarRadioTiles(tileUnidadX, tileUnidadY);
-                unidad.CambiarRadioTiles(mapa.DeterminarTilesInvalidos(unidad.ObtenerRadioTiles(), tileUnidadX, tileUnidadY, unidad.ObtenerPasosTotales()));
-                List<Vector2> radioTiles = unidad.ObtenerRadioTiles();
+                unidad.CambiarTilesMovimiento(mapa.DeterminarTilesInvalidos(unidad.ObtenerTilesMovimiento(), tileUnidadX, tileUnidadY, unidad.ObtenerRadioMovimiento()));
+                unidad.CambiarTilesAtaque(mapa.DeterminarTilesAtaque(unidad.ObtenerTilesMovimiento(), tileUnidadX, tileUnidadY));
+                List<Vector2> tilesMovimiento = unidad.ObtenerTilesMovimiento();
+                List<Vector2> tilesAtaque = unidad.ObtenerTilesAtaque();
 
                 // comprueba que el click no haya sido sobre el tile de la unidad
                 if (tileX != tileUnidadX || tileY != tileUnidadY)
@@ -90,20 +93,20 @@ public class ControladorJuego : MonoBehaviour
                         // obtiene la posicion del tile a la que mover
                         posMundo = mapa.ObtenerPosMundo(tileX, tileY);
                         unidad.DeterminarDireccionMovimiento(posMundo);
-
-                        mapa.DestruirTilesDeMovimiento(radioTiles);
                     }
                     else
-                    {
-                        mapa.DestruirTilesDeMovimiento(radioTiles);
                         unidad.ToggleSeleccion(false);
-                    }
+                    
+                    mapa.DestruirTiles();
+                    tilesMovimiento.Clear();
+                    tilesAtaque.Clear();
                     seleccionandoTile = false;
                 }
-                // @NOTE: solo deberia instanciar, la primera vez que se hace click sobre la unidad
                 else if (!seleccionandoTile)
                 {
-                    mapa.InstanciarTilesDeMovimiento(radioTiles);
+                    // crea los tiles de movimiento
+                    mapa.InstanciarTilesMovimiento(tilesMovimiento);
+                    mapa.InstanciarTilesAtaque(tilesAtaque);
                     seleccionandoTile = true;
                 }
             }

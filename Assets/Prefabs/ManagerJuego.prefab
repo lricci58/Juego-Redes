@@ -68,7 +68,11 @@ MonoBehaviour:
   layerColision:
     serializedVersion: 2
     m_Bits: 256
-  tileMovimiento: {fileID: 2915198811722647901, guid: 0d38e2e6a1bed2b4db3cf3eacb5b4cdf, type: 3}
+  layerUnidades:
+    serializedVersion: 2
+    m_Bits: 512
+  tileMovimiento: {fileID: 9009052477643153068, guid: 0d38e2e6a1bed2b4db3cf3eacb5b4cdf, type: 3}
+  tileAtaque: {fileID: 8859957345604846137, guid: a7beacab811e08a478393c02c6cd3c9e, type: 3}
   ancho: 16
   alto: 12
   dimensionTile: 127

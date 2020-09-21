@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca080415d33840f488cc282eb734d160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pasosTotales: 2
+  radioMovimiento: 2
   vida: 0
   armadura: 0
   ataque: 0
