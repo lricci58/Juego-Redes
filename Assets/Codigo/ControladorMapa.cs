@@ -121,7 +121,6 @@ public class ControladorMapa : MonoBehaviour
             // comprueba si la posicion colisiona con algun colider en la layer de colision
             if (Physics2D.OverlapPoint(posMundo, layerColision))
             {
-                // @NOTE: ya se, esto es lo mas cutre que viste en la vida... tenemos que rehacerlo :/
                 if (listaValidos.Contains(posTile))
                 {
                     if (posTile.y > posUnidad.y)
@@ -154,22 +153,31 @@ public class ControladorMapa : MonoBehaviour
         foreach (Vector2 posTile in posicionesTiles)
         {
             Vector2 tileAComprobar;
+            Vector3 posMundo;
 
             tileAComprobar = new Vector2(posTile.x + 1, posTile.y);
-            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
-                tilesAtaque.Add(tileAComprobar);
+            posMundo = ObtenerCentroTile((int)tileAComprobar.x, (int)tileAComprobar.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && !tilesAtaque.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                if(!Physics2D.OverlapPoint(posMundo, layerColision))
+                    tilesAtaque.Add(tileAComprobar);
 
             tileAComprobar = new Vector2(posTile.x - 1, posTile.y);
-            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
-                tilesAtaque.Add(tileAComprobar);
+            posMundo = ObtenerCentroTile((int)tileAComprobar.x, (int)tileAComprobar.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && !tilesAtaque.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                if (!Physics2D.OverlapPoint(posMundo, layerColision))
+                    tilesAtaque.Add(tileAComprobar);
 
             tileAComprobar = new Vector2(posTile.x, posTile.y + 1);
-            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
-                tilesAtaque.Add(tileAComprobar);
+            posMundo = ObtenerCentroTile((int)tileAComprobar.x, (int)tileAComprobar.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && !tilesAtaque.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                if (!Physics2D.OverlapPoint(posMundo, layerColision))
+                    tilesAtaque.Add(tileAComprobar);
 
             tileAComprobar = new Vector2(posTile.x, posTile.y - 1);
-            if (!posicionesTiles.Contains(tileAComprobar) && tileAComprobar != posUnidad)
-                tilesAtaque.Add(tileAComprobar);
+            posMundo = ObtenerCentroTile((int)tileAComprobar.x, (int)tileAComprobar.y);
+            if (!posicionesTiles.Contains(tileAComprobar) && !tilesAtaque.Contains(tileAComprobar) && tileAComprobar != posUnidad)
+                if (!Physics2D.OverlapPoint(posMundo, layerColision))
+                    tilesAtaque.Add(tileAComprobar);
         }
 
         tilesAtaque.Remove(posUnidad);
