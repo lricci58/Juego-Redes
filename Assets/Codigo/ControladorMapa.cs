@@ -20,8 +20,8 @@ public class ControladorMapa : MonoBehaviour
     private Transform contenedorTiles;
 
     [SerializeField] private GameObject tileMovimiento;
-    private List<GameObject> listaTilesMovimiento;
     [SerializeField] private GameObject tileAtaque;
+    private List<GameObject> listaTilesMovimiento;
     private List<GameObject> listaTilesAtaque;
 
     [SerializeField] private int ancho;
@@ -119,11 +119,13 @@ public class ControladorMapa : MonoBehaviour
             Vector3 posMundo = ObtenerCentroTile((int)posTile.x, (int)posTile.y);
 
             // comprueba si la posicion colisiona con algun colider en la layer de colision
-            if (Physics2D.OverlapPoint(posMundo, layerColision))
+            if (Physics2D.OverlapPoint(posMundo, layerColision) || Physics2D.OverlapPoint(posMundo, layerUnidades))
             {
+                // para evitar errores, por si el tile ya se habia borrado antes
                 if (listaValidos.Contains(posTile))
                 {
                     if (posTile.y > posUnidad.y)
+                        // borra todos los tiles desde el invalido en adelante
                         for (float posY = posTile.y; posY <= posUnidad.y + radioMovimiento; posY++)
                             listaValidos.Remove(new Vector2(posTile.x, posY));
                     

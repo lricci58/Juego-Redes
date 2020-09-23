@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7095623940222644402}
   - component: {fileID: 5868938520429365582}
   - component: {fileID: 8610739376307277964}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: InfanteriaHacha
   m_TagString: InfanteriaHacha
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: -158054179
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2989642195218504086, guid: 2fd14856064e0904eb0360ebf7000db3, type: 3}
+  m_Sprite: {fileID: -948129327583810577, guid: 2fd14856064e0904eb0360ebf7000db3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radioMovimiento: 2
+  radioAtaque: 1
   vida: 0
   armadura: 0
   ataque: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unidad : MonoBehaviour 
 {
     [SerializeField] private int radioMovimiento;
+    [SerializeField] private int radioAtaque;
     [SerializeField] private float vida;
     [SerializeField] private float armadura;
     [SerializeField] private float ataque;
@@ -19,8 +20,8 @@ public class Unidad : MonoBehaviour
     private List<Vector2> tilesMovimiento;
     private List<Vector2> tilesAtaque;
     private bool seleccionada = false;
-
     private bool moviendo = false;
+    private bool atacando = false;
     private string direccionX = "";
     private string direccionY = "";
 
@@ -52,6 +53,11 @@ public class Unidad : MonoBehaviour
 
     public void Mover(Vector3 posicion)
     {
+        if (direccionX == "derecha")
+            sprite.flipX = false;
+        else if (direccionX == "izquierda")
+            sprite.flipX = true;
+
         if (moviendo)
         {
             float posicionActualX = transform.position.x - offsetPosicionX;
@@ -64,21 +70,15 @@ public class Unidad : MonoBehaviour
             {
                 // comprueba que el eje no haya llegado a su destino
                 if (posicionActual.x < posicion.x)
-                {
-                    sprite.flipX = false;
                     // en ese caso, se ejecuta el movimiento
                     transform.Translate(tiempoMov * Time.deltaTime, 0, 0);
-                }
                 else if (posicionActual.x >= posicion.x)
                     direccionX = "";
             }
             else if (direccionX == "izquierda")
             {
                 if (posicionActual.x > posicion.x)
-                {
-                    sprite.flipX = true;
                     transform.Translate(-tiempoMov * Time.deltaTime, 0, 0);
-                }
                 else if (posicionActual.x <= posicion.x)
                     direccionX = "";
             }
@@ -87,18 +87,14 @@ public class Unidad : MonoBehaviour
             if (direccionY == "arriba")
             {
                 if (posicionActual.y < posicion.y)
-                {
                     transform.Translate(0, tiempoMov * Time.deltaTime, 0);
-                }
                 else if (posicionActual.y >= posicion.y)
                     direccionY = "";
             }
             else if (direccionY == "abajo")
             {
                 if (posicionActual.y > posicion.y)
-                {
                     transform.Translate(0, -tiempoMov * Time.deltaTime, 0);
-                }
                 else if (posicionActual.y <= posicion.y)
                     direccionY = "";
             }
@@ -112,6 +108,20 @@ public class Unidad : MonoBehaviour
                 // posiciona al personaje en su lugar, ya que puede (most likely) que se haya pasado de su destino
                 transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
             }
+        }
+    }
+
+    public void Atacar(Unidad objetivo)
+    {
+        if (atacando && !moviendo)
+        {
+            animador.SetTrigger("atacando");
+
+            // @TODO: solo llamar cuando termine la animacionde atacar
+            objetivo.GetComponent<Animator>().SetTrigger("golpeado");
+
+            atacando = false;
+            seleccionada = false;
         }
     }
 
@@ -145,9 +155,6 @@ public class Unidad : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Agrega posiciones de movimiento segun el radio de movimiento de la unidad
-    /// </summary>
     public void DeterminarRadioTiles(int posUnidadX, int posUnidadY)
     {
         // determina la posicion del primer tile de iteracion
@@ -185,8 +192,6 @@ public class Unidad : MonoBehaviour
 
     public bool ClickEnTileMovimiento(int x, int y)
     {
-        // Comprueba que el tile clickeado este dentro de la lista de disponibles
-
         foreach (Vector2 posTile in tilesMovimiento)
         {
             if (posTile.x == x && posTile.y == y)
@@ -198,8 +203,6 @@ public class Unidad : MonoBehaviour
 
     public bool ClickEnTileAtaque(int x, int y)
     {
-        // Comprueba que el tile clickeado este dentro de la lista de disponibles
-
         foreach (Vector2 posTile in tilesAtaque)
         {
             if (posTile.x == x && posTile.y == y)
@@ -236,6 +239,11 @@ public class Unidad : MonoBehaviour
 
     public void ToggleSeleccion(bool estado) {
         seleccionada = estado;
+    }
+
+    public void ToggleAtaque(bool estado)
+    {
+        atacando = estado;
     }
 
     public bool EstaSeleccionada() {
