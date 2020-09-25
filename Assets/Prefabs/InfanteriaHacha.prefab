@@ -144,9 +144,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radioMovimiento: 2
   radioAtaque: 1
-  vida: 0
+  vida: 2
   armadura: 0
-  ataque: 0
+  ataque: 1
   tiempoMov: 150
   offsetPosicionX: 70
   offsetPosicionY: 115

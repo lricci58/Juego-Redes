@@ -55,11 +55,15 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Codigo\BotonUnidad.cs" />
+    <Compile Include="Assets\Codigo\ControladorBotones.cs" />
     <Compile Include="Assets\Codigo\Unidad.cs" />
-    <Compile Include="Assets\Codigo\ControladorJuego.cs" />
+    <Compile Include="Assets\Codigo\ControladorBatalla.cs" />
     <Compile Include="Assets\Codigo\ControladorCamara.cs" />
+    <Compile Include="Assets\Codigo\ControladorJuego.cs" />
     <Compile Include="Assets\Codigo\CargadorJuego.cs" />
-    <Compile Include="Assets\Codigo\ControladorMapa.cs" />
+    <Compile Include="Assets\Codigo\CargadorMapa.cs" />
+    <Compile Include="Assets\Codigo\ControladorUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -614,6 +618,9 @@
     <Reference Include="Unity.Rider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
@@ -622,9 +629,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

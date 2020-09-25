@@ -19,6 +19,7 @@ public class Unidad : MonoBehaviour
 
     private List<Vector2> tilesMovimiento;
     private List<Vector2> tilesAtaque;
+    private bool desplegada = false;
     private bool seleccionada = false;
     private bool moviendo = false;
     private bool atacando = false;
@@ -28,7 +29,7 @@ public class Unidad : MonoBehaviour
     void Start()
     {
         // agrega automaticamente el script a la lista de unidades
-        ControladorJuego.instancia.AgregarUnidad(this);
+        ControladorBatalla.instancia.AgregarUnidad(this);
 
         animador = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
@@ -118,19 +119,31 @@ public class Unidad : MonoBehaviour
             animador.SetTrigger("atacando");
 
             // @TODO: solo llamar cuando termine la animacionde atacar
-            objetivo.GetComponent<Animator>().SetTrigger("golpeado");
+            objetivo.animador.SetTrigger("golpeado");
+            objetivo.Golpeado(this);
 
             atacando = false;
             seleccionada = false;
         }
     }
 
+    public void Golpeado(Unidad atacante)
+    {
+        if (vida > 0)
+        {
+            vida -= atacante.ataque;
+            if (vida < 0)
+                vida = 0;
+        }
+        
+        if(vida == 0)
+            animador.SetTrigger("muriendo");
+    }
+
     public void DeterminarDireccionMovimiento(Vector3 posicion)
     {
         if (seleccionada)
         {
-            // Setea la direccion 'x' e 'y' segun su objetivo
-
             float posicionActualX = transform.position.x - offsetPosicionX;
             float posicionActualY = transform.position.y - offsetPosicionY;
             Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
@@ -214,18 +227,15 @@ public class Unidad : MonoBehaviour
 
     // @TODO: crear metodos de ataque, ser golpeado, morir, etc
 
-    public List<Vector2> ObtenerTilesMovimiento()
-    {
+    public List<Vector2> ObtenerTilesMovimiento() {
         return tilesMovimiento;
     }
 
-    public List<Vector2> ObtenerTilesAtaque()
-    {
+    public List<Vector2> ObtenerTilesAtaque() {
         return tilesAtaque;
     }
 
-    public void CambiarTilesMovimiento(List<Vector2> nuevosTilesMovimiento)
-    {
+    public void CambiarTilesMovimiento(List<Vector2> nuevosTilesMovimiento) {
         tilesMovimiento = nuevosTilesMovimiento;
     }
 
@@ -241,8 +251,7 @@ public class Unidad : MonoBehaviour
         seleccionada = estado;
     }
 
-    public void ToggleAtaque(bool estado)
-    {
+    public void ToggleAtaque(bool estado) {
         atacando = estado;
     }
 
@@ -254,7 +263,23 @@ public class Unidad : MonoBehaviour
         return moviendo;
     }
 
+    public bool EstaMuerta() {
+        if (vida > 0)
+            return false;
+        else
+            return true;
+    }
+
     public Vector3 ObtenerPosicion()  {
         return transform.position;
+    }
+
+    public void Desplegar(Vector3 posicion) {
+        transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
+        desplegada = true;
+    }
+
+    public bool EstaDesplegada() {
+        return desplegada;
     }
 }
