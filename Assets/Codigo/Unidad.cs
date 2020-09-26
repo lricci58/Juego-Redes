@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ public class Unidad : MonoBehaviour
     private bool atacando = false;
     private string direccionX = "";
     private string direccionY = "";
+    private Unidad unidadObjetivo;
 
     void Start()
     {
@@ -117,27 +119,30 @@ public class Unidad : MonoBehaviour
         if (atacando && !moviendo)
         {
             animador.SetTrigger("atacando");
-
-            // @TODO: solo llamar cuando termine la animacionde atacar
-            objetivo.animador.SetTrigger("golpeado");
-            objetivo.Golpeado(this);
-
+            unidadObjetivo = objetivo;
             atacando = false;
             seleccionada = false;
         }
     }
 
+    public void Daño()
+    {
+        unidadObjetivo.Golpeado(this);
+    }
+
     public void Golpeado(Unidad atacante)
     {
         if (vida > 0)
-        {
             vida -= atacante.ataque;
-            if (vida < 0)
-                vida = 0;
-        }
-        
-        if(vida == 0)
+
+        if (vida <= 0)
             animador.SetTrigger("muriendo");
+        else
+            animador.SetTrigger("golpeado");
+    }
+
+    public void DestruirUnidad() {
+        Destroy(gameObject);
     }
 
     public void DeterminarDireccionMovimiento(Vector3 posicion)
@@ -264,10 +269,10 @@ public class Unidad : MonoBehaviour
     }
 
     public bool EstaMuerta() {
-        if (vida > 0)
-            return false;
-        else
+        if (vida < 0)
             return true;
+        else
+            return false;
     }
 
     public Vector3 ObtenerPosicion()  {

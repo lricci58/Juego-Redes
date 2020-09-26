@@ -53,9 +53,9 @@ public class CargadorMapa : MonoBehaviour
 
     private void InstanciarEscenario()
     {
-        // @NOTE: revisar! puede que alguno de los conjuntos no lleve uno de los componentes (rios, muros, etc)
+        // @TODO: revisar! realizar el sistema de cargado de mapas aleatoreo
 
-        // elije (random) que conjunto de elementos se va a cargar (temp)
+        // elije que conjunto de elementos se va a cargar (temp)
         int indiceRandom = Random.Range(0, mapas.GetLength(0));
 
         // crea el escenario con objetos random (temp)
@@ -84,8 +84,8 @@ public class CargadorMapa : MonoBehaviour
                 InstanciarDesdeArray(unidades, posicionTipoUnidad, contenedorUnidades);
             }
             // en caso de que el argumento no sea valido
-            catch {
-                Debug.LogError("No se encontro la unidad (" + listaNombresUnidad[i] + ") que se desea instanciar... CargadorMapa -> InstanciarUnidades() : GameObject");
+            catch (IndexOutOfRangeException) {
+                Debug.LogError("No se encontro la unidad (" + listaNombresUnidad[i] + ") que se desea instanciar... [CargadorMapa -> InstanciarUnidades() : GameObject]");
             }
         }
     }

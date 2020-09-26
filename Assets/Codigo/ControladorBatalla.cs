@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -89,16 +90,16 @@ public class ControladorBatalla : MonoBehaviour
 
                 // mueve la unidad si debe hacerlo
                 unidadElegida.Mover(posMundo);
-                if(unidadObjetivo != null)
+
+                // ejecuta el ataque si existe un objetivo
+                if (unidadObjetivo != null)
                 {
                     unidadElegida.Atacar(unidadObjetivo);
                     if (unidadObjetivo.EstaMuerta())
-                    {    
-                        // Destroy(unidadObjetivo.gameObject);
                         ejercito.Remove(unidadObjetivo);
-                    }
-                }   
+                }
 
+                // comprueba si la unidad deja de estar seleccionada
                 if (!unidadElegida.EstaSeleccionada() && !unidadElegida.EstaMoviendo())
                     unidadElegida = null;
             }
@@ -110,16 +111,14 @@ public class ControladorBatalla : MonoBehaviour
         List<GameObject> botonesUnidad = GameObject.FindGameObjectsWithTag("Boton").ToList();
         for (int i = 0; i < botonesUnidad.Count; i++)
         {
-            try
-            {
+            try {
                 if (botonesUnidad[i].GetComponent<BotonUnidad>().seleccionada)
                 {
                     Destroy(botonesUnidad[i]);
                     return i;
                 }
             }
-            catch
-            {
+            catch (NullReferenceException) {
                 return -1;
             }
         }
