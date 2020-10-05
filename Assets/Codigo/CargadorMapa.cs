@@ -1,23 +1,15 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class CargadorMapa : MonoBehaviour
 {
-    // almacenan las listas de prefabs
-    [SerializeField] private GameObject[] unidades;
-    [SerializeField] private GameObject[] mapas;
-    [SerializeField] private GameObject[] rios;
-    [SerializeField] private GameObject[] muros;
-
-    [SerializeField] private LayerMask layerColision;
-    [SerializeField] private LayerMask layerUnidades;
-
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
-    public Transform contenedorMapa;
-    private Transform contenedorUnidades;
+    private Transform contenedorMapa;
     private Transform contenedorTiles;
+    private Transform contenedorUnidades;
 
     [SerializeField] private GameObject tileMovimiento;
     [SerializeField] private GameObject tileAtaque;
@@ -29,34 +21,38 @@ public class CargadorMapa : MonoBehaviour
     [SerializeField] private float dimensionTile;
     private Vector3 posicionOriginal;
 
+    [SerializeField] private LayerMask layerColision;
+    [SerializeField] private LayerMask layerUnidades;
+
+    // almacenan las listas de prefabs
+    public GameObject[] unidades;
+    public GameObject[] mapas;
+    public GameObject[] rios;
+    public GameObject[] muros;
+
     public void CrearEscenario()
     {
-        // @TODO: setear las zonas de despliegue (vienen de controlador juego)
+        // @TODO: setear las dos zonas de despliegue
 
-        contenedorMapa = new GameObject("ContenedorMapa").transform;
+        // setea el offset de la grilla
+        posicionOriginal = new Vector3(-dimensionTile * 8, -dimensionTile * 6);
+
         InstanciarEscenario();
+        InstanciarUnidades(ControladorJuego.instancia.listaUnidades);
 
         listaTilesMovimiento = new List<GameObject>();
         listaTilesAtaque = new List<GameObject>();
-
         contenedorTiles = new GameObject("ContenedorTiles").transform;
-        contenedorTiles.SetParent(contenedorMapa);
-        
-        // setea el offset de la grilla
-        posicionOriginal = new Vector3(-dimensionTile*8, -dimensionTile*6);
-
-        contenedorUnidades = new GameObject("ContenedorUnidades").transform;
-        contenedorUnidades.SetParent(contenedorMapa);
-        
-        InstanciarUnidades(ControladorJuego.instancia.unidadesEjercito);
     }
 
     private void InstanciarEscenario()
     {
-        // @TODO: revisar! realizar el sistema de cargado de mapas aleatoreo
+        // @TODO: realizar el sistema de cargado de mapas aleatoreo
 
         // elije que conjunto de elementos se va a cargar (temp)
         int indiceRandom = Random.Range(0, mapas.GetLength(0));
+
+        contenedorMapa = new GameObject("ContenedorMapa").transform;
 
         // crea el escenario con objetos random (temp)
         InstanciarDesdeArray(mapas, indiceRandom, contenedorMapa);
@@ -64,28 +60,19 @@ public class CargadorMapa : MonoBehaviour
         InstanciarDesdeArray(muros, indiceRandom, contenedorMapa);
     }
 
-    public void InstanciarUnidades(string[] listaNombresUnidad)
+    private void InstanciarUnidades(int[] listaUnidades)
     {
+        contenedorUnidades = new GameObject("ContenedorUnidades").transform;
+
         // recorre la lista de nombres, instanciando las unidades segun el nombre
-        for (int i = 0; i < listaNombresUnidad.GetLength(0); i++)
+        for (int i = 0; i < listaUnidades.GetLength(0); i++)
         {
-            int posicionTipoUnidad = -1;
-
-            if (listaNombresUnidad[i] == "InfanteriaHacha")
-                posicionTipoUnidad = 0;
-            
-            else if (listaNombresUnidad[i] == "InfanteriaEspada")
-                posicionTipoUnidad = 1;
-            
-            else if (listaNombresUnidad[i] == "Infanteria_2")
-                posicionTipoUnidad = 2;
-
             try {
-                InstanciarDesdeArray(unidades, posicionTipoUnidad, contenedorUnidades);
+                // ControladorConexion.instancia.CmdSpawnObjeto(listaUnidades[i]);
+                InstanciarDesdeArray(unidades, listaUnidades[i], contenedorUnidades);
             }
-            // en caso de que el argumento no sea valido
             catch (IndexOutOfRangeException) {
-                Debug.LogError("No se encontro la unidad (" + listaNombresUnidad[i] + ") que se desea instanciar... [CargadorMapa -> InstanciarUnidades() : GameObject]");
+                Debug.LogError("No se encontro la unidad que se desea instanciar... [CargadorMapa -> InstanciarUnidades() : void] || Iteracion: " + i);
             }
         }
     }
@@ -121,15 +108,15 @@ public class CargadorMapa : MonoBehaviour
                         // borra todos los tiles desde el invalido en adelante
                         for (float posY = posTile.y; posY <= posUnidad.y + radioMovimiento; posY++)
                             listaValidos.Remove(new Vector2(posTile.x, posY));
-                    
+
                     if (posTile.y < posUnidad.y)
                         for (float posY = posTile.y; posY >= posUnidad.y - radioMovimiento; posY--)
                             listaValidos.Remove(new Vector2(posTile.x, posY));
-                    
+
                     if (posTile.x > posUnidad.x)
                         for (float posX = posTile.x; posX <= posUnidad.x + radioMovimiento; posX++)
                             listaValidos.Remove(new Vector2(posX, posTile.y));
-                    
+
                     if (posTile.x < posUnidad.x)
                         for (float posX = posTile.x; posX >= posUnidad.x - radioMovimiento; posX--)
                             listaValidos.Remove(new Vector2(posX, posTile.y));
@@ -153,7 +140,7 @@ public class CargadorMapa : MonoBehaviour
             tileAComprobar = new Vector2(posTile.x + 1, posTile.y);
             posMundo = ObtenerCentroTile((int)tileAComprobar.x, (int)tileAComprobar.y);
             if (!posicionesTiles.Contains(tileAComprobar) && !tilesAtaque.Contains(tileAComprobar) && tileAComprobar != posUnidad)
-                if(!Physics2D.OverlapPoint(posMundo, layerColision))
+                if (!Physics2D.OverlapPoint(posMundo, layerColision))
                     tilesAtaque.Add(tileAComprobar);
 
             tileAComprobar = new Vector2(posTile.x - 1, posTile.y);

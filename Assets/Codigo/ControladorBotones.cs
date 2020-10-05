@@ -16,20 +16,20 @@ public class ControladorBotones : MonoBehaviour
 
     private void AgregarUnidades()
     {
-        for (int i = 0; i < ControladorJuego.instancia.unidadesEjercito.GetLength(0); i++)
+        int[] listaUnidades = ControladorJuego.instancia.listaUnidades;
+
+        for (int i = 0; i < listaUnidades.GetLength(0); i++)
         {
-            string nombreUnidad = ControladorJuego.instancia.unidadesEjercito[i];
+            int tipoUnidad = listaUnidades[i];
 
-            if (nombreUnidad == "InfanteriaHacha")
-                boton.CrearBoton("Infantería con Hacha", imagenUnidades[0]);
+            if (tipoUnidad == 0)
+                boton.CrearBoton("Infantería con Hacha", imagenUnidades[tipoUnidad]);
 
-            else if (nombreUnidad == "InfanteriaEspada")
-                boton.CrearBoton("Infantería con Espada", imagenUnidades[1]);
+            else if (tipoUnidad == 1)
+                boton.CrearBoton("Infantería con Espada", imagenUnidades[tipoUnidad]);
 
             GameObject instancia = Instantiate(objetoBoton);
             instancia.transform.SetParent(contenedorBotones);
         }
     }
-
-
 }

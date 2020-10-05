@@ -19,8 +19,7 @@ public class BotonUnidad : MonoBehaviour
         imagenUnidad.sprite = imagen;
     }
 
-    private void ClickBoton()
-    {
-        seleccionada = true;
-    }
+    public void Deseleccionar() => seleccionada = false;
+
+    private void ClickBoton() => seleccionada = true;
 }

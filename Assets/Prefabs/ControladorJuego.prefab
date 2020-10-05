@@ -43,8 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a675d8ba377aab49aa98c1f528229dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  batalla: {fileID: 5567406736467252946, guid: a4969b5af359a8945bc9271b6b9c2f96, type: 3}
-  canvas: {fileID: 8888845364296519172, guid: ae07238e442a8604c86d347bcb39ef4d, type: 3}
-  unidadesEjercito:
-  - InfanteriaHacha
-  - InfanteriaHacha
+  listaUnidades: 000000000000000000000000

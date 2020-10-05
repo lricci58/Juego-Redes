@@ -5,9 +5,8 @@ using UnityEngine;
 public class ControladorJuego : MonoBehaviour
 {
     public static ControladorJuego instancia = null;
-    public ControladorBatalla batalla;
 
-    public string[] unidadesEjercito;
+    public int[] listaUnidades;
 
     void Awake()
     {
@@ -18,14 +17,5 @@ public class ControladorJuego : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
-
-        // @NOTE: esto solo debe hacerse en Update(), cuando comience una batalla
-        if (ControladorBatalla.instancia == null)
-            Instantiate(batalla);
     }
-
-    //void Update()
-    //{
-        
-    //}
 }

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Unidad : MonoBehaviour 
+public class Unidad : NetworkBehaviour 
 {
     [SerializeField] private int radioMovimiento;
     [SerializeField] private int radioAtaque;
@@ -20,7 +19,6 @@ public class Unidad : MonoBehaviour
 
     private List<Vector2> tilesMovimiento;
     private List<Vector2> tilesAtaque;
-    private bool desplegada = false;
     private bool seleccionada = false;
     private bool moviendo = false;
     private bool atacando = false;
@@ -125,10 +123,7 @@ public class Unidad : MonoBehaviour
         }
     }
 
-    public void Daño()
-    {
-        unidadObjetivo.Golpeado(this);
-    }
+    public void Golpear() => unidadObjetivo.Golpeado(this);
 
     public void Golpeado(Unidad atacante)
     {
@@ -139,10 +134,6 @@ public class Unidad : MonoBehaviour
             animador.SetTrigger("muriendo");
         else
             animador.SetTrigger("golpeado");
-    }
-
-    public void DestruirUnidad() {
-        Destroy(gameObject);
     }
 
     public void DeterminarDireccionMovimiento(Vector3 posicion)
@@ -230,43 +221,23 @@ public class Unidad : MonoBehaviour
         return false;
     }
 
-    // @TODO: crear metodos de ataque, ser golpeado, morir, etc
+    public List<Vector2> ObtenerTilesMovimiento() => tilesMovimiento;
 
-    public List<Vector2> ObtenerTilesMovimiento() {
-        return tilesMovimiento;
-    }
+    public List<Vector2> ObtenerTilesAtaque() => tilesAtaque;
 
-    public List<Vector2> ObtenerTilesAtaque() {
-        return tilesAtaque;
-    }
+    public void CambiarTilesMovimiento(List<Vector2> nuevosTilesMovimiento) => tilesMovimiento = nuevosTilesMovimiento;
 
-    public void CambiarTilesMovimiento(List<Vector2> nuevosTilesMovimiento) {
-        tilesMovimiento = nuevosTilesMovimiento;
-    }
+    public void CambiarTilesAtaque(List<Vector2> nuevosTilesAtaque) => tilesAtaque = nuevosTilesAtaque;
 
-    public void CambiarTilesAtaque(List<Vector2> nuevosTilesAtaque) {
-        tilesAtaque = nuevosTilesAtaque;
-    }
+    public int ObtenerRadioMovimiento() => radioMovimiento;
 
-    public int ObtenerRadioMovimiento() {
-        return radioMovimiento;
-    }
+    public void AltSeleccion(bool estado) => seleccionada = estado;
 
-    public void ToggleSeleccion(bool estado) {
-        seleccionada = estado;
-    }
+    public void AltAtaque(bool estado) => atacando = estado;
 
-    public void ToggleAtaque(bool estado) {
-        atacando = estado;
-    }
+    public bool EstaSeleccionada() => seleccionada;
 
-    public bool EstaSeleccionada() {
-        return seleccionada;
-    }
-
-    public bool EstaMoviendo() {
-        return moviendo;
-    }
+    public bool EstaMoviendo() => moviendo;
 
     public bool EstaMuerta() {
         if (vida < 0)
@@ -275,16 +246,8 @@ public class Unidad : MonoBehaviour
             return false;
     }
 
-    public Vector3 ObtenerPosicion()  {
-        return transform.position;
-    }
+    public Vector3 ObtenerPosicion()  => transform.position;
 
-    public void Desplegar(Vector3 posicion) {
-        transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
-        desplegada = true;
-    }
-
-    public bool EstaDesplegada() {
-        return desplegada;
-    }
+    public void Desplegar(Vector3 posicion) => transform.position = 
+        new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
 }
