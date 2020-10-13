@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Boton
+  - Unidad
+  - Server
   layers:
   - Default
   - TransparentFX

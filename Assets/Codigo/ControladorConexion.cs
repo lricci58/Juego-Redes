@@ -4,28 +4,44 @@ using UnityEngine;
 public class ControladorConexion : NetworkBehaviour
 {
     public static ControladorConexion instancia = null;
-    public ControladorBatalla batalla;
+    public GameObject objetoBatalla;
 
     void Start()
     {
-        if (!hasAuthority) return;
+        if (!isLocalPlayer) return;
 
         instancia = this;
-        Instantiate(batalla);
+        Instantiate(objetoBatalla);
     }
 
     [Command]
-    public void CmdSpawnObjeto(int indice)
+    public void CmdSpawnObjeto(int indice, Vector3 posUnidadLocal)
     {
-        GameObject objetoAInstanciar = ControladorBatalla.instancia.mapa.unidades[indice];
-        GameObject instancia = Instantiate(objetoAInstanciar, objetoAInstanciar.transform.position, Quaternion.identity);
+        GameObject aInstanciar = ControladorBatalla.instancia.mapa.unidades[indice];
+        GameObject unidadInstanciada =  Instantiate(aInstanciar, posUnidadLocal, Quaternion.identity);
 
-        NetworkServer.Spawn(instancia);
+        // @TODO: figure out how to delete unidadInstanciada after spawning
+
+        // spawnea la unidad y otorga la autoridad del objeto al cliente del parametro
+        NetworkServer.Spawn(unidadInstanciada, connectionToClient);
     }
 
     [Command]
-    public void CmdJugadorTerminoDespliegue()
+    public void CmdJugadorTerminoDespliegue() => RpcTest();
+
+    [ClientRpc]
+    public void RpcTest() => ControladorBatalla.instancia.desplegados++;
+
+    [Command]
+    public void CmdUnidadValida(NetworkIdentity identidadUnidad)
     {
-        ControladorBatalla.instancia.desplegados++;
+        if (connectionToClient.clientOwnedObjects.Contains(identidadUnidad))
+            TargetActualizarValidez(connectionToClient, identidadUnidad);
+    }
+
+    [TargetRpc]
+    public void TargetActualizarValidez(NetworkConnection conn, NetworkIdentity identidadUnidad)
+    {
+        ControladorBatalla.instancia.AgregarUnidadAEjercito(identidadUnidad.GetComponent<Unidad>());
     }
 }

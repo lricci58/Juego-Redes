@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using Mirror.RemoteCalls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +14,7 @@ public class ControladorBatalla : NetworkBehaviour
 
     private List<Unidad> ejercito;
     private List<Unidad> listaUnidadesDespliegue;
+    private List<Unidad> unidades;
     private Vector3 posMundo;
     private Unidad unidadElegida;
     private Unidad unidadObjetivo;
@@ -22,12 +22,18 @@ public class ControladorBatalla : NetworkBehaviour
 
     private int numeroUnidad = -1;
     private bool despliegue = true;
-    [SyncVar] public int desplegados = 0;
     private bool todosListos = false;
+    [SyncVar (hook = nameof(ActualizarDesplegados))] public int desplegados = 0;
 
-    private void Start()
+    void Start()
     {
         instancia = this;
+
+        ejercito = new List<Unidad>();
+        listaUnidadesDespliegue = new List<Unidad>();
+        // lista para todas las unidades, aliadas y enemigas
+        unidades = new List<Unidad>();
+
         IniciarJuego();
     }
 
@@ -37,97 +43,134 @@ public class ControladorBatalla : NetworkBehaviour
         canvas = objetoCanvas.GetComponent<ControladorUI>();
         canvas.MostrarPanelDespliegue(true);
 
-        ejercito = new List<Unidad>();
-        listaUnidadesDespliegue = new List<Unidad>();
-
         mapa = GetComponent<CargadorMapa>();
         mapa.CrearEscenario();
     }
 
     public void AgregarUnidad(Unidad componenteScript)
     {
-        ejercito.Add(componenteScript);
-        listaUnidadesDespliegue.Add(componenteScript);
-        componenteScript.gameObject.SetActive(false);
+        
+
+        if (!todosListos)
+        {
+            ejercito.Add(componenteScript);
+            listaUnidadesDespliegue.Add(componenteScript);
+            componenteScript.gameObject.SetActive(false);
+        }
+        // comprueba que el dueño del objeto sea el cliente local
+        else
+        {
+            unidades.Add(componenteScript);
+            ControladorConexion.instancia.CmdUnidadValida(componenteScript.GetComponent<NetworkIdentity>());
+        }
     }
 
-    private bool TodosDesplegaron()
-    {
-        if (desplegados >= 2)
-            return true;
-        else
-            return false;
-    }
+    public void AgregarUnidadAEjercito(Unidad componenteScript) => ejercito.Add(componenteScript);
 
     void Update()
     {
-        todosListos = TodosDesplegaron();
+        if (!ControladorConexion.instancia.isLocalPlayer) { return; }
+        if (!ControladorConexion.instancia.hasAuthority) { return; }
 
-        if (despliegue)
-        {
-            if (numeroUnidad != -1)
-            {
-                DesplegarUnidad(listaUnidadesDespliegue[numeroUnidad]);
-                
-                despliegue = false;
-                foreach (Unidad unidad in listaUnidadesDespliegue)
-                    if (!unidad.gameObject.activeSelf)
-                        despliegue = true;
+        FaseControlBatalla();
 
-                if (!despliegue)
-                {
-                    canvas.MostrarPanelDespliegue(false);
-                    ControladorConexion.instancia.CmdJugadorTerminoDespliegue();
-                }
-            }
-            else
-                numeroUnidad = DeterminarUnidadDespliegue();
-        }
-        // @TODO: revisar! (no se si funciona correctamente)
-        else if (todosListos)
-        {
-             /* @TODO: 
-             * destruir las unidades locales (guardando las posiciones de alguna manera)
-             * spawnear las unidades (en sus respectivas posiciones) desde el server
-             * para que las vean todos los clientes...
-            */
+        FaseDespliegue();
 
-            // comprueba que sea su turno
-            // if (!turno) { return; }
-
-            if (unidadElegida == null)
-            {
-                foreach (Unidad unidad in ejercito)
-                {
-                    if (unidad.SeSelecciono())
-                    {
-                        unidadElegida = unidad;
-                        break;
-                    }
-                }
-            }
-
-            if (unidadElegida != null)
-            {
-                if (!unidadElegida.EstaMoviendo()) { SeleccionarTile(unidadElegida); }
-
-                // mueve la unidad si debe hacerlo
-                unidadElegida.Mover(posMundo);
-
-                // ejecuta el ataque si existe un objetivo
-                if (unidadObjetivo != null)
-                {
-                    unidadElegida.Atacar(unidadObjetivo);
-                    if (unidadObjetivo.EstaMuerta()) { ejercito.Remove(unidadObjetivo); }   
-                }
-
-                // comprueba si la unidad deja de estar seleccionada
-                if (!unidadElegida.EstaSeleccionada() && !unidadElegida.EstaMoviendo()) { unidadElegida = null; }
-            }
-        }
-
-        // @TODO: ejecutar comando para cambiar turno a false y que el server compruebe a quien le toca despues
+        FaseFinDespliegue();
     }
+
+    #region ControlJuego
+
+    private void FaseControlBatalla()
+    {
+        // comprueba que estemos en la fase de batalla
+        if (!todosListos) { return; }
+
+        // @TODO: comprobar que sea su turno
+
+        if (unidadElegida == null)
+        {
+            foreach (Unidad unidad in ejercito)
+            {
+                if (unidad.SeSelecciono())
+                {
+                    unidadElegida = unidad;
+                    break;
+                }
+            }
+        }
+
+        if (unidadElegida != null)
+        {
+            if (!unidadElegida.EstaMoviendo()) { SeleccionarTile(unidadElegida); }
+
+            // mueve la unidad si debe hacerlo
+            unidadElegida.Mover(posMundo);
+
+            // ejecuta el ataque si existe un objetivo
+            if (unidadObjetivo != null)
+            {
+                unidadElegida.Atacar(unidadObjetivo);
+                if (unidadObjetivo.EstaMuerta()) { ejercito.Remove(unidadObjetivo); }
+            }
+
+            // comprueba si la unidad deja de estar seleccionada
+            if (!unidadElegida.EstaSeleccionada() && !unidadElegida.EstaMoviendo()) { unidadElegida = null; }
+        }
+    }
+
+    private void FaseDespliegue()
+    {
+        // comprueba que estemos en la fase de despliegue
+        if (!despliegue) { return; }
+
+        if (numeroUnidad != -1)
+        {
+            DesplegarUnidad(listaUnidadesDespliegue[numeroUnidad]);
+
+            despliegue = false;
+            foreach (Unidad unidad in listaUnidadesDespliegue)
+                if (!unidad.gameObject.activeSelf)
+                    despliegue = true;
+
+            if (!despliegue)
+            {
+                canvas.MostrarPanelDespliegue(false);
+                ControladorConexion.instancia.CmdJugadorTerminoDespliegue();
+            }
+        }
+        else
+            numeroUnidad = DeterminarUnidadDespliegue();
+    }
+
+    private void FaseFinDespliegue()
+    {
+        // comprueba que los 2 jugadores hayan desplegado
+        if (TodosDesplegaron() && !todosListos)
+        {
+            todosListos = true;
+
+            listaUnidadesDespliegue.AddRange(ejercito);
+            ejercito.Clear();
+
+            for (int i = 0; i < listaUnidadesDespliegue.Count; i++)
+            {
+                Unidad unidad = listaUnidadesDespliegue[i];
+
+                // re-spawnea (reemplaza) las unidades instanciadas pero en la red
+                ControladorConexion.instancia.CmdSpawnObjeto(unidad.tipoUnidad, unidad.transform.position);
+                // destruye las unidades que fueron reemplazadas
+                Destroy(unidad.gameObject);
+                listaUnidadesDespliegue.Remove(unidad);
+            }
+
+            // setea el contenedor padre de las unidades
+            foreach (GameObject objetoUnidad in GameObject.FindGameObjectsWithTag("Unidad"))
+                objetoUnidad.transform.SetParent(mapa.contenedorUnidades);
+        }
+    }
+
+    #endregion
 
     #region Despliegue
 
@@ -135,17 +178,19 @@ public class ControladorBatalla : NetworkBehaviour
     {
         // obtiene botones activos (visibles)
         List<GameObject> botonesUnidad = GameObject.FindGameObjectsWithTag("Boton").ToList();
-        
+
         for (int i = 0; i < botonesUnidad.Count; i++)
         {
-            try {
+            try
+            {
                 if (botonesUnidad[i].GetComponent<BotonUnidad>().seleccionada)
                 {
                     // botonesUnidad[i].SetActive(false);
                     return i;
                 }
             }
-            catch (NullReferenceException) {
+            catch (NullReferenceException)
+            {
                 return -1;
             }
         }
@@ -164,15 +209,15 @@ public class ControladorBatalla : NetworkBehaviour
             foreach (Unidad otraUnidad in ejercito)
             {
                 mapa.ObtenerPosGrilla(otraUnidad.ObtenerPosicion(), out int otraUnidadTileX, out int otraUnidadTileY);
-                
+
                 // comprueba si la posicion de despleigue conincide con la de otra unidad ya desplegada
-                if (otraUnidadTileX == tileX && otraUnidadTileY == tileY) 
+                if (otraUnidadTileX == tileX && otraUnidadTileY == tileY)
                 {
                     // 'deselecciona' el boton
                     botonesUnidad[numeroUnidad].GetComponent<BotonUnidad>().Deseleccionar();
                     numeroUnidad = -1;
 
-                    return; 
+                    return;
                 }
             }
 
@@ -185,6 +230,16 @@ public class ControladorBatalla : NetworkBehaviour
             listaUnidadesDespliegue.Remove(unidad);
             numeroUnidad = -1;
         }
+    }
+
+    private void ActualizarDesplegados(int oldValue, int newValue) => desplegados = newValue;
+
+    private bool TodosDesplegaron()
+    {
+        if (desplegados == 2)
+            return true;
+        else
+            return false;
     }
 
     #endregion
@@ -227,7 +282,7 @@ public class ControladorBatalla : NetworkBehaviour
             else if (unidad.ClickEnTileAtaque(tileX, tileY))
             {
                 bool debeAtacar = false;
-                foreach (Unidad posibleObjetivo in ejercito)
+                foreach (Unidad posibleObjetivo in unidades)
                 {
                     mapa.ObtenerPosGrilla(posibleObjetivo.ObtenerPosicion(), out int tileUnidadObjX, out int tileUnidadObjY);
                     if (tileX == tileUnidadObjX && tileY == tileUnidadObjY)
@@ -235,6 +290,7 @@ public class ControladorBatalla : NetworkBehaviour
                         // comprueba que la unidad no este en el ejercito aliado
                         if (!ejercito.Contains(posibleObjetivo))
                         {
+
                             unidadObjetivo = posibleObjetivo;
                             unidad.AltAtaque(true);
                             debeAtacar = true;

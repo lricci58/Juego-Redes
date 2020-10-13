@@ -59,12 +59,12 @@
     <Compile Include="Assets\Codigo\ControladorBotones.cs" />
     <Compile Include="Assets\Codigo\Unidad.cs" />
     <Compile Include="Assets\Codigo\ControladorBatalla.cs" />
+    <Compile Include="Assets\Codigo\ControladorConexion.cs" />
     <Compile Include="Assets\Codigo\ControladorCamara.cs" />
     <Compile Include="Assets\Codigo\ControladorUI.cs" />
     <Compile Include="Assets\Codigo\ControladorJuego.cs" />
     <Compile Include="Assets\Codigo\CargadorMapa.cs" />
     <Compile Include="Assets\Codigo\CargadorJuego.cs" />
-    <Compile Include="Assets\Codigo\ControladorConexion.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />

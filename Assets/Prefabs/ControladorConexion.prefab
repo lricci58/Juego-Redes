@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  batalla: {fileID: 5567406736467252946, guid: a4969b5af359a8945bc9271b6b9c2f96, type: 3}
+  objetoBatalla: {fileID: 5567406736467252948, guid: a4969b5af359a8945bc9271b6b9c2f96, type: 3}
+  desplegados: 0
 --- !u!114 &9106649477824531525
 MonoBehaviour:
   m_ObjectHideFlags: 0

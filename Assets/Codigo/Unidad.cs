@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Mirror;
 using UnityEngine;
 
 public class Unidad : NetworkBehaviour 
 {
+    public int tipoUnidad;
     [SerializeField] private int radioMovimiento;
     [SerializeField] private int radioAtaque;
     [SerializeField] private float vida;
@@ -21,6 +23,7 @@ public class Unidad : NetworkBehaviour
     private List<Vector2> tilesAtaque;
     private bool seleccionada = false;
     private bool moviendo = false;
+    private bool girado = false;
     private bool atacando = false;
     private string direccionX = "";
     private string direccionY = "";
@@ -54,61 +57,61 @@ public class Unidad : NetworkBehaviour
 
     public void Mover(Vector3 posicion)
     {
-        if (direccionX == "derecha")
-            sprite.flipX = false;
-        else if (direccionX == "izquierda")
-            sprite.flipX = true;
-
-        if (moviendo)
+        if (direccionX == "derecha" && girado || direccionX == "izquierda" && !girado)
         {
-            float posicionActualX = transform.position.x - offsetPosicionX;
-            float posicionActualY = transform.position.y - offsetPosicionY;
-            Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
+            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+            girado = !girado;
+        }
 
-            animador.SetBool("moviendo", true);
+        if (!moviendo) { return; }
 
-            if (direccionX == "derecha")
-            {
-                // comprueba que el eje no haya llegado a su destino
-                if (posicionActual.x < posicion.x)
-                    // en ese caso, se ejecuta el movimiento
-                    transform.Translate(tiempoMov * Time.deltaTime, 0, 0);
-                else if (posicionActual.x >= posicion.x)
-                    direccionX = "";
-            }
-            else if (direccionX == "izquierda")
-            {
-                if (posicionActual.x > posicion.x)
-                    transform.Translate(-tiempoMov * Time.deltaTime, 0, 0);
-                else if (posicionActual.x <= posicion.x)
-                    direccionX = "";
-            }
+        float posicionActualX = transform.position.x - offsetPosicionX;
+        float posicionActualY = transform.position.y - offsetPosicionY;
+        Vector3 posicionActual = new Vector3(posicionActualX, posicionActualY);
 
-            // if (direccionX == "") // para que solo mueva en eje 'x' antes que 'y'
-            if (direccionY == "arriba")
-            {
-                if (posicionActual.y < posicion.y)
-                    transform.Translate(0, tiempoMov * Time.deltaTime, 0);
-                else if (posicionActual.y >= posicion.y)
-                    direccionY = "";
-            }
-            else if (direccionY == "abajo")
-            {
-                if (posicionActual.y > posicion.y)
-                    transform.Translate(0, -tiempoMov * Time.deltaTime, 0);
-                else if (posicionActual.y <= posicion.y)
-                    direccionY = "";
-            }
+        animador.SetBool("moviendo", true);
 
-            // compueba que ambos ejes hayan llegado a su destino
-            if (direccionX == "" && direccionY == "")
-            {
-                animador.SetBool("moviendo", false);
-                moviendo = false;
+        if (direccionX == "derecha")
+        {
+            // comprueba que el eje no haya llegado a su destino
+            if (posicionActual.x < posicion.x)
+                // en ese caso, se ejecuta el movimiento
+                transform.Translate(tiempoMov * Time.deltaTime, 0, 0);
+            else if (posicionActual.x >= posicion.x)
+                direccionX = "";
+        }
+        else if (direccionX == "izquierda")
+        {
+            if (posicionActual.x > posicion.x)
+                transform.Translate(-tiempoMov * Time.deltaTime, 0, 0);
+            else if (posicionActual.x <= posicion.x)
+                direccionX = "";
+        }
 
-                // posiciona al personaje en su lugar, ya que puede (most likely) que se haya pasado de su destino
-                transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
-            }
+        // if (direccionX == "") // para que solo mueva en eje 'x' antes que 'y'
+        if (direccionY == "arriba")
+        {
+            if (posicionActual.y < posicion.y)
+                transform.Translate(0, tiempoMov * Time.deltaTime, 0);
+            else if (posicionActual.y >= posicion.y)
+                direccionY = "";
+        }
+        else if (direccionY == "abajo")
+        {
+            if (posicionActual.y > posicion.y)
+                transform.Translate(0, -tiempoMov * Time.deltaTime, 0);
+            else if (posicionActual.y <= posicion.y)
+                direccionY = "";
+        }
+
+        // compueba que ambos ejes hayan llegado a su destino
+        if (direccionX == "" && direccionY == "")
+        {
+            animador.SetBool("moviendo", false);
+            moviendo = false;
+
+            // posiciona al personaje en su lugar, ya que puede (most likely) que se haya pasado de su destino
+            transform.position = new Vector3(posicion.x + offsetPosicionX, posicion.y + offsetPosicionY, transform.position.z);
         }
     }
 

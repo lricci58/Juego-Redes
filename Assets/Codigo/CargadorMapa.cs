@@ -1,6 +1,7 @@
 ﻿using Mirror;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,7 +10,7 @@ public class CargadorMapa : MonoBehaviour
     // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform contenedorMapa;
     private Transform contenedorTiles;
-    private Transform contenedorUnidades;
+    [NonSerialized] public Transform contenedorUnidades;
 
     [SerializeField] private GameObject tileMovimiento;
     [SerializeField] private GameObject tileAtaque;
@@ -30,6 +31,8 @@ public class CargadorMapa : MonoBehaviour
     public GameObject[] rios;
     public GameObject[] muros;
 
+    public int[] listaUnidades;
+
     public void CrearEscenario()
     {
         // @TODO: setear las dos zonas de despliegue
@@ -38,7 +41,7 @@ public class CargadorMapa : MonoBehaviour
         posicionOriginal = new Vector3(-dimensionTile * 8, -dimensionTile * 6);
 
         InstanciarEscenario();
-        InstanciarUnidades(ControladorJuego.instancia.listaUnidades);
+        InstanciarUnidades();
 
         listaTilesMovimiento = new List<GameObject>();
         listaTilesAtaque = new List<GameObject>();
@@ -60,8 +63,9 @@ public class CargadorMapa : MonoBehaviour
         InstanciarDesdeArray(muros, indiceRandom, contenedorMapa);
     }
 
-    private void InstanciarUnidades(int[] listaUnidades)
+    private void InstanciarUnidades()
     {
+        listaUnidades = ControladorJuego.instancia.listaUnidades;
         contenedorUnidades = new GameObject("ContenedorUnidades").transform;
 
         // recorre la lista de nombres, instanciando las unidades segun el nombre

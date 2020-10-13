@@ -12,9 +12,8 @@ ScriptsOnlyBuild:
     - ControladorUI
     - Unidad
     Mirror.Components.dll:
+    - Mirror.NetworkAnimator
     - Mirror.NetworkTransform
-    Mirror.Editor.dll:
-    - Mirror.NetworkBehaviourInspector
     Mirror.dll:
     - Mirror.NetworkIdentity
     - Mirror.NetworkManager
@@ -107,15 +106,19 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12808}
     - Class: 114
-      Script: {instanceID: 12878}
+      Script: {instanceID: 12816}
     - Class: 114
-      Script: {instanceID: 12916}
+      Script: {instanceID: 12880}
     - Class: 114
-      Script: {instanceID: 13334}
+      Script: {instanceID: 12918}
     - Class: 114
-      Script: {instanceID: 13658}
+      Script: {instanceID: 13266}
     - Class: 114
-      Script: {instanceID: 13704}
+      Script: {instanceID: 13336}
+    - Class: 114
+      Script: {instanceID: 13660}
+    - Class: 114
+      Script: {instanceID: 13706}
     - Class: 114
       Script: {instanceID: 13860}
     - Class: 114
@@ -128,8 +131,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 14364}
     - Class: 114
       Script: {instanceID: 14444}
-    - Class: 114
-      Script: {instanceID: 23474}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -487,7 +488,7 @@ ScriptsOnlyBuild:
     className: ControlPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 253523422a8a248baa84160febe60636
+      Hash: bbca4dab13fdb25f5bd31dc65c5e483c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Unidad
@@ -539,6 +540,12 @@ ScriptsOnlyBuild:
     assemblyName: Mirror.Components.dll
     namespaceName: Mirror.Experimental
     className: NetworkRigidbody
+  - hash:
+      serializedVersion: 2
+      Hash: 4b8c3be6cfc3cc14937464fc87ccf9d7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ControladorConexion
   - hash:
       serializedVersion: 2
       Hash: dcbbca79eceed2a30084d03f1ae9cfa9
@@ -877,7 +884,7 @@ ScriptsOnlyBuild:
     className: PhysicsSimulator
   - hash:
       serializedVersion: 2
-      Hash: daac4b1804398c6b368769169455ad79
+      Hash: 3d33b3eebae6be0a512cb6cb9e4cece8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CargadorMapa
@@ -1085,12 +1092,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: d1f19a74339f5b0ab76b34e1d5e1b509
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ControladorConexion
   platform: 5
   scenePathNames:
   - Assets/Escenas/batalla.unity
