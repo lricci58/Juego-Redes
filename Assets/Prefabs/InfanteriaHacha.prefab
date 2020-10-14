@@ -147,13 +147,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  tipoUnidad: 0
-  radioMovimiento: 2
-  radioAtaque: 1
-  vida: 2
-  armadura: 0
-  ataque: 1
-  tiempoMov: 150
+  unitType: 0
+  movementRadius: 2
+  attackRadius: 1
+  health: 5
+  armor: 2
+  damage: 4
+  movementSpeed: 150
   offsetPosicionX: 70
   offsetPosicionY: 115
 --- !u!114 &3819861724763174311

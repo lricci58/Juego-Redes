@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 477163531}
   - component: {fileID: 477163530}
   m_Layer: 0
-  m_Name: Grilla
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb09cdf457ae2a41a3c1c867d974af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  juego: {fileID: 4296037962424908342, guid: 1ca8e5a9bf96628489d3152c7c4d24e3, type: 3}
+  gameManager: {fileID: 4296037962424908342, guid: 1ca8e5a9bf96628489d3152c7c4d24e3, type: 3}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -315,11 +315,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1df92669346cb24ab2ca9d9a649f52e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidadMovimientoCam: 500
-  factorZoom: 400
-  velocidadZoom: 100
-  limAlto: 310
-  limAncho: 210
+  movementVelocity: 500
+  zoomFactor: 400
+  zoomSpeed: 1
+  heighLimit: 210
+  widthLimit: 310
 --- !u!1 &1314771128
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,16 +1,16 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - BotonUnidad
-    - CargadorJuego
-    - CargadorMapa
-    - ControladorBatalla
-    - ControladorBotones
-    - ControladorCamara
-    - ControladorConexion
-    - ControladorJuego
-    - ControladorUI
-    - Unidad
+    - BattleManager
+    - CameraManager
+    - ConnectionManager
+    - GameLoader
+    - GameManager
+    - MapLoader
+    - UI_Manager
+    - Unit
+    - UnitButton
+    - UnitButtonManager
     Mirror.Components.dll:
     - Mirror.NetworkAnimator
     - Mirror.NetworkTransform
@@ -368,10 +368,10 @@ ScriptsOnlyBuild:
     className: TankGameManager
   - hash:
       serializedVersion: 2
-      Hash: 3b4555938fd2f38288436c803a5a6dc2
+      Hash: 5c96fc1ee91b2c02b3a408b4c6c58a5b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: BotonUnidad
+    className: UnitButton
   - hash:
       serializedVersion: 2
       Hash: 051c18b41ea168ba34b7f7c41b137e34
@@ -392,10 +392,10 @@ ScriptsOnlyBuild:
     className: AspectRatioFitter
   - hash:
       serializedVersion: 2
-      Hash: a048c92bdf3773ced957a63bc30d62a9
+      Hash: 84dd1f2d34ae6b1c80fa5f7bc6d2e162
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorBotones
+    className: UnitButtonManager
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -488,10 +488,10 @@ ScriptsOnlyBuild:
     className: ControlPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: bbca4dab13fdb25f5bd31dc65c5e483c
+      Hash: dd16799546978e94e5c46a537766e256
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: Unidad
+    className: Unit
   - hash:
       serializedVersion: 2
       Hash: 5cc439bf63c0539d39588e69465ac2ab
@@ -530,10 +530,10 @@ ScriptsOnlyBuild:
     className: Tank
   - hash:
       serializedVersion: 2
-      Hash: 815d9c2ca076466ff4e7589823405320
+      Hash: a4f785d78b0824fabedf4af3084a449d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorBatalla
+    className: BattleManager
   - hash:
       serializedVersion: 2
       Hash: 9b01b1d80bd3ecf4eaca45e1a22d444e
@@ -542,16 +542,16 @@ ScriptsOnlyBuild:
     className: NetworkRigidbody
   - hash:
       serializedVersion: 2
-      Hash: 4b8c3be6cfc3cc14937464fc87ccf9d7
+      Hash: bbe086c303a61a244d80d45503001fcc
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorConexion
+    className: ConnectionManager
   - hash:
       serializedVersion: 2
-      Hash: dcbbca79eceed2a30084d03f1ae9cfa9
+      Hash: c8f6349f4dfd8a162c57d7753938a981
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorCamara
+    className: CameraManager
   - hash:
       serializedVersion: 2
       Hash: 16a720ee1ef3f470f479041a1e75bdc1
@@ -803,7 +803,7 @@ ScriptsOnlyBuild:
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorUI
+    className: UI_Manager
   - hash:
       serializedVersion: 2
       Hash: 1088b99d0c88ca05dcb48022854c0cd7
@@ -812,10 +812,10 @@ ScriptsOnlyBuild:
     className: NetworkManagerPong
   - hash:
       serializedVersion: 2
-      Hash: 4930698dc159f5791beea18c0a062052
+      Hash: 692b23ff053ada8b34993ce698656759
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ControladorJuego
+    className: GameManager
   - hash:
       serializedVersion: 2
       Hash: 083eba9bfa137d3541591a9c79dea11a
@@ -884,10 +884,10 @@ ScriptsOnlyBuild:
     className: PhysicsSimulator
   - hash:
       serializedVersion: 2
-      Hash: 3d33b3eebae6be0a512cb6cb9e4cece8
+      Hash: f668af81337a684d709687d83b6eec46
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: CargadorMapa
+    className: MapLoader
   - hash:
       serializedVersion: 2
       Hash: 681b5f9be6f57e5a7b20908e503986d3
@@ -1070,10 +1070,10 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: ca322947b992d23e1c493d8709d4aca6
+      Hash: 62e040979f1bcc5cfdb183bf34b809bf
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: CargadorJuego
+    className: GameLoader
   - hash:
       serializedVersion: 2
       Hash: 4c790fa3b7c93033baa4406ca5ac8c04

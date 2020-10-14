@@ -55,16 +55,16 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Codigo\BotonUnidad.cs" />
-    <Compile Include="Assets\Codigo\ControladorBotones.cs" />
-    <Compile Include="Assets\Codigo\Unidad.cs" />
-    <Compile Include="Assets\Codigo\ControladorBatalla.cs" />
-    <Compile Include="Assets\Codigo\ControladorConexion.cs" />
-    <Compile Include="Assets\Codigo\ControladorCamara.cs" />
-    <Compile Include="Assets\Codigo\ControladorUI.cs" />
-    <Compile Include="Assets\Codigo\ControladorJuego.cs" />
-    <Compile Include="Assets\Codigo\CargadorMapa.cs" />
-    <Compile Include="Assets\Codigo\CargadorJuego.cs" />
+    <Compile Include="Assets\Codigo\UnitButton.cs" />
+    <Compile Include="Assets\Codigo\UnitButtonManager.cs" />
+    <Compile Include="Assets\Codigo\Unit.cs" />
+    <Compile Include="Assets\Codigo\BattleManager.cs" />
+    <Compile Include="Assets\Codigo\ConnectionManager.cs" />
+    <Compile Include="Assets\Codigo\CameraManager.cs" />
+    <Compile Include="Assets\Codigo\UI_Manager.cs" />
+    <Compile Include="Assets\Codigo\GameManager.cs" />
+    <Compile Include="Assets\Codigo\MapLoader.cs" />
+    <Compile Include="Assets\Codigo\GameLoader.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
