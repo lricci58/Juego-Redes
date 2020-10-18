@@ -65,6 +65,7 @@
     <Compile Include="Assets\Codigo\GameManager.cs" />
     <Compile Include="Assets\Codigo\MapLoader.cs" />
     <Compile Include="Assets\Codigo\GameLoader.cs" />
+    <Compile Include="Assets\Codigo\StartBattleButton.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />

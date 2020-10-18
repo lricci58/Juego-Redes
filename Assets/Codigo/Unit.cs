@@ -114,7 +114,7 @@ public class Unit : NetworkBehaviour
 
     public void Attack(Unit target)
     {
-        if (!isAttacking && isMoving) { return; }
+        if (!isAttacking && !isMoving) { return; }
 
         targetUnit = target;
         isAttacking = false;
@@ -123,7 +123,13 @@ public class Unit : NetworkBehaviour
         animator.SetTrigger("atacando");
     }
 
-    public void Hit() => ConnectionManager.instance.CmdAttackUnit(targetUnit.gameObject, damage);
+    public void Hit()
+    {
+        // comprueba que la conexion tenga autoridad sobre la unidad
+        if (!hasAuthority) { return; }
+
+        ConnectionManager.instance.CmdAttackUnit(targetUnit.gameObject, damage);
+    }
 
     public void Damaged(float oldValue, float newValue)
     {

@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - GameLoader
     - GameManager
     - MapLoader
+    - StartBattleButton
     - UI_Manager
     - Unit
     - UnitButton
@@ -131,6 +132,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 14364}
     - Class: 114
       Script: {instanceID: 14444}
+    - Class: 114
+      Script: {instanceID: 21390}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -530,7 +533,7 @@ ScriptsOnlyBuild:
     className: Tank
   - hash:
       serializedVersion: 2
-      Hash: a4f785d78b0824fabedf4af3084a449d
+      Hash: 4c53dfe110797b9d7bdfdb8ffa43c42b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BattleManager
@@ -812,7 +815,7 @@ ScriptsOnlyBuild:
     className: NetworkManagerPong
   - hash:
       serializedVersion: 2
-      Hash: 692b23ff053ada8b34993ce698656759
+      Hash: 35dae13d45caef65ef66bcd403aae984
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -1092,6 +1095,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 7c06dc4a20249b0bca13f7d43c706bac
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: StartBattleButton
   platform: 5
   scenePathNames:
   - Assets/Escenas/batalla.unity

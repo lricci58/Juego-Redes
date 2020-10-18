@@ -9,6 +9,8 @@ public class MapLoader : MonoBehaviour
     private Transform mapContainer;
     private Transform tileContainer;
     [NonSerialized] public Transform unitContainer;
+    [NonSerialized] public Transform allyUnitContainer;
+    [NonSerialized] public Transform enemyUnitContainer;
 
     [SerializeField] private GameObject movementTile;
     [SerializeField] private GameObject attackTile;
@@ -64,7 +66,13 @@ public class MapLoader : MonoBehaviour
     private void InstantiateUnits()
     {
         unitTypesList = GameManager.instance.unitList;
+        
         unitContainer = new GameObject("UnitContainer").transform;
+        allyUnitContainer = new GameObject("AlliedUnitsContainer").transform;
+        enemyUnitContainer = new GameObject("EnemyUnitsContainer").transform;
+        
+        allyUnitContainer.SetParent(unitContainer);
+        enemyUnitContainer.SetParent(unitContainer);
 
         // recorre la lista de nombres, instanciando las unidades segun el nombre
         for (int i = 0; i < unitTypesList.GetLength(0); i++)

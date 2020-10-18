@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     public int[] unitList;
+    public int playerBattleSide;
 
     void Awake()
     {
@@ -14,6 +15,7 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
+        // mantiene el objeto como singleton
         DontDestroyOnLoad(gameObject);
     }
 }

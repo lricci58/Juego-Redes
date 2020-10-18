@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BattleManager : NetworkBehaviour
 {
@@ -10,7 +11,7 @@ public class BattleManager : NetworkBehaviour
 
     public MapLoader map;
     [SerializeField] private GameObject canvasObject;
-    private UI_Manager canvas;
+    [NonSerialized] public UI_Manager canvas;
 
     private List<Unit> army;
     private List<Unit> deployUnitList;
@@ -21,9 +22,11 @@ public class BattleManager : NetworkBehaviour
     private bool selectingTile = false;
 
     private int deployUnitIndex = -1;
-    public bool deployFase = true;
+    [NonSerialized] public bool deployFase = true;
     private bool battleFase = false;
-    [SyncVar (hook = nameof(ActualizarDesplegados))] public int endedDeployFaseCount = 0;
+    [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
+    [NonSerialized] [SyncVar] public int turnNumber = 0;
+    private int myTurn;
 
     void Start()
     {
@@ -42,6 +45,8 @@ public class BattleManager : NetworkBehaviour
         Instantiate(canvasObject);
         canvas = canvasObject.GetComponent<UI_Manager>();
         canvas.ShowDeploymentPanel(true);
+        canvas.ShowStartBattleButton(true);
+        canvas.ShowWaitingText(false);
 
         map = GetComponent<MapLoader>();
         map.SetScene();
@@ -49,21 +54,31 @@ public class BattleManager : NetworkBehaviour
 
     public void UnitInstantiated(Unit unit)
     {
-        if (!battleFase)
+        if (battleFase)
+        {
+            inspectorUnitList.Add(unit);
+            // setea el contenedor padre de las unidades
+            unit.transform.SetParent(map.unitContainer);
+            unit.transform.SetParent(map.enemyUnitContainer);
+
+            // comprueba si el cliente local es dueño de la unidad instanciada
+            ConnectionManager.instance.CmdCheckUnitOwner(unit.GetComponent<NetworkIdentity>());
+        }
+        else
         {
             army.Add(unit);
             deployUnitList.Add(unit);
+            unit.transform.SetParent(map.allyUnitContainer);
+
             unit.gameObject.SetActive(false);
-        }
-        // comprueba si el cliente local es dueño de la unidad instanciada
-        else
-        {
-            inspectorUnitList.Add(unit);
-            ConnectionManager.instance.CmdCheckUnitOwner(unit.GetComponent<NetworkIdentity>());
         }
     }
 
-    public void AddUnitToArmy(Unit unit) => army.Add(unit);
+    public void AddUnitToArmy(Unit unit)
+    {
+        army.Add(unit);
+        unit.transform.SetParent(map.allyUnitContainer);
+    }
 
     void Update()
     {
@@ -86,8 +101,10 @@ public class BattleManager : NetworkBehaviour
         // comprueba que estemos en la fase de batalla
         if (!battleFase) { return; }
 
-        // @TODO: comprobar que sea su turno
+        // comprueba que sea su turno
+        if (turnNumber != myTurn) { return; }
 
+        // comprueba si una unidad fue seleccionada
         if (selectedUnit == null)
         {
             foreach (Unit unit in army)
@@ -100,6 +117,7 @@ public class BattleManager : NetworkBehaviour
             }
         }
 
+        // maneja la unidad seleccionada
         if (selectedUnit != null)
         {
             if (!selectedUnit.IsMoving())
@@ -112,13 +130,9 @@ public class BattleManager : NetworkBehaviour
             if (targetUnit != null)
             {
                 selectedUnit.Attack(targetUnit);
-                if (targetUnit.IsDead()) 
-                {
-                    army.Remove(targetUnit);
+                
+                if (targetUnit.IsDead())
                     inspectorUnitList.Remove(targetUnit);
-                }
-
-                targetUnit = null;
             }
 
             // comprueba si la unidad deja de estar seleccionada
@@ -139,12 +153,6 @@ public class BattleManager : NetworkBehaviour
             foreach (Unit unit in deployUnitList)
                 if (!unit.gameObject.activeSelf)
                     deployFase = true;
-
-            if (!deployFase)
-            {
-                canvas.ShowDeploymentPanel(false);
-                ConnectionManager.instance.CmdEndedDeployFase();
-            }
         }
         else
             deployUnitIndex = SetDeployUnitIndex();
@@ -152,28 +160,25 @@ public class BattleManager : NetworkBehaviour
 
     private void DeployFaseEnded()
     {
+        battleFase = true;
+        canvas.ShowWaitingText(false);
+
         // CameraManager.instance.SmoothZoomTo(.3f);
         // CameraManager.instance.SmoothMovementTo(new Vector3(0, 0, 0));
-
-        battleFase = true;
 
         deployUnitList.AddRange(army);
         army.Clear();
 
         for (int i = 0; i < deployUnitList.Count; i++)
         {
-            Unit unit = deployUnitList[i];
+            Unit unitToReespawn = deployUnitList[i];
 
             // re-spawnea (reemplaza) las unidades instanciadas pero en la red
-            ConnectionManager.instance.CmdSpawnObject(unit.unitType, unit.transform.position);
-            // destruye las unidades que fueron reemplazadas
-            Destroy(unit.gameObject);
-            deployUnitList.Remove(unit);
-        }
+            ConnectionManager.instance.CmdSpawnObject(unitToReespawn.unitType, unitToReespawn.transform.position);
 
-        // setea el contenedor padre de las unidades
-        foreach (GameObject unitObject in GameObject.FindGameObjectsWithTag("Unidad"))
-            unitObject.transform.SetParent(map.unitContainer);
+            // destruye las unidades que fueron reemplazadas
+            Destroy(unitToReespawn.gameObject);
+        }
     }
 
     #endregion
@@ -339,8 +344,6 @@ public class BattleManager : NetworkBehaviour
             deployUnitIndex = -1;
         }
     }
-
-    private void ActualizarDesplegados(int oldValue, int newValue) => endedDeployFaseCount = newValue;
 
     private bool EveryoneDeployed()
     {

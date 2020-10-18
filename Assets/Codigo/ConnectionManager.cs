@@ -19,8 +19,9 @@ public class ConnectionManager : NetworkBehaviour
     {
         GameObject originalPrefab = BattleManager.instance.map.unitPrefabs[index];
         GameObject instance = Instantiate(originalPrefab, unitLocalPosition, Quaternion.identity);
+        instance.transform.position = unitLocalPosition;
 
-        // @NOTE: al instanciar en server, host (a veces) recibe un objeto "de mas"
+        // @NOTE: a veces el cliente ejecuta el comando de mas
 
         // spawnea la unidad y otorga la autoridad del objeto al cliente del parametro
         NetworkServer.Spawn(instance, connectionToClient);
@@ -48,9 +49,8 @@ public class ConnectionManager : NetworkBehaviour
     [Command]
     public void CmdAttackUnit(GameObject unitObject, float damage)
     {
-        Debug.Log(unitObject);
-
         Unit unit = unitObject.GetComponent<Unit>();
+
         if (unit.health > 0)
             unit.health -= damage;
     }
