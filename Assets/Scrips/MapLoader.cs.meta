@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 93a19d2d04571294b83fbc47844c70a0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - tileMovimiento: {fileID: 9009052477643153068, guid: 0d38e2e6a1bed2b4db3cf3eacb5b4cdf, type: 3}
+  - tileAtaque: {fileID: 8859957345604846137, guid: a7beacab811e08a478393c02c6cd3c9e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
