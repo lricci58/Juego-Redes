@@ -1,6 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class ConnectionManager : NetworkBehaviour
 {
@@ -56,5 +57,17 @@ public class ConnectionManager : NetworkBehaviour
 
         if (unit.currentHealth > 0)
             unit.currentHealth -= damage;
+    }
+
+    [Command]
+    public void CmdCountrySelected(string selectedCountryName, string[] borderingCountryName)
+    {
+        RpcUpdateSelectedCountry(selectedCountryName, borderingCountryName);
+    }
+
+    [ClientRpc]
+    public void RpcUpdateSelectedCountry(string selectedCountryName, string[] borderingCountryName)
+    {
+        MapManager.instancia.ActualizarEstadoPaises(selectedCountryName, borderingCountryName);
     }
 }

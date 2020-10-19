@@ -9,6 +9,7 @@ ScriptsOnlyBuild:
     - GameMngLoader
     - HealthBarScript
     - MapLoader
+    - MapManager
     - Paises_Limitrofes
     - SeleccionMapa
     - StartBattleButtonScript
@@ -179,6 +180,10 @@ ScriptsOnlyBuild:
       Script: {instanceID: 13592}
     - Class: 114
       Script: {instanceID: 13714}
+    - Class: 114
+      Script: {instanceID: 13924}
+    - Class: 114
+      Script: {instanceID: 21710}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -825,7 +830,7 @@ ScriptsOnlyBuild:
     className: NetworkRoomPlayer
   - hash:
       serializedVersion: 2
-      Hash: ecf99c72532fcbbe561ec7e241e4e2af
+      Hash: 9cc254d341841f83eb629035b318c7db
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SeleccionMapa
@@ -1231,6 +1236,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MapManager
   platform: 5
   scenePathNames:
   - Assets/Scenes/MainMenu.unity

@@ -57,19 +57,20 @@
   <ItemGroup>
     <Compile Include="Assets\Scrips\UnitButtonScript.cs" />
     <Compile Include="Assets\Scrips\UnitButtonManager.cs" />
+    <Compile Include="Assets\Scrips\Paises_Limitrofes.cs" />
     <Compile Include="Assets\Scrips\HealthBarScript.cs" />
     <Compile Include="Assets\Scrips\UnitScript.cs" />
     <Compile Include="Assets\Scrips\BattleManager.cs" />
     <Compile Include="Assets\Scrips\ConnectionManager.cs" />
     <Compile Include="Assets\Scrips\CameraManager.cs" />
+    <Compile Include="Assets\Scrips\SeleccionMapa.cs" />
+    <Compile Include="Assets\Scrips\GameMngLoader.cs" />
     <Compile Include="Assets\Scrips\UI_Manager.cs" />
     <Compile Include="Assets\Scrips\GameManager.cs" />
     <Compile Include="Assets\Scrips\MapLoader.cs" />
     <Compile Include="Assets\Scrips\StartBattleButtonScript.cs" />
     <Compile Include="Assets\Scrips\BattleLoader.cs" />
-    <Compile Include="Assets\Scrips\SeleccionMapa.cs" />
-    <Compile Include="Assets\Scrips\Paises_Limitrofes.cs" />
-    <Compile Include="Assets\Scrips\GameMngLoader.cs" />
+    <Compile Include="Assets\Scrips\MapManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
