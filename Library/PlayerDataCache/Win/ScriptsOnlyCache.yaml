@@ -1,17 +1,21 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - BattleLoader
     - BattleManager
     - CameraManager
     - ConnectionManager
-    - GameLoader
     - GameManager
+    - GameMngLoader
+    - HealthBarScript
     - MapLoader
-    - StartBattleButton
+    - Paises_Limitrofes
+    - SeleccionMapa
+    - StartBattleButtonScript
     - UI_Manager
-    - Unit
-    - UnitButton
     - UnitButtonManager
+    - UnitButtonScript
+    - UnitScript
     Mirror.Components.dll:
     - Mirror.NetworkAnimator
     - Mirror.NetworkTransform
@@ -47,7 +51,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Text
     - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
-    Assets/Escenas/batalla.unity:
+    Assets/Scenes/BattleScene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -77,13 +81,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11804}
     - Class: 114
-      Script: {instanceID: 11806}
-    - Class: 114
-      Script: {instanceID: 11828}
-    - Class: 114
-      Script: {instanceID: 11912}
-    - Class: 114
-      Script: {instanceID: 12054}
+      Script: {instanceID: 11830}
     - Class: 114
       Script: {instanceID: 12074}
     - Class: 114
@@ -99,44 +97,152 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12362}
     - Class: 114
-      Script: {instanceID: 12516}
+      Script: {instanceID: 12518}
     - Class: 114
-      Script: {instanceID: 12646}
+      Script: {instanceID: 12648}
     - Class: 114
-      Script: {instanceID: 12674}
+      Script: {instanceID: 12672}
     - Class: 114
-      Script: {instanceID: 12808}
+      Script: {instanceID: 12678}
     - Class: 114
-      Script: {instanceID: 12816}
+      Script: {instanceID: 12812}
     - Class: 114
-      Script: {instanceID: 12880}
+      Script: {instanceID: 12884}
     - Class: 114
-      Script: {instanceID: 12918}
+      Script: {instanceID: 12922}
     - Class: 114
-      Script: {instanceID: 13266}
+      Script: {instanceID: 13270}
     - Class: 114
-      Script: {instanceID: 13336}
+      Script: {instanceID: 13340}
     - Class: 114
-      Script: {instanceID: 13660}
+      Script: {instanceID: 13668}
     - Class: 114
-      Script: {instanceID: 13706}
+      Script: {instanceID: 13868}
     - Class: 114
-      Script: {instanceID: 13860}
+      Script: {instanceID: 13924}
     - Class: 114
-      Script: {instanceID: 13916}
+      Script: {instanceID: 13996}
     - Class: 114
-      Script: {instanceID: 13988}
+      Script: {instanceID: 14144}
     - Class: 114
-      Script: {instanceID: 14136}
+      Script: {instanceID: 14372}
     - Class: 114
-      Script: {instanceID: 14364}
+      Script: {instanceID: 14428}
     - Class: 114
-      Script: {instanceID: 14444}
-    - Class: 114
-      Script: {instanceID: 21390}
+      Script: {instanceID: 14454}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    Assets/Scenes/MainMapScene.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 50
+      Script: {instanceID: 0}
+    - Class: 60
+      Script: {instanceID: 0}
+    - Class: 61
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 12402}
+    - Class: 114
+      Script: {instanceID: 13446}
+    - Class: 114
+      Script: {instanceID: 13592}
+    - Class: 114
+      Script: {instanceID: 13714}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 850595691
+      Script: {instanceID: 0}
+    Assets/Scenes/MainMenu.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 61
+      Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 11826}
+    - Class: 114
+      Script: {instanceID: 11830}
+    - Class: 114
+      Script: {instanceID: 11912}
+    - Class: 114
+      Script: {instanceID: 12054}
+    - Class: 114
+      Script: {instanceID: 12118}
+    - Class: 114
+      Script: {instanceID: 12672}
+    - Class: 114
+      Script: {instanceID: 12678}
+    - Class: 114
+      Script: {instanceID: 12820}
+    - Class: 114
+      Script: {instanceID: 13270}
+    - Class: 114
+      Script: {instanceID: 13868}
+    - Class: 114
+      Script: {instanceID: 13924}
+    - Class: 114
+      Script: {instanceID: 14144}
+    - Class: 115
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -161,16 +267,16 @@ ScriptsOnlyBuild:
     className: Button
   - hash:
       serializedVersion: 2
-      Hash: 4bc4346a71a8df53a6b106f68ef3a190
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: CanvasScaler
-  - hash:
-      serializedVersion: 2
       Hash: 016664814c823cfc5ac199e835dc335b
     assemblyName: Mirror.dll
     namespaceName: Mirror
     className: TelepathyTransport
+  - hash:
+      serializedVersion: 2
+      Hash: 4bc4346a71a8df53a6b106f68ef3a190
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: CanvasScaler
   - hash:
       serializedVersion: 2
       Hash: f40fedccd4adbc76605bea6d67537e4b
@@ -374,7 +480,7 @@ ScriptsOnlyBuild:
       Hash: 5c96fc1ee91b2c02b3a408b4c6c58a5b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: UnitButton
+    className: UnitButtonScript
   - hash:
       serializedVersion: 2
       Hash: 051c18b41ea168ba34b7f7c41b137e34
@@ -411,6 +517,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RectMask2D
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Paises_Limitrofes
   - hash:
       serializedVersion: 2
       Hash: 387b0f327bf03d74ebb3c29ed5937262
@@ -491,10 +603,16 @@ ScriptsOnlyBuild:
     className: ControlPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: dd16799546978e94e5c46a537766e256
+      Hash: 307187c90d067c5ebadf7cfa5fdf8fa2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: Unit
+    className: HealthBarScript
+  - hash:
+      serializedVersion: 2
+      Hash: 4902eb3f450a17d63a33ca9655f21d5f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UnitScript
   - hash:
       serializedVersion: 2
       Hash: 5cc439bf63c0539d39588e69465ac2ab
@@ -533,7 +651,7 @@ ScriptsOnlyBuild:
     className: Tank
   - hash:
       serializedVersion: 2
-      Hash: 4c53dfe110797b9d7bdfdb8ffa43c42b
+      Hash: 34843ccfc711cdcabaa5be17a64b7568
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BattleManager
@@ -545,7 +663,7 @@ ScriptsOnlyBuild:
     className: NetworkRigidbody
   - hash:
       serializedVersion: 2
-      Hash: bbe086c303a61a244d80d45503001fcc
+      Hash: 4a715b1491ff919d327d4fc0e4fb84df
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ConnectionManager
@@ -707,6 +825,12 @@ ScriptsOnlyBuild:
     className: NetworkRoomPlayer
   - hash:
       serializedVersion: 2
+      Hash: ecf99c72532fcbbe561ec7e241e4e2af
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SeleccionMapa
+  - hash:
+      serializedVersion: 2
       Hash: 8075eaf0cfb57abd29d10d3e4b233241
     assemblyName: Mirror.Examples.dll
     namespaceName: Mirror.Examples.Additive
@@ -783,6 +907,12 @@ ScriptsOnlyBuild:
     assemblyName: Mirror.example.RigidbodyPhysics.dll
     namespaceName: Mirror.Examples.RigidbodyPhysics
     className: AddForce
+  - hash:
+      serializedVersion: 2
+      Hash: 62e040979f1bcc5cfdb183bf34b809bf
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameMngLoader
   - hash:
       serializedVersion: 2
       Hash: 9e12720e9f1df1639263519e77f2c4d7
@@ -1067,16 +1197,22 @@ ScriptsOnlyBuild:
     className: Slider
   - hash:
       serializedVersion: 2
+      Hash: 7c06dc4a20249b0bca13f7d43c706bac
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: StartBattleButtonScript
+  - hash:
+      serializedVersion: 2
       Hash: 0fd6822f6177297bd0eb4d83cc7a9030
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 62e040979f1bcc5cfdb183bf34b809bf
+      Hash: ebdaef941c00748ca8d3845b332dbe8c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: GameLoader
+    className: BattleLoader
   - hash:
       serializedVersion: 2
       Hash: 4c790fa3b7c93033baa4406ca5ac8c04
@@ -1095,14 +1231,10 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 7c06dc4a20249b0bca13f7d43c706bac
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: StartBattleButton
   platform: 5
   scenePathNames:
-  - Assets/Escenas/batalla.unity
+  - Assets/Scenes/MainMenu.unity
+  - Assets/Scenes/MainMapScene.unity
+  - Assets/Scenes/BattleScene.unity
   playerPath: C:/Users/User/unity-workspace/Juego-Redes/Build/Wars Of Titania - Total
     Conquest.exe

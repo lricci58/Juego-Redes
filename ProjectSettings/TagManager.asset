@@ -7,6 +7,11 @@ TagManager:
   - Boton
   - Unidad
   - Server
+  - pais
+  - puntero
+  - temp
+  - Seleccionado
+  - Limitrofe
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - Colision
   - Unidades
   - 
-  - 
+  - WorldSpaceUI
   - 
   - 
   - 

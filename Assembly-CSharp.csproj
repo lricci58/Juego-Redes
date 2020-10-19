@@ -55,17 +55,21 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Codigo\UnitButton.cs" />
-    <Compile Include="Assets\Codigo\UnitButtonManager.cs" />
-    <Compile Include="Assets\Codigo\Unit.cs" />
-    <Compile Include="Assets\Codigo\BattleManager.cs" />
-    <Compile Include="Assets\Codigo\ConnectionManager.cs" />
-    <Compile Include="Assets\Codigo\CameraManager.cs" />
-    <Compile Include="Assets\Codigo\UI_Manager.cs" />
-    <Compile Include="Assets\Codigo\GameManager.cs" />
-    <Compile Include="Assets\Codigo\MapLoader.cs" />
-    <Compile Include="Assets\Codigo\GameLoader.cs" />
-    <Compile Include="Assets\Codigo\StartBattleButton.cs" />
+    <Compile Include="Assets\Scrips\UnitButtonScript.cs" />
+    <Compile Include="Assets\Scrips\UnitButtonManager.cs" />
+    <Compile Include="Assets\Scrips\HealthBarScript.cs" />
+    <Compile Include="Assets\Scrips\UnitScript.cs" />
+    <Compile Include="Assets\Scrips\BattleManager.cs" />
+    <Compile Include="Assets\Scrips\ConnectionManager.cs" />
+    <Compile Include="Assets\Scrips\CameraManager.cs" />
+    <Compile Include="Assets\Scrips\UI_Manager.cs" />
+    <Compile Include="Assets\Scrips\GameManager.cs" />
+    <Compile Include="Assets\Scrips\MapLoader.cs" />
+    <Compile Include="Assets\Scrips\StartBattleButtonScript.cs" />
+    <Compile Include="Assets\Scrips\BattleLoader.cs" />
+    <Compile Include="Assets\Scrips\SeleccionMapa.cs" />
+    <Compile Include="Assets\Scrips\Paises_Limitrofes.cs" />
+    <Compile Include="Assets\Scrips\GameMngLoader.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
