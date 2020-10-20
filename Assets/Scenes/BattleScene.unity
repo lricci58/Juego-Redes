@@ -321,6 +321,7 @@ MonoBehaviour:
   zoomSpeed: 1
   heighLimit: 210
   widthLimit: 310
+  depthCam: {fileID: 958095550}
 --- !u!1 &958095547
 GameObject:
   m_ObjectHideFlags: 0

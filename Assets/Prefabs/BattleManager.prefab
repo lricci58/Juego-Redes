@@ -49,7 +49,6 @@ MonoBehaviour:
   syncInterval: 0.1
   map: {fileID: 5567406736467252949}
   canvasObject: {fileID: 268265353975932368, guid: ae07238e442a8604c86d347bcb39ef4d, type: 3}
-  endedDeployFaseCount: 0
 --- !u!114 &5567406736467252949
 MonoBehaviour:
   m_ObjectHideFlags: 0

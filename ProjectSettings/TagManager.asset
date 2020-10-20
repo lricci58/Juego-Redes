@@ -7,11 +7,10 @@ TagManager:
   - Boton
   - Unidad
   - Server
+  - Selected
+  - Bordering
   - pais
   - puntero
-  - temp
-  - Seleccionado
-  - Limitrofe
   layers:
   - Default
   - TransparentFX
