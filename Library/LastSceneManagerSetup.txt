@@ -1,9 +1,9 @@
 sceneSetups:
-- path: Assets/Scenes/MainMenu.unity
+- path: Assets/Scenes/MainMenuScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
-- path: Assets/Scenes/MainMapScene.unity
+- path: Assets/Scenes/CampaignMapScene.unity
   isLoaded: 0
   isActive: 0
   isSubScene: 0
