@@ -4,12 +4,14 @@ public class UI_Manager : MonoBehaviour
 {
     private static GameObject deploymentPanel;
     private static GameObject startBattleButton;
+    private static GameObject endTurnButton;
     private static GameObject waitingText;
 
     void Awake()
     {
         deploymentPanel = GameObject.Find("DeploymentPanel");
         startBattleButton = GameObject.Find("StartBattleButton");
+        endTurnButton = GameObject.Find("EndTurnButton");
         waitingText = GameObject.Find("TextoEspera");
     }
 
@@ -23,6 +25,12 @@ public class UI_Manager : MonoBehaviour
     {
         if (startBattleButton.activeSelf != state)
             startBattleButton.SetActive(state);
+    }
+
+    public void ShowEndTurnButton(bool state)
+    {
+        if (endTurnButton.activeSelf != state)
+            endTurnButton.SetActive(state);
     }
 
     public void ShowWaitingText(bool state)

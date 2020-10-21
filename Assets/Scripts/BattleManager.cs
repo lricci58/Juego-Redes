@@ -25,11 +25,13 @@ public class BattleManager : NetworkBehaviour
     private bool battleFase = false;
     [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
     [NonSerialized] [SyncVar] public int turnNumber = 0;
-    private int myTurn;
+    [NonSerialized] public int myTurnNumber;
 
     void Start()
     {
         instance = this;
+
+        myTurnNumber = GameManager.instance.playerBattleSide;
 
         army = new List<UnitScript>();
         deployUnitList = new List<UnitScript>();
@@ -45,8 +47,9 @@ public class BattleManager : NetworkBehaviour
         canvas = canvasObject.GetComponent<UI_Manager>();
         canvas.ShowDeploymentPanel(true);
         canvas.ShowStartBattleButton(true);
+        canvas.ShowEndTurnButton(false);
         canvas.ShowWaitingText(false);
-
+        
         map = GetComponent<MapLoader>();
         map.SetScene();
     }
@@ -65,7 +68,6 @@ public class BattleManager : NetworkBehaviour
         }
         else
         {
-            army.Add(unit);
             deployUnitList.Add(unit);
             unit.transform.SetParent(map.allyUnitContainer);
 
@@ -102,7 +104,7 @@ public class BattleManager : NetworkBehaviour
         if (!battleFase) { return; }
 
         // comprueba que sea su turno
-        if (turnNumber != myTurn) { return; }
+        if (turnNumber != myTurnNumber) { return; }
 
         // comprueba si una unidad fue seleccionada
         if (selectedUnit == null)
@@ -138,6 +140,11 @@ public class BattleManager : NetworkBehaviour
             // comprueba si la unidad deja de estar seleccionada
             if (!selectedUnit.IsSelected() && !selectedUnit.IsMoving()) { selectedUnit = null; }
         }
+
+        if (army.Count == 0)
+        {
+
+        }
     }
 
     private void DeployFaseManager()
@@ -163,12 +170,14 @@ public class BattleManager : NetworkBehaviour
         battleFase = true;
 
         canvas.ShowWaitingText(false);
+        if (myTurnNumber == turnNumber)
+            canvas.ShowEndTurnButton(true);
 
         // CameraManager.instance.SmoothZoomTo(.3f);
         // CameraManager.instance.SmoothMovementTo(new Vector3(0, 0, 0));
 
-        deployUnitList.AddRange(army);
-        army.Clear();
+        //deployUnitList.AddRange(army);
+        //army.Clear();
 
         for (int i = 0; i < deployUnitList.Count; i++)
         {
@@ -337,7 +346,6 @@ public class BattleManager : NetworkBehaviour
             Vector3 desplyPosition = map.GetWorldPos(xTile, yTile);
             unit.Deploy(desplyPosition);
             unit.gameObject.SetActive(true);
-            deployUnitList.Remove(unit);
             deployUnitIndex = -1;
         }
     }

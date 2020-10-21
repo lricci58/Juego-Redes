@@ -13,7 +13,7 @@ public class StartBattleButtonScript : MonoBehaviour
 
     private void ClickBoton()
     {
-        // oculta la ui de despliegue
+        // oculta la UI de despliegue
         BattleManager.instance.canvas.ShowDeploymentPanel(false);
         BattleManager.instance.canvas.ShowStartBattleButton(false);
         BattleManager.instance.canvas.ShowWaitingText(true);

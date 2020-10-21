@@ -6,7 +6,9 @@ using System.Collections.Generic;
 public class ConnectionManager : NetworkBehaviour
 {
     public static ConnectionManager instance = null;
+
     private string mainMapSceneName = "CampaignMapScene";
+    private string battleSceneName = "BattleScene";
 
     void Start()
     {
@@ -60,14 +62,39 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdCountryWasSelected(string selectedName, string[] borderingNames)
-    {
-        RpcUpdateSelectedCountryOnClients(selectedName, borderingNames);
-    }
+    public void CmdCountryWasSelected(string selectedName, string[] borderingNames) => RpcUpdateSelectedCountryOnClients(selectedName, borderingNames);
 
     [ClientRpc]
     public void RpcUpdateSelectedCountryOnClients(string selectedName, string[] borderingNames)
     {
         MapManager.instancia.ActualizarEstadoPaises(selectedName, borderingNames);
+    }
+
+    [Command]
+    public void CmdEndTurn(int playerBattleSide) => RpcPlayerEndedTurn(playerBattleSide);
+
+    [ClientRpc]
+    public void RpcPlayerEndedTurn(int playerBattleSide)
+    {
+        // si se termino el turno del defensor (0), empieza el del atacante(0++)
+        if (playerBattleSide == 0)
+            BattleManager.instance.turnNumber++;
+        else if (playerBattleSide == 1)
+            BattleManager.instance.turnNumber--;
+
+        // muestra el boton de terminar de turno en su turno
+        if (BattleManager.instance.myTurnNumber == BattleManager.instance.turnNumber)
+            BattleManager.instance.canvas.ShowEndTurnButton(true);
+        else
+            BattleManager.instance.canvas.ShowEndTurnButton(false);
+    }
+
+    [Command]
+    public void CmdPlayerAttacked() => RpcPlayerAttacked();
+
+    [ClientRpc]
+    public void RpcPlayerAttacked()
+    {
+        SceneManager.LoadScene(battleSceneName);
     }
 }

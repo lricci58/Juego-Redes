@@ -17,7 +17,6 @@ public class MapManager : MonoBehaviour
 
     public void ActualizarEstadoPaises(string nombrePaisSeleccionado, string[] nombrePaisesLimitrofes)
     {
-        
         GameObject posibleSeleccionado = GameObject.FindGameObjectWithTag("Selected");
         GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
 

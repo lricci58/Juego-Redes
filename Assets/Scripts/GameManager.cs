@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
 
-    public int[] unitList;
-    public int playerBattleSide; public string mainMenuSceneName = "MainMenuScene";
+    /* [NonSerialized] */ public int playerBattleSide = 2;
+    /* [NonSerialized] */ public int[] unitList;
 
     void Awake()
     {

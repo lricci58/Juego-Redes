@@ -58,7 +58,6 @@
     <Compile Include="Assets\Scripts\MapManager.cs" />
     <Compile Include="Assets\Scripts\UnitButtonScript.cs" />
     <Compile Include="Assets\Scripts\UnitButtonManager.cs" />
-    <Compile Include="Assets\Scripts\Paises_Limitrofes.cs" />
     <Compile Include="Assets\Scripts\HealthBarScript.cs" />
     <Compile Include="Assets\Scripts\UnitScript.cs" />
     <Compile Include="Assets\Scripts\BattleManager.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="Assets\Scripts\MapLoader.cs" />
     <Compile Include="Assets\Scripts\StartBattleButtonScript.cs" />
     <Compile Include="Assets\Scripts\BattleLoader.cs" />
+    <Compile Include="Assets\Scripts\EndTurnButtonScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
