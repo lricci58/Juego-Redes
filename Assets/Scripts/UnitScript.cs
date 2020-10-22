@@ -7,6 +7,7 @@ public class UnitScript : NetworkBehaviour
 {
     public int unitType;
     [SerializeField] private int movementRadius;
+    private int movementLeft;
     [SerializeField] private int attackRadius;
     [SyncVar (hook = nameof(Damaged))] public float currentHealth;
     private float maxHealth;
@@ -21,6 +22,7 @@ public class UnitScript : NetworkBehaviour
 
     private List<Vector2> movementTiles;
     private List<Vector2> attackTiles;
+    private bool canMove = true;
     private bool isSelected = false;
     private bool isMoving = false;
     private bool flipped = false;
@@ -40,6 +42,8 @@ public class UnitScript : NetworkBehaviour
 
         movementTiles = new List<Vector2>();
         attackTiles = new List<Vector2>();
+
+        movementLeft = movementRadius;
     }
 
     private void OnEnable() => maxHealth = currentHealth;
@@ -115,6 +119,10 @@ public class UnitScript : NetworkBehaviour
 
             // posiciona al personaje en su lugar, ya que es posible que se pase de su destino por algunos pixeles
             transform.position = new Vector3(position.x + offsetPosicionX, position.y + offsetPosicionY, transform.position.z);
+
+            // si no tiene movimientos disponibles...
+            if (movementLeft == 0)
+                canMove = false;
         }
     }
 
@@ -163,15 +171,32 @@ public class UnitScript : NetworkBehaviour
 
             if (currentPosition != position)
             {
+                float tilesToMoveInPixels = 0f;
+
                 if (currentPosition.x < position.x)
+                {
                     xDirection = "derecha";
+                    tilesToMoveInPixels = -currentPosition.x +position.x;
+                }  
                 else if (currentPosition.x > position.x)
+                {
                     xDirection = "izquierda";
+                    tilesToMoveInPixels = -position.x + currentPosition.x;
+                }
 
                 if (currentPosition.y < position.y)
+                {
                     yDirection = "arriba";
+                    tilesToMoveInPixels = -currentPosition.y + position.y;
+                }
                 else if (currentPosition.y > position.y)
+                {
                     yDirection = "abajo";
+                    tilesToMoveInPixels = -position.y + currentPosition.y;
+                }
+
+                // calcula y resta la cantidad de tiles que se movera la unidad
+                movementLeft -= (int)tilesToMoveInPixels / 127;
 
                 isMoving = true;
                 isSelected = false;
@@ -185,10 +210,10 @@ public class UnitScript : NetworkBehaviour
     {
         // determina la posicion del primer tile de iteracion
         int initialXPos = unitXPosition + 1;
-        int initialYPos = unitYPosition - movementRadius;
+        int initialYPos = unitYPosition - movementLeft;
 
         // determina cuantas filas tiene el radio
-        int rows = (movementRadius * 2) + 1 + initialYPos;
+        int rows = (movementLeft * 2) + 1 + initialYPos;
         int tlesPerRow = initialXPos - 1;
 
         for (int yPos = initialYPos; yPos < rows; yPos++)
@@ -219,10 +244,8 @@ public class UnitScript : NetworkBehaviour
     public bool ClickOnMovementTile(int x, int y)
     {
         foreach (Vector2 posTile in movementTiles)
-        {
             if (posTile.x == x && posTile.y == y)
                 return true;
-        }
 
         return false;
     }
@@ -230,10 +253,8 @@ public class UnitScript : NetworkBehaviour
     public bool ClickOnAttackTile(int x, int y)
     {
         foreach (Vector2 tilePosition in attackTiles)
-        {
             if (tilePosition.x == x && tilePosition.y == y)
                 return true;
-        }
 
         return false;
     }
@@ -253,6 +274,14 @@ public class UnitScript : NetworkBehaviour
     public void ToggleAttack(bool state) => isAttacking = state;
 
     public bool IsSelected() => isSelected;
+
+    public bool CanMove() => canMove;
+
+    public void ResetUnitsInArmy()
+    {
+        movementLeft = movementRadius;
+        canMove = true;
+    }
 
     public bool IsMoving() => isMoving;
 

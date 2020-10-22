@@ -12,6 +12,10 @@ public class EndTurnButtonScript : MonoBehaviour
 
     private void ClickBoton()
     {
+        // resetea las unidades luego de terminar el turno
+        foreach (UnitScript unit in BattleManager.instance.army)
+            unit.ResetUnitsInArmy();
+
         ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
     }
 }

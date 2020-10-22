@@ -12,7 +12,7 @@ public class BattleManager : NetworkBehaviour
     [SerializeField] private GameObject canvasObject;
     [NonSerialized] public UI_Manager canvas;
 
-    private List<UnitScript> army;
+    [NonSerialized] public List<UnitScript> army;
     private List<UnitScript> deployUnitList;
     private List<UnitScript> enemyArmy;
     private Vector3 worldPos;
@@ -111,7 +111,7 @@ public class BattleManager : NetworkBehaviour
         {
             foreach (UnitScript unit in army)
             {
-                if (unit.Selected())
+                if (unit.CanMove() && unit.Selected())
                 {
                     selectedUnit = unit;
                     break;
@@ -135,6 +135,8 @@ public class BattleManager : NetworkBehaviour
                 
                 if (targetUnit.IsDead())
                     enemyArmy.Remove(targetUnit);
+
+                targetUnit = null;
             }
 
             // comprueba si la unidad deja de estar seleccionada
@@ -143,7 +145,7 @@ public class BattleManager : NetworkBehaviour
 
         if (army.Count == 0)
         {
-
+            // you lost, bitch
         }
     }
 
