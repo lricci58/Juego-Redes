@@ -48,15 +48,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Mapa
+  - name: Map
     uniqueID: 1076338677
     locked: 0
-  - name: Obstaculos
-    uniqueID: 3236898403
-    locked: 0
-  - name: Grilla
+  - name: Map Props
     uniqueID: 4011211383
     locked: 0
-  - name: Unidades
+  - name: Collision
+    uniqueID: 3236898403
+    locked: 0
+  - name: Units
     uniqueID: 4136913117
     locked: 0

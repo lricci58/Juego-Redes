@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arquero
+  m_Controller: {fileID: 9100000, guid: b89f724fa7f063d44b3523cc78731152, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 6f8c52471a4e9c644a29aae98d58b0d7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6f8c52471a4e9c644a29aae98d58b0d7, type: 2}
+  - m_OriginalClip: {fileID: 0}
+    m_OverrideClip: {fileID: 7400000, guid: 99f4bbc9a91e1f44e9e465a3d93e43a4, type: 2}
+  - m_OriginalClip: {fileID: 0}
+    m_OverrideClip: {fileID: 7400000, guid: e657d50f7e2f2264088e3dc4dcceb31f, type: 2}
+  - m_OriginalClip: {fileID: 0}
+    m_OverrideClip: {fileID: 7400000, guid: 133866df746d5c3488e2e20477b09f21, type: 2}
+  - m_OriginalClip: {fileID: 0}
+    m_OverrideClip: {fileID: 7400000, guid: be08d56f4363bff45b915e152269ffe5, type: 2}
+  - m_OriginalClip: {fileID: 0}
+    m_OverrideClip: {fileID: 7400000, guid: 256df791fe627d44c9e9f1ca28bd8dc9, type: 2}
