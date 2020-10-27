@@ -62,13 +62,16 @@ public class UnitScript : NetworkBehaviour
         return isSelected;
     }
 
+    public void flipUnit()
+    {
+        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+        flipped = !flipped;
+    }
+
     public void Move(Vector3 position)
     {
         if (xDirection == "derecha" && flipped || xDirection == "izquierda" && !flipped)
-        {
-            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            flipped = !flipped;
-        }
+            flipUnit();
 
         if (!isMoving) { return; }
 
@@ -206,39 +209,109 @@ public class UnitScript : NetworkBehaviour
         }
     }
 
-    public void SetTileRadius(int unitXPosition, int unitYPosition)
+    public void SetTilesRadius(Vector3Int gridUnitPos)
     {
         // determina la posicion del primer tile de iteracion
-        int initialXPos = unitXPosition + 1;
-        int initialYPos = unitYPosition - movementLeft;
+        int initialXPos = gridUnitPos.x + 1;
+        int initialYPos = gridUnitPos.y - movementLeft;
 
         // determina cuantas filas tiene el radio
-        int rows = (movementLeft * 2) + 1 + initialYPos;
-        int tlesPerRow = initialXPos - 1;
+        int rows = initialYPos + (movementLeft * 2) + 1;
+        int tilesPerRow = initialXPos - 1;
 
         for (int yPos = initialYPos; yPos < rows; yPos++)
         {
             // dependiendo de posY, setea cuantos tiles debe tener la fila
-            if (yPos <= unitYPosition)
+            if (yPos <= gridUnitPos.y)
             {
-                tlesPerRow++;
+                tilesPerRow++;
                 initialXPos--;
             }
             else
             {
-                tlesPerRow--;
+                tilesPerRow--;
                 initialXPos++;
             }
 
-            for (int xPos = initialXPos; xPos < tlesPerRow; xPos++)
+            for (int xPos = initialXPos; xPos < tilesPerRow; xPos++)
             {
                 // evita guardar la posicion del jugador
-                if (xPos == unitXPosition && yPos == unitYPosition)
+                if (xPos == gridUnitPos.x && yPos == gridUnitPos.y)
                     continue;
 
-                movementTiles.Add(new Vector2(xPos, yPos));
+                // comprueba que el tile sea valido para mover
+                if (BattleManager.instance.CanMoveToPosition(new Vector3Int(xPos, yPos, 0)))
+                    movementTiles.Add(new Vector2(xPos, yPos));
             }
         }
+
+        // remueve los tiles de movimiento que son inaccesibles debido a unidades enemigas
+        RemoveInaccesibleTiles(gridUnitPos);
+    }
+
+    private void RemoveInaccesibleTiles(Vector3Int gridUnitPos)
+    {
+        List<Vector2> validTilesList = new List<Vector2>();
+        validTilesList.AddRange(movementTiles);
+
+        foreach (Vector2 tilePos in movementTiles)
+        {
+            // comprueba si la posicion colisiona con alguna unidad
+            if (!BattleManager.instance.IsUnitInPosition(new Vector3Int((int)tilePos.x, (int)tilePos.y, 0))) { continue; }
+
+            // para evitar errores, por si el tile ya se habia borrado antes
+            if (!validTilesList.Contains(tilePos)) { continue; }
+
+            if (tilePos.x > gridUnitPos.x)
+                for (float posX = tilePos.x; posX <= gridUnitPos.x + movementRadius; posX++)
+                    validTilesList.Remove(new Vector2(posX, tilePos.y));
+
+            if (tilePos.x < gridUnitPos.x)
+                for (float posX = tilePos.x; posX >= gridUnitPos.x - movementRadius; posX--)
+                    validTilesList.Remove(new Vector2(posX, tilePos.y));
+
+            if (tilePos.y > gridUnitPos.y)
+                // borra todos los tiles desde el invalido en adelante
+                for (float posY = tilePos.y; posY <= gridUnitPos.y + movementRadius; posY++)
+                    validTilesList.Remove(new Vector2(tilePos.x, posY));
+
+            if (tilePos.y < gridUnitPos.y)
+                for (float posY = tilePos.y; posY >= gridUnitPos.y - movementRadius; posY--)
+                    validTilesList.Remove(new Vector2(tilePos.x, posY));
+        }
+
+        movementTiles = validTilesList;
+
+        // agrega los tiles de ataque a los tiles de movimiento actuales
+        SetAttackTiles(gridUnitPos);
+    }
+
+    private void SetAttackTiles(Vector3Int gridUnitPos)
+    {
+        // comprueba si se le puede añadir un tile de ataque al lado de cada tile de movimiento
+        foreach (Vector2 tilePos in movementTiles)
+        {
+            CheckTileIsValidForAttack(new Vector2(tilePos.x + 1, tilePos.y), gridUnitPos);
+            CheckTileIsValidForAttack(new Vector2(tilePos.x - 1, tilePos.y), gridUnitPos);
+            CheckTileIsValidForAttack(new Vector2(tilePos.x, tilePos.y + 1), gridUnitPos);
+            CheckTileIsValidForAttack(new Vector2(tilePos.x, tilePos.y - 1), gridUnitPos);
+        }
+
+        // hace lo mismo para las posiciones correlativas a la unidad
+        CheckTileIsValidForAttack(new Vector2(gridUnitPos.x + 1, gridUnitPos.y), gridUnitPos);
+        CheckTileIsValidForAttack(new Vector2(gridUnitPos.x - 1, gridUnitPos.y), gridUnitPos);
+        CheckTileIsValidForAttack(new Vector2(gridUnitPos.x, gridUnitPos.y + 1), gridUnitPos);
+        CheckTileIsValidForAttack(new Vector2(gridUnitPos.x, gridUnitPos.y - 1), gridUnitPos);
+    }
+
+    private void CheckTileIsValidForAttack(Vector2 tileToCheck, Vector3Int gridUnitPos)
+    {
+        Vector3Int tileToCheckInTilemap = new Vector3Int((int)tileToCheck.x, (int)tileToCheck.y, 0);
+        // comprueba que no haya un tile de movimiento, ataque o o la unidad en la posicion
+        if (tileToCheckInTilemap != gridUnitPos)
+            if (!movementTiles.Contains(tileToCheck) && !attackTiles.Contains(tileToCheck))
+                if (BattleManager.instance.CanMoveToPosition(tileToCheckInTilemap))
+                    attackTiles.Add(tileToCheck);
     }
 
     public bool ClickOnMovementTile(int x, int y)
@@ -262,12 +335,6 @@ public class UnitScript : NetworkBehaviour
     public List<Vector2> GetMovementTiles() => movementTiles;
 
     public List<Vector2> GetAttackTiles() => attackTiles;
-
-    public void SetMovementTiles(List<Vector2> newMovementTiles) => movementTiles = newMovementTiles;
-
-    public void SetAttackTiles(List<Vector2> newAttackTiles) => attackTiles = newAttackTiles;
-
-    public int GetMovementRadius() => movementRadius;
 
     public void ToggleSelected(bool state) => isSelected = state;
 
@@ -294,8 +361,8 @@ public class UnitScript : NetworkBehaviour
 
     public void DestroyUnit() => Destroy(gameObject);
 
-    public Vector3 GetPosition()  => transform.position;
-
+    public Vector3 GetPosition()  => transform.position - new Vector3(offsetPosicionX, offsetPosicionY, 0f);
+    
     public void Deploy(Vector3 position) => transform.position = 
         new Vector3(position.x + offsetPosicionX, position.y + offsetPosicionY, transform.position.z);
 }

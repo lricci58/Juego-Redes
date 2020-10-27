@@ -141,8 +141,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 14d4be099a926654d862c670a660bc72, type: 3}
+    m_FontSize: 15
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 1292567348165190018}
   - component: {fileID: 7571266820785932881}
   m_Layer: 5
-  m_Name: Canvas 1
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 6072545024877330590}
   - component: {fileID: 9164385461034399844}
   m_Layer: 5
-  m_Name: StartBattleText
+  m_Name: ButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -670,8 +670,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 17
+    m_Font: {fileID: 12800000, guid: 14d4be099a926654d862c670a660bc72, type: 3}
+    m_FontSize: 12
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
@@ -749,8 +749,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: 14d4be099a926654d862c670a660bc72, type: 3}
+    m_FontSize: 18
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
@@ -761,7 +761,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Esperando a que el enemigo est\xE9 listo"
+  m_Text: Esperando a que el enemigo este listo
 --- !u!1 &3206722951308051916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,7 +1334,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonObject: {fileID: 3498502301018724369, guid: 7ec6668f2b78b774f8be03d76fe11c77, type: 3}
   unitImages:
-  - {fileID: 2452848128957565416, guid: 2fd14856064e0904eb0360ebf7000db3, type: 3}
+  - {fileID: 2033754906967245142, guid: 7f0bc265d75e80c4a9caa2f97909721d, type: 3}
+  - {fileID: 2033754906967245142, guid: 1393c2eaef17d884bafacb0a20e26b6e, type: 3}
+  - {fileID: 2033754906967245142, guid: d10d998ef155db046bc0619bccd3fb90, type: 3}
+  - {fileID: 2033754906967245142, guid: f05fd0933159135449494a05ce03644a, type: 3}
+  - {fileID: 2033754906967245142, guid: 95975760007bdc84e9e6cd8554e36a89, type: 3}
   buttonContaniner: {fileID: 7840989746731609539}
 --- !u!1 &8180696507098325264
 GameObject:
@@ -1348,7 +1352,7 @@ GameObject:
   - component: {fileID: 5328984887998608586}
   - component: {fileID: 4554507961884612928}
   m_Layer: 5
-  m_Name: StartBattleText
+  m_Name: ButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1402,12 +1406,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 17
+    m_Font: {fileID: 12800000, guid: 14d4be099a926654d862c670a660bc72, type: 3}
+    m_FontSize: 12
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 114
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

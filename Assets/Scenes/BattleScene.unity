@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb09cdf457ae2a41a3c1c867d974af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleManager: {fileID: 5567406736467252946, guid: a4969b5af359a8945bc9271b6b9c2f96, type: 3}
+  battleManager: {fileID: 2760411800882800678, guid: a4969b5af359a8945bc9271b6b9c2f96, type: 3}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -237,8 +237,8 @@ MonoBehaviour:
   movementVelocity: 500
   zoomFactor: 400
   zoomSpeed: 1
-  heighLimit: 300
-  widthLimit: 400
+  heighLimit: 450
+  widthLimit: 600
   depthCam: {fileID: 958095550}
   zoomMin: 250
   zoomMax: 500

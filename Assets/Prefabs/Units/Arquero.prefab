@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 7503596299782045997}
   - component: {fileID: 2311756675753507807}
   - component: {fileID: 6061011472292279840}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Arquero
   m_TagString: Unidad
   m_Icon: {fileID: 0}
@@ -272,7 +272,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -158054179
   m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 2033754906967245142, guid: 1393c2eaef17d884bafacb0a20e26b6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -348,10 +348,10 @@ MonoBehaviour:
   attackRadius: 3
   currentHealth: 12
   armor: 8
-  damage: 4
+  damage: 2
   movementSpeed: 200
-  offsetPosicionX: 70
-  offsetPosicionY: 115
+  offsetPosicionX: 75
+  offsetPosicionY: 165
 --- !u!114 &7503596299782045997
 MonoBehaviour:
   m_ObjectHideFlags: 0

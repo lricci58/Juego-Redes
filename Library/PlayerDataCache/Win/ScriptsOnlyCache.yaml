@@ -25,6 +25,17 @@ ScriptsOnlyBuild:
     - Mirror.NetworkManager
     - Mirror.NetworkManagerHUD
     - Mirror.TelepathyTransport
+    Unity.2D.Tilemap.Editor.dll:
+    - UnityEditor.Tilemaps.GridBrush
+    - UnityEditor.Tilemaps.GridBrushEditor
+    - UnityEditor.Tilemaps.GridPaintPaletteClipboard
+    - UnityEditor.Tilemaps.GridPaintPaletteWindow
+    - UnityEditor.Tilemaps.GridPaintingState
+    - UnityEditor.Tilemaps.GridPaletteBrushes
+    - UnityEditor.Tilemaps.GridPalettes
+    - UnityEditor.Tilemaps.PaintableSceneViewGrid
+    - UnityEditor.Tilemaps.SceneViewGridManager
+    - UnityEditor.Tilemaps.TileDragAndDropManager
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     UnityEditor.Graphs.dll:
@@ -65,8 +76,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
-    - Class: 60
-      Script: {instanceID: 0}
     - Class: 61
       Script: {instanceID: 0}
     - Class: 74
@@ -80,59 +89,61 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
+      Script: {instanceID: 606}
+    - Class: 114
       Script: {instanceID: 11804}
     - Class: 114
-      Script: {instanceID: 11832}
+      Script: {instanceID: 11830}
     - Class: 114
-      Script: {instanceID: 12076}
+      Script: {instanceID: 12080}
     - Class: 114
-      Script: {instanceID: 12078}
+      Script: {instanceID: 12082}
     - Class: 114
-      Script: {instanceID: 12120}
+      Script: {instanceID: 12124}
     - Class: 114
-      Script: {instanceID: 12248}
+      Script: {instanceID: 12254}
     - Class: 114
-      Script: {instanceID: 12280}
+      Script: {instanceID: 12286}
     - Class: 114
-      Script: {instanceID: 12336}
+      Script: {instanceID: 12342}
     - Class: 114
-      Script: {instanceID: 12366}
+      Script: {instanceID: 12372}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12530}
     - Class: 114
-      Script: {instanceID: 12650}
+      Script: {instanceID: 12666}
     - Class: 114
-      Script: {instanceID: 12674}
+      Script: {instanceID: 12690}
     - Class: 114
-      Script: {instanceID: 12680}
+      Script: {instanceID: 12696}
     - Class: 114
-      Script: {instanceID: 12814}
+      Script: {instanceID: 12832}
     - Class: 114
-      Script: {instanceID: 12856}
+      Script: {instanceID: 12878}
     - Class: 114
-      Script: {instanceID: 12888}
+      Script: {instanceID: 12910}
     - Class: 114
-      Script: {instanceID: 12926}
+      Script: {instanceID: 12948}
     - Class: 114
-      Script: {instanceID: 13274}
+      Script: {instanceID: 13310}
     - Class: 114
-      Script: {instanceID: 13344}
+      Script: {instanceID: 13384}
     - Class: 114
-      Script: {instanceID: 13672}
+      Script: {instanceID: 13716}
     - Class: 114
-      Script: {instanceID: 13872}
+      Script: {instanceID: 13924}
     - Class: 114
-      Script: {instanceID: 13928}
+      Script: {instanceID: 13986}
     - Class: 114
-      Script: {instanceID: 14000}
+      Script: {instanceID: 14058}
     - Class: 114
-      Script: {instanceID: 14148}
+      Script: {instanceID: 14206}
     - Class: 114
-      Script: {instanceID: 14376}
+      Script: {instanceID: 14442}
     - Class: 114
-      Script: {instanceID: 14432}
+      Script: {instanceID: 14498}
     - Class: 114
-      Script: {instanceID: 14458}
+      Script: {instanceID: 14526}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -145,11 +156,21 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
+    - Class: 221
+      Script: {instanceID: 0}
     - Class: 222
       Script: {instanceID: 0}
     - Class: 223
       Script: {instanceID: 0}
     - Class: 224
+      Script: {instanceID: 0}
+    - Class: 19719996
+      Script: {instanceID: 0}
+    - Class: 156049354
+      Script: {instanceID: 0}
+    - Class: 483693784
+      Script: {instanceID: 0}
+    - Class: 1839735485
       Script: {instanceID: 0}
     Assets/Scenes/CampaignMapScene.unity:
     - Class: 1
@@ -171,13 +192,13 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 12316}
+      Script: {instanceID: 12322}
     - Class: 114
-      Script: {instanceID: 13450}
+      Script: {instanceID: 13494}
     - Class: 114
-      Script: {instanceID: 13596}
+      Script: {instanceID: 13640}
     - Class: 114
-      Script: {instanceID: 13718}
+      Script: {instanceID: 13762}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -218,30 +239,36 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11828}
+      Script: {instanceID: -582}
     - Class: 114
-      Script: {instanceID: 11832}
+      Script: {instanceID: 606}
     - Class: 114
-      Script: {instanceID: 11914}
+      Script: {instanceID: 11826}
     - Class: 114
-      Script: {instanceID: 12056}
+      Script: {instanceID: 11830}
     - Class: 114
-      Script: {instanceID: 12120}
+      Script: {instanceID: 11912}
     - Class: 114
-      Script: {instanceID: 12674}
+      Script: {instanceID: 12060}
     - Class: 114
-      Script: {instanceID: 12680}
+      Script: {instanceID: 12124}
     - Class: 114
-      Script: {instanceID: 12822}
+      Script: {instanceID: 12690}
     - Class: 114
-      Script: {instanceID: 13274}
+      Script: {instanceID: 12696}
     - Class: 114
-      Script: {instanceID: 13872}
+      Script: {instanceID: 12840}
     - Class: 114
-      Script: {instanceID: 13928}
+      Script: {instanceID: 13310}
     - Class: 114
-      Script: {instanceID: 14148}
+      Script: {instanceID: 13924}
+    - Class: 114
+      Script: {instanceID: 13986}
+    - Class: 114
+      Script: {instanceID: 14206}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -251,11 +278,19 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
+    - Class: 221
+      Script: {instanceID: 0}
     - Class: 222
       Script: {instanceID: 0}
     - Class: 223
       Script: {instanceID: 0}
     - Class: 224
+      Script: {instanceID: 0}
+    - Class: 156049354
+      Script: {instanceID: 0}
+    - Class: 483693784
+      Script: {instanceID: 0}
+    - Class: 1839735485
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -1022,7 +1057,7 @@ ScriptsOnlyBuild:
     className: PhysicsSimulator
   - hash:
       serializedVersion: 2
-      Hash: f668af81337a684d709687d83b6eec46
+      Hash: b78c59bd94e3c6153676c404855483d8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MapLoader
