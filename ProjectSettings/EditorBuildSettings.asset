@@ -6,14 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/batalla.unity
-    guid: 6b84e4f71820e684689fa3bcfb690c31
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: d91445e26d770e3468c87e103266cfdf
+    path: Assets/Scenes/MainMenuScene.unity
+    guid: 0dce170a53eb9d34da93a30e901ad530
   - enabled: 1
-    path: Assets/Scenes/MainMapScene.unity
-    guid: 67743a0a1ce3a864cbd1a6453f250306
+    path: Assets/Scenes/CampaignMapScene.unity
+    guid: a76c4dd4eec2d58459c0e1500e73d9f8
   - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: a9539997b11cf1a42ac196d612682e64

@@ -55,21 +55,26 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scrips\UnitButtonScript.cs" />
-    <Compile Include="Assets\Scrips\UnitButtonManager.cs" />
-    <Compile Include="Assets\Scrips\HealthBarScript.cs" />
-    <Compile Include="Assets\Scrips\UnitScript.cs" />
-    <Compile Include="Assets\Scrips\BattleManager.cs" />
-    <Compile Include="Assets\Scrips\ConnectionManager.cs" />
-    <Compile Include="Assets\Scrips\CameraManager.cs" />
-    <Compile Include="Assets\Scrips\UI_Manager.cs" />
-    <Compile Include="Assets\Scrips\GameManager.cs" />
-    <Compile Include="Assets\Scrips\MapLoader.cs" />
-    <Compile Include="Assets\Scrips\StartBattleButtonScript.cs" />
-    <Compile Include="Assets\Scrips\BattleLoader.cs" />
-    <Compile Include="Assets\Scrips\SeleccionMapa.cs" />
-    <Compile Include="Assets\Scrips\Paises_Limitrofes.cs" />
-    <Compile Include="Assets\Scrips\GameMngLoader.cs" />
+    <Compile Include="Assets\Scripts\CampaignMapPhase\MapManager.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\UnitButtonScript.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\UnitButtonManager.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\HealthBarScript.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\UnitScript.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\BattleManager.cs" />
+    <Compile Include="Assets\Scripts\ConnectionManager.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\EndTurnInBattleButtonScript.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\CameraManager.cs" />
+    <Compile Include="Assets\Scripts\CampaignMapPhase\Pais.cs" />
+    <Compile Include="Assets\Scripts\GameMngLoader.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\UI_Manager.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\MapLoader.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\StartBattleButtonScript.cs" />
+    <Compile Include="Assets\Scripts\BattlePhase\BattleLoader.cs" />
+    <Compile Include="Assets\Scripts\CampaignMapPhase\EmpezarScript.cs" />
+    <Compile Include="Assets\Scripts\EndTurnButtonScript.cs" />
+    <Compile Include="Assets\Scripts\CampaignMapPhase\EndTurnInMapButtonScript.cs" />
+    <Compile Include="Assets\Scripts\CampaignMapPhase\AttackScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
@@ -652,6 +657,9 @@
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>

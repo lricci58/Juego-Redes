@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: "Palad\xEDn"
+  m_Controller: {fileID: 9100000, guid: 322a7aa6233c7324a9da56a4a523ce96, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: aeed05d291ba0f743bab1794e4773d5c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: aeed05d291ba0f743bab1794e4773d5c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c49b428fd3a6f8747940b411ddb6fb3d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c49b428fd3a6f8747940b411ddb6fb3d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c9af317719567a6459ab9b6ef8f5e9c8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c9af317719567a6459ab9b6ef8f5e9c8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 2d7193b8987bdf7418de9ed99d7cab1d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2d7193b8987bdf7418de9ed99d7cab1d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 724e2c3bf3a0e69469e0b9775a1c1a73, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 724e2c3bf3a0e69469e0b9775a1c1a73, type: 2}
