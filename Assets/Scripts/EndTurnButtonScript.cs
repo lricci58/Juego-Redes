@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class EndTurnButtonScript : MonoBehaviour
+public class EndTurnInBattleButtonScript : MonoBehaviour
 {
     public Button endTurnButton;
 

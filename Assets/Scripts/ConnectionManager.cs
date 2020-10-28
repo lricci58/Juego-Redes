@@ -6,8 +6,6 @@ using System.Collections.Generic;
 public class ConnectionManager : NetworkBehaviour
 {
     public static ConnectionManager instance = null;
-
-    private string mainMapSceneName = "CampaignMapScene";
     private string battleSceneName = "BattleScene";
 
     void Start()
@@ -17,8 +15,11 @@ public class ConnectionManager : NetworkBehaviour
         if (!isLocalPlayer) { return; }
 
         instance = this;
-        SceneManager.LoadScene(mainMapSceneName);
     }
+    /* si es [TargetRpc] es del servidor a un solo cliente
+     * si es [ClientRpc] es del servidor a todos los clientes y 
+     * si es [Command]  es del cualquier cliente la servidor 
+     */
 
     [Command]
     public void CmdSpawnObject(int index, Vector3 unitLocalPosition)
@@ -78,12 +79,12 @@ public class ConnectionManager : NetworkBehaviour
     {
         // si se termino el turno del defensor (0), empieza el del atacante(0++)
         if (playerBattleSide == 0)
-            BattleManager.instance.turnNumber++;
+            BattleManager.instance.currentTurn++;
         else if (playerBattleSide == 1)
-            BattleManager.instance.turnNumber--;
+            BattleManager.instance.currentTurn--;
 
         // muestra el boton de terminar de turno en su turno
-        if (BattleManager.instance.myTurnNumber == BattleManager.instance.turnNumber)
+        if (BattleManager.instance.myTurnNumber == BattleManager.instance.currentTurn)
             BattleManager.instance.canvas.ShowEndTurnButton(true);
         else
             BattleManager.instance.canvas.ShowEndTurnButton(false);
@@ -96,5 +97,17 @@ public class ConnectionManager : NetworkBehaviour
     public void RpcPlayerAttacked()
     {
         SceneManager.LoadScene(battleSceneName);
+    }
+
+    [TargetRpc]
+    public void TargetAddCountry(NetworkConnection conn, string nombrePais)
+    {
+        GameManager.instance.misPaises.Add(nombrePais);
+    }
+
+    [TargetRpc]
+    public void TargetSetYourTurnNumber(NetworkConnection conn, int turnNumber)
+    {
+        MapManager.instancia.miTurno = turnNumber;
     }
 }
