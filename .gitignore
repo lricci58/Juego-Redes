@@ -5,5 +5,7 @@
 **/Temp
 **/obj
 **/Packages
+**/ProjectSettings/
 Unity Packages
 **/Build
+**/Library/PlayerDataCache/
