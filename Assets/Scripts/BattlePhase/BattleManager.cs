@@ -11,7 +11,7 @@ public class BattleManager : NetworkBehaviour
 
     public MapLoader map;
     [SerializeField] private GameObject canvasObject;
-    [NonSerialized] public UI_Manager canvas;
+    [NonSerialized] public BattleUI_Manager canvas;
 
     [NonSerialized] public List<UnitScript> army;
     private List<UnitScript> deployUnitList;
@@ -45,7 +45,7 @@ public class BattleManager : NetworkBehaviour
     private void InitGame()
     {
         Instantiate(canvasObject);
-        canvas = canvasObject.GetComponent<UI_Manager>();
+        canvas = canvasObject.GetComponent<BattleUI_Manager>();
         canvas.ShowDeploymentPanel(true);
         canvas.ShowStartBattleButton(true);
         canvas.ShowEndTurnButton(false);

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/Images/MainMap/UI Images/attackButtonImage.png.meta
+guid: 9285ef94037900344a38f340e8823b86
+=======
 guid: 9c1ee2f00b31589459bd719e594d0f9d
+>>>>>>> 1579265e0c7033784af0ad19c2b66f331ed862f6:Assets/Resources/Images/MainMap/UI Images/Marco Grande 1.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

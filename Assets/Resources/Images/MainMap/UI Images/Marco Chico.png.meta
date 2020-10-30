@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/Images/MainMap/UI Images/clouds_1.png.meta
+guid: 2143775da164e224ebfd0d4623cecfc8
+=======
 guid: 01ba4843d253a58489de9f0c3cd26f37
+>>>>>>> 1579265e0c7033784af0ad19c2b66f331ed862f6:Assets/Resources/Images/MainMap/UI Images/Marco Chico.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -73,6 +77,8 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+<<<<<<< HEAD:Assets/Resources/Images/MainMap/UI Images/clouds_1.png.meta
+=======
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 16384
@@ -85,6 +91,7 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+>>>>>>> 1579265e0c7033784af0ad19c2b66f331ed862f6:Assets/Resources/Images/MainMap/UI Images/Marco Chico.png.meta
   spriteSheet:
     serializedVersion: 2
     sprites: []

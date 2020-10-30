@@ -12,6 +12,6 @@ public class AttackScript : MonoBehaviour
 
     private void ClickBoton()
     {
-        ConnectionManager.instance.CmdPlayerAttacked();
+        // aumentar syncvar de "preparado" para ataque
     }
 }

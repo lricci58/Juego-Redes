@@ -13,7 +13,6 @@ public class GameManager : NetworkBehaviour
     /* [NonSerialized] */ public List<int> armyToBattle;
     [NonSerialized] public List<string> misPaises;
 
-
     void Awake()
     {
         misPaises = new List<string>();
@@ -36,7 +35,7 @@ public class GameManager : NetworkBehaviour
 
         for (int i = 0; i < cantPaises; i++)
         {
-            int paisRandom = Random.Range(0, listaPaisesEnMapa.Count - 1);
+            int paisRandom = Random.Range(0, listaPaisesEnMapa.Count);
             // indica al jugador que pais le toco
             ConnectionManager.instance.TargetAddCountry(NetworkServer.connections[numJugador], listaPaisesEnMapa[paisRandom].name);
             listaPaisesEnMapa.RemoveAt(paisRandom);
@@ -47,7 +46,7 @@ public class GameManager : NetworkBehaviour
 
         // @TODO: hacer animacion de pintar pais
 
-        int contadorTurno = Random.Range(0, NetworkServer.connections.Count - 1);
+        int contadorTurno = Random.Range(0, NetworkServer.connections.Count);
 
         // crea el orden de la lista
         for (int turn = 0; turn < NetworkServer.connections.Count; turn++)
@@ -55,7 +54,6 @@ public class GameManager : NetworkBehaviour
             ConnectionManager.instance.TargetSetYourTurnNumber(NetworkServer.connections[contadorTurno], turn);
 
             if (++contadorTurno > NetworkServer.connections.Count - 1) { contadorTurno = 0; }
-
         }
     }
 }

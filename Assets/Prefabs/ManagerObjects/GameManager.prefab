@@ -43,5 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a675d8ba377aab49aa98c1f528229dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   playerBattleSide: 0
-  unitList: 00000000
+  armyToBattle: 
+  mapManager: {fileID: 3333825135821379646, guid: 3afe7d05ea0172b42b3fb637abe4b68e, type: 3}

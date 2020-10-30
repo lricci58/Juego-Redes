@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class ConnectionManager : NetworkBehaviour
 {
     public static ConnectionManager instance = null;
-    private string battleSceneName = "BattleScene";
 
     void Start()
     {
@@ -72,32 +71,76 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdEndTurn(int playerBattleSide) => RpcPlayerEndedTurn(playerBattleSide);
+    public void CmdEndTurn(int playerBattleSide) => RpcPlayerEndedTurn(playerBattleSide, NetworkServer.connections.Count - 1);
 
     [ClientRpc]
-    public void RpcPlayerEndedTurn(int playerBattleSide)
+    public void RpcPlayerEndedTurn(int playerBattleSide, int amountPlayers)
     {
-        // si se termino el turno del defensor (0), empieza el del atacante(0++)
-        if (playerBattleSide == 0)
-            BattleManager.instance.currentTurn++;
-        else if (playerBattleSide == 1)
-            BattleManager.instance.currentTurn--;
+        if (SceneManager.GetActiveScene().name == "CampaignMapScene")
+        {
+            // cambia de turno
+            if (++MapManager.instancia.turnoActual > amountPlayers) { MapManager.instancia.turnoActual = 0; }
 
-        // muestra el boton de terminar de turno en su turno
-        if (BattleManager.instance.myTurnNumber == BattleManager.instance.currentTurn)
-            BattleManager.instance.canvas.ShowEndTurnButton(true);
-        else
-            BattleManager.instance.canvas.ShowEndTurnButton(false);
+            // deselecciona cualquier pais que pueda estar seleccionado
+            MapManager.instancia.HayPaisSeleccionado();
+
+            // muestra el boton de terminar de turno en su turno
+            if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
+                MapManager.instancia.canvas.ShowEndPhaseButton(true);
+            else
+                MapManager.instancia.canvas.ShowEndPhaseButton(false);
+        }
+        else if (SceneManager.GetActiveScene().name == "BattleScene")
+        {
+            // si se termino el turno del defensor (0), empieza el del atacante(0++)
+            if (playerBattleSide == 0)
+                BattleManager.instance.currentTurn++;
+            else if (playerBattleSide == 1)
+                BattleManager.instance.currentTurn--;
+
+            // muestra el boton de terminar de turno en su turno
+            if (BattleManager.instance.myTurnNumber == BattleManager.instance.currentTurn)
+                BattleManager.instance.canvas.ShowEndTurnButton(true);
+            else
+                BattleManager.instance.canvas.ShowEndTurnButton(false);
+        }
     }
 
     [Command]
-    public void CmdPlayerAttacked() => RpcPlayerAttacked();
+    public void CmdPlayerAttacked(string paisAtacado, string paisAtacante)
+    {
+        // busca el jugador que esta siendo atacado
+        RpcSearchCountryInPlayers(paisAtacado, paisAtacante);
+    }
 
     [ClientRpc]
-    public void RpcPlayerAttacked()
+    public void RpcSearchCountryInPlayers(string paisAtacado, string paisAtacante)
     {
-        SceneManager.LoadScene(battleSceneName);
+        // comprueba que el pais sea suyo
+        if (GameManager.instance.misPaises.Contains(paisAtacado))
+        {
+            // deselecciona al pais seleccionado y sus limitrofes
+            MapManager.instancia.HayPaisSeleccionado();
+
+            // despliega el menu de ataque
+            MapManager.instancia.DesplegarMenuAtaque(null, null, paisAtacado, paisAtacante, 0);
+        }
     }
+
+    [Command]
+    public void CmdPlayerStoppedAttacking()
+    {
+        RpcCloseAttackMenues();
+    }
+
+    [ClientRpc]
+    public void RpcCloseAttackMenues()
+    {
+        MapManager.instancia.OcultarMenuAtaque();
+    }
+
+    [ClientRpc]
+    public void RpcChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
     [TargetRpc]
     public void TargetAddCountry(NetworkConnection conn, string nombrePais)
@@ -109,5 +152,9 @@ public class ConnectionManager : NetworkBehaviour
     public void TargetSetYourTurnNumber(NetworkConnection conn, int turnNumber)
     {
         MapManager.instancia.miTurno = turnNumber;
+
+        // muestra el boton de terminar de turno en su turno
+        if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
+            MapManager.instancia.canvas.ShowEndPhaseButton(true);
     }
 }
