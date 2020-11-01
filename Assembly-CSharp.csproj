@@ -55,45 +55,70 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CampaignMapPhase\MapManager.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\UnitButtonScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\UnitButtonManager.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\EndTurnInMapButtonScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\UI_Manager.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\HealthBarScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\UnitScript.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\CancelButtonScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\BattleManager.cs" />
-    <Compile Include="Assets\Scripts\ConnectionManager.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\EndTurnInBattleButtonScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\CameraManager.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\EmpezarScript.cs" />
-    <Compile Include="Assets\Scripts\EndTurnButtonScript.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\Pais.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\CampaignMapUI_Manager.cs" />
-    <Compile Include="Assets\Scripts\CampaignMapPhase\AttackScript.cs" />
-    <Compile Include="Assets\Scripts\GameMngLoader.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\BattleUI_Manager.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\MapLoader.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\StartBattleButtonScript.cs" />
-    <Compile Include="Assets\Scripts\BattlePhase\BattleLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\MapManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitButtonManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\EndTurnInMapButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\UI_Manager.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\HealthBarScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\CancelButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\ConnectionManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\EndTurnInBattleButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\CameraManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\EmpezarScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\Pais.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\CampaignMapUI_Manager.cs" />
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\AttackScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\GameMngLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleUI_Manager.cs" />
+    <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\MapLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\StartBattleButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\NetworkManagerLobby.cs" />
+    <Compile Include="Assets\Resources\Scripts\MainMenu\MainMenu.cs" />
+    <Compile Include="Assets\Resources\Scripts\MainMenu\JoinLobbyMenu.cs" />
+    <Compile Include="Assets\Resources\Scripts\MainMenu\ExitButtonScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\MainMenu\LobbyScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Mdb.dll" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\ScriptTemplates\51-Mirror__Network Authenticator-NewNetworkAuthenticator.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
      <None Include="Assets\ScriptTemplates\53-Mirror__Network Observer-NewNetworkObserver.cs.txt" />
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Pdb.dll" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\ScriptTemplates\56-Mirror__Network Discovery-NewNetworkDiscovery.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Rocks.dll" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\Mirror\version.txt" />
      <None Include="Assets\Mirror\Readme.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\ScriptTemplates\52-Mirror__Network Behaviour-NewNetworkBehaviour.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\License.txt" />
      <None Include="Assets\ScriptTemplates\55-Mirror__Network Room Player-NewNetworkRoomPlayer.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\ScriptTemplates\50-Mirror__Network Manager-NewNetworkManager.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
      <None Include="Assets\ScriptTemplates\54-Mirror__Network Room Manager-NewNetworkRoomManager.cs.txt" />
+     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.1.5f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -685,10 +710,6 @@
       <Project>{0B19A977-654F-2E90-8A43-6FA2F66B3118}</Project>
       <Name>Mirror.Websocket</Name>
     </ProjectReference>
-    <ProjectReference Include="Mirror.Examples.csproj">
-      <Project>{E7E88FBA-0CC8-7E80-5AD7-4BF491A5A29E}</Project>
-      <Name>Mirror.Examples</Name>
-    </ProjectReference>
     <ProjectReference Include="Mirror.CompilerSymbols.csproj">
       <Project>{2FF98CE9-36BB-0F36-50B7-1548F22FC1BE}</Project>
       <Name>Mirror.CompilerSymbols</Name>
@@ -705,25 +726,13 @@
       <Project>{DBA2532A-8AA5-C8AF-5ED2-7C3441D22DF3}</Project>
       <Name>Telepathy</Name>
     </ProjectReference>
-    <ProjectReference Include="Mirror.Examples.Cloud.Pong.csproj">
-      <Project>{2939C3A4-ADE0-F71F-587C-CA89A5852DC4}</Project>
-      <Name>Mirror.Examples.Cloud.Pong</Name>
-    </ProjectReference>
     <ProjectReference Include="Mirror.csproj">
       <Project>{1589150B-D4CB-70E0-4F32-5B8B5F1A9331}</Project>
       <Name>Mirror</Name>
     </ProjectReference>
-    <ProjectReference Include="Mirror.example.RigidbodyPhysics.csproj">
-      <Project>{A0BBE484-7F54-F858-7428-E903393F5EC5}</Project>
-      <Name>Mirror.example.RigidbodyPhysics</Name>
-    </ProjectReference>
     <ProjectReference Include="Mirror.Editor.csproj">
       <Project>{B35D1296-75D3-063E-C784-81BF99F2A4BA}</Project>
       <Name>Mirror.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Mirror.Examples.Cloud.GUI.csproj">
-      <Project>{60CA78C0-0C97-2945-2895-2E428C9DAE0F}</Project>
-      <Name>Mirror.Examples.Cloud.GUI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
