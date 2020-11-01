@@ -34,7 +34,7 @@ public class ConnectionManager : NetworkBehaviour
     public override void OnStartAuthority()
     {
         // @TODO: crear una interfaz con inputField para el nombre
-        CmdSetDisplayName("Jugador");
+        CmdSetDisplayName(MainMenu.instance.playerName);
     }
 
     public override void OnStartClient()

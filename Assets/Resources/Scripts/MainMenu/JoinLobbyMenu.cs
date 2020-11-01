@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class JoinLobbyMenu : MonoBehaviour
@@ -11,8 +7,11 @@ public class JoinLobbyMenu : MonoBehaviour
 
     [SerializeField] private GameObject optionsMenuPanel = null;
     [SerializeField] private GameObject lobbyPanel = null;
+    [SerializeField] private GameObject changeNameButton = null;
+    [SerializeField] private GameObject inputNamePanel = null;
+    [SerializeField] private GameObject inputIpPanel = null;
     [SerializeField] private GameObject startButton = null;
-    [SerializeField] private TMP_InputField ipAddressInputField = null;
+    [SerializeField] private InputField ipAddressInputField = null;
     [SerializeField] private Button joinButton = null;
 
     private void OnEnable()
@@ -29,6 +28,12 @@ public class JoinLobbyMenu : MonoBehaviour
 
     public void JoinLobby()
     {
+        if (MainMenu.instance.playerName == null)
+        {
+            inputNamePanel.SetActive(true);
+            return;
+        }
+
         string ipAddress = ipAddressInputField.text;
 
         networkManager.networkAddress = ipAddress;
@@ -41,14 +46,19 @@ public class JoinLobbyMenu : MonoBehaviour
     {
         joinButton.interactable = true;
 
-        gameObject.SetActive(false);
+        // oculata el pop up para poner ip, el menu principal, y muestra el menu de sala
+        inputIpPanel.SetActive(false);
         optionsMenuPanel.SetActive(false);
         lobbyPanel.SetActive(true);
         startButton.SetActive(false);
+
+        changeNameButton.SetActive(false);
     }
 
     private void HandleClientDisconnected()
     {
         joinButton.interactable = true;
+
+        changeNameButton.SetActive(true);
     }
 }
