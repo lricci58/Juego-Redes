@@ -9,3 +9,4 @@
 Unity Packages
 **/Build
 **/Library/PlayerDataCache
+/Library/ArtifactDB
