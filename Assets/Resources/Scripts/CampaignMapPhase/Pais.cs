@@ -9,6 +9,7 @@ public class Pais : MonoBehaviour
 
     [NonSerialized] public List<int> garrison;
 
+    [NonSerialized] public Color colorOriginal;
     private void OnMouseDown()
     {
         if (MapManager.instancia.miTurno != MapManager.instancia.turnoActual) { return; }
@@ -48,6 +49,18 @@ public class Pais : MonoBehaviour
             ConnectionManager.instance.CmdCountryWasSelected(gameObject.name, limitrofesAtacables.ToArray());
         }
     }
+    public void CambiarColorOriginal(Color nuevoColor)
+    {
+        colorOriginal = nuevoColor;
+        CambiarAOriginal();
+    }
+    public void CambiarAOriginal()
+    {
+       GetComponent<SpriteRenderer>().color = colorOriginal;
+    }
+
 }
+
+
 
 

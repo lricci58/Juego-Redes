@@ -248,7 +248,22 @@ public class ConnectionManager : NetworkBehaviour
     [TargetRpc]
     public void TargetAddCountry(NetworkConnection conn, string nombrePais)
     {
-        GameManager.instance.misPaises.Add(nombrePais);
+        GameManager.instance.AgregarPais(nombrePais);
+
+    }
+
+    [Command]
+    public void CmdPintarPais(string pais, Color color)
+    {
+
+        RpcPintarPais(pais, color);
+    }
+
+    [ClientRpc]
+    public void RpcPintarPais(string pais, Color color)
+    {
+        GameObject.Find(pais).GetComponent<Pais>().CambiarColorOriginal(color);
+
     }
 
     [TargetRpc]
@@ -259,5 +274,12 @@ public class ConnectionManager : NetworkBehaviour
         // muestra el boton de terminar de turno en su turno
         if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
             MapManager.instancia.canvas.ShowEndPhaseButton(true);
+    }
+    [TargetRpc]
+    public void TargetSetYourColor(NetworkConnection conn, Color playerColor)
+    {
+
+        GameManager.instance.SetPlayerColor(playerColor);
+
     }
 }

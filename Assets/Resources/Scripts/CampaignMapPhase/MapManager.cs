@@ -15,9 +15,12 @@ public class MapManager : NetworkBehaviour
     [NonSerialized] public int miTurno;
     [NonSerialized] [SyncVar] public int turnoActual = 0;
 
-    private Color colorOriginal = new Color(1f, 1f, 1f);
-    private Color colorSeleccionado = new Color(.7f, .7f, .7f);
-    private Color colorLimitrofe = new Color(1f, 0f, 0f);
+    private Color colorOriginal;
+    private Color colorSeleccionado = new Color(0.3f, 0.3f, 0.3f);
+    private Color colorLimitrofe = new Color(0.3f, 0.3f, 0.3f);
+    private Color colorNeutral = new Color(.96f, .96f, .96f);
+
+    GameObject []paises;
 
     void Start()
     {
@@ -34,6 +37,8 @@ public class MapManager : NetworkBehaviour
         
         canvas.ShowEndPhaseButton(false);
         canvas.ShowEndTurnButton(false);
+
+
     }
 
     void Update()
@@ -87,13 +92,13 @@ public class MapManager : NetworkBehaviour
         if (HayPaisSeleccionado()) { return; }
 
         GameObject paisSeleccionado = GameObject.Find(nombrePaisSeleccionado);
-        paisSeleccionado.GetComponent<SpriteRenderer>().color = colorSeleccionado;
+        paisSeleccionado.GetComponent<SpriteRenderer>().color -= colorSeleccionado;
         paisSeleccionado.tag = "Selected";
 
         foreach (string nombrePaisLimitrofe in nombrePaisesLimitrofes)
         {
             GameObject paisLimitrofe = GameObject.Find(nombrePaisLimitrofe);
-            paisLimitrofe.GetComponent<SpriteRenderer>().color = colorLimitrofe;
+            paisLimitrofe.GetComponent<SpriteRenderer>().color += colorLimitrofe;
             paisLimitrofe.tag = "Bordering";
         }
     }
@@ -104,20 +109,21 @@ public class MapManager : NetworkBehaviour
         GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
 
         if (posibleSeleccionado == null) { return false; }
-        
+
         // deselecciona al pais
-        posibleSeleccionado.GetComponent<SpriteRenderer>().color = colorOriginal;
-        posibleSeleccionado.tag = "Untagged";
+        posibleSeleccionado.GetComponent<Pais>().CambiarAOriginal();
+        posibleSeleccionado.tag = "pais";
 
         // y a sus limitrofes
         foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
         {
             if (posibleLimitrofe == null) { continue; }
 
-            posibleLimitrofe.GetComponent<SpriteRenderer>().color = colorOriginal;
-            posibleLimitrofe.tag = "Untagged";
+            posibleLimitrofe.GetComponent<Pais>().CambiarAOriginal();
+            posibleLimitrofe.tag = "pais";
         }
 
         return true;
     }
+
 }
