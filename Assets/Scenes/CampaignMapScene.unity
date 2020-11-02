@@ -267,6 +267,7 @@ MonoBehaviour:
   limitrofes:
   - Celestia
   - Botalia
+  oroPorTurno: 400
 --- !u!1 &239904156
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +418,7 @@ MonoBehaviour:
   - Makintia
   - Lunix
   - Kaslu
+  oroPorTurno: 400
 --- !u!1 &243933314
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +562,7 @@ MonoBehaviour:
   limitrofes:
   - Lindoss
   - Sursica
+  oroPorTurno: 400
 --- !u!1 &256666234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1406,7 @@ MonoBehaviour:
   - Rinoria
   - Borsonia
   - Kaross
+  oroPorTurno: 400
 --- !u!1 &702354200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1562,7 @@ MonoBehaviour:
   - Windor
   - Rinoria
   - Marless
+  oroPorTurno: 400
 --- !u!1 &785391038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1839,6 +1844,7 @@ MonoBehaviour:
   limitrofes:
   - Ventos
   - Norsica
+  oroPorTurno: 400
 --- !u!1 &894010079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,6 +1985,7 @@ MonoBehaviour:
   limitrofes:
   - Mirkovia
   - Castania
+  oroPorTurno: 400
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2216,6 +2223,7 @@ MonoBehaviour:
   limitrofes:
   - Tauria
   - Aletta
+  oroPorTurno: 400
 --- !u!1 &1038245512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,6 +2379,7 @@ MonoBehaviour:
   - Varatoss
   - Lindoss
   - Botalia
+  oroPorTurno: 400
 --- !u!1 &1082520064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2530,6 +2539,7 @@ MonoBehaviour:
   - Feoss
   - Kaross
   - Varatoss
+  oroPorTurno: 400
 --- !u!1 &1094439285
 GameObject:
   m_ObjectHideFlags: 0
@@ -2674,6 +2684,7 @@ MonoBehaviour:
   - Lindoss
   - Sursica
   - Rocaristan
+  oroPorTurno: 400
 --- !u!1 &1104830783
 GameObject:
   m_ObjectHideFlags: 0
@@ -2821,6 +2832,7 @@ MonoBehaviour:
   - Poronia
   - Celestia
   - Ivania
+  oroPorTurno: 400
 --- !u!1 &1141314649
 GameObject:
   m_ObjectHideFlags: 0
@@ -3049,6 +3061,7 @@ MonoBehaviour:
   - Ivania
   - Castania
   - Borsonia
+  oroPorTurno: 400
 --- !u!1 &1261496238
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,6 +3210,7 @@ MonoBehaviour:
   - Talantria
   - Norsica
   - Sursica
+  oroPorTurno: 400
 --- !u!1 &1444322958
 GameObject:
   m_ObjectHideFlags: 0
@@ -3297,6 +3311,7 @@ MonoBehaviour:
   - Tauria
   - Sursica
   - Rocaristan
+  oroPorTurno: 400
 --- !u!60 &1444322962
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3498,6 +3513,7 @@ MonoBehaviour:
   - Aletta
   - Windor
   - Kaslu
+  oroPorTurno: 400
 --- !u!1 &1631687624
 GameObject:
   m_ObjectHideFlags: 0
@@ -3663,6 +3679,7 @@ MonoBehaviour:
   - Talantria
   - Islovia
   - Feoss
+  oroPorTurno: 400
 --- !u!1 &1697078359
 GameObject:
   m_ObjectHideFlags: 0
@@ -3835,6 +3852,7 @@ MonoBehaviour:
   - Ivania
   - Kaslu
   - Lunix
+  oroPorTurno: 400
 --- !u!850595691 &1697242270
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -4043,6 +4061,7 @@ MonoBehaviour:
   - Castania
   - Celestia
   - Rinoria
+  oroPorTurno: 400
 --- !u!1 &1730221452
 GameObject:
   m_ObjectHideFlags: 0
@@ -4196,6 +4215,7 @@ MonoBehaviour:
   - Windor
   - Kaslu
   - Marless
+  oroPorTurno: 400
 --- !u!1 &1775374971
 GameObject:
   m_ObjectHideFlags: 0
@@ -4351,6 +4371,7 @@ MonoBehaviour:
   limitrofes:
   - Kaslu
   - Makintia
+  oroPorTurno: 400
 --- !u!1 &1844141604
 GameObject:
   m_ObjectHideFlags: 0
@@ -4501,6 +4522,7 @@ MonoBehaviour:
   limitrofes:
   - Poronia
   - Varatoss
+  oroPorTurno: 400
 --- !u!1 &1853487726
 GameObject:
   m_ObjectHideFlags: 0
@@ -4658,6 +4680,7 @@ MonoBehaviour:
   - Windor
   - Makintia
   - Lunix
+  oroPorTurno: 400
 --- !u!1 &1907091718
 GameObject:
   m_ObjectHideFlags: 0
@@ -4796,6 +4819,7 @@ MonoBehaviour:
   limitrofes:
   - Makintia
   - Sursica
+  oroPorTurno: 400
 --- !u!1 &1951317599
 GameObject:
   m_ObjectHideFlags: 0
@@ -5027,6 +5051,7 @@ MonoBehaviour:
   - Kaross
   - Lindoss
   - Mirkovia
+  oroPorTurno: 400
 --- !u!1 &2050331070
 GameObject:
   m_ObjectHideFlags: 0
@@ -5252,6 +5277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   limitrofes:
   - Rinoria
+  oroPorTurno: 400
 --- !u!4 &57710907530779756
 Transform:
   m_ObjectHideFlags: 0

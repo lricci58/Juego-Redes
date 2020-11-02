@@ -10,6 +10,12 @@ public class Pais : MonoBehaviour
     [NonSerialized] public List<int> garrison;
 
     [NonSerialized] public Color colorOriginal;
+
+    [SerializeField] private int oroPorTurno;
+    
+
+
+
     private void OnMouseDown()
     {
         if (MapManager.instancia.miTurno != MapManager.instancia.turnoActual) { return; }
