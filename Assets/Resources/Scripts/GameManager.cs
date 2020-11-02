@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager instance = null;
-    List<Color> playerColors = new List<Color>();
+    List<Color32> playerColors = new List<Color32>();
 
     /* [NonSerialized] */ public int playerBattleSide = 2;
     /* [NonSerialized] */ public List<int> armyToBattle;
@@ -30,15 +30,23 @@ public class GameManager : NetworkBehaviour
 
         // comprueba si la instancia de ventana esta en un host
         if (!ConnectionManager.instance.isServer) { return; }
-        playerColors.Add(new Color(0.253f, 0.148f, 0.61f));
-        playerColors.Add(new Color(0.76f, 0.116f, 0.255f));
-        playerColors.Add(new Color(0.153f, 0f, 0f));
-        playerColors.Add(new Color(1f, 0.213f, 0.1f));
-        playerColors.Add(new Color(0.188f, 0.28f, 0.161f));
-        playerColors.Add(new Color(0.49f, 0.164f, 0f));
-        playerColors.Add(new Color(1f, 0.93f, 0.228f));
+
+        playerColors.Add(new Color32(76, 116, 255, 255));
+        playerColors.Add(new Color32(200, 0, 0, 255));
+        playerColors.Add(new Color32(198, 165, 0, 255));
+        playerColors.Add(new Color32(188, 28, 161, 255));
+        playerColors.Add(new Color32(38, 127, 0, 255));
+        playerColors.Add(new Color32(108, 36, 175, 255));
+        playerColors.Add(new Color32(165, 88, 24, 255));
+        playerColors.Add(new Color32(255, 109, 0, 255));
+        /*
+        prueba de color sobre los paises
+        for (int i = 0; i < playerColors.Count; i++)
+        {
+            GameObject.Find("GameObject ("+(i+1)+")").GetComponent<SpriteRenderer>().color = playerColors[i];
 
 
+        }*/
         // @TODO: hacer animacion de pintar pais
 
         int contadorTurno = Random.Range(0, NetworkServer.connections.Count);
