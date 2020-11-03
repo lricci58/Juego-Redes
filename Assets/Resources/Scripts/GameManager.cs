@@ -10,21 +10,20 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance = null;
     List<Color32> playerColors = new List<Color32>();
 
-    /* [NonSerialized] */ public int playerBattleSide = 2;
-    /* [NonSerialized] */ public List<int> armyToBattle;
-    [NonSerialized] public List<string> misPaises;
+    /* [NonSerialized] */
+    public int playerBattleSide = 2;
+    /* [NonSerialized] */ public List<int> playerReserveUnits;
+    [NonSerialized] public List<string> misPaises = new List<string>();
     private Color playerColor;
+
     void Awake()
     {
-        misPaises = new List<string>();
-      
-
         // se asegura que solo exista una instancia del controlador de juego
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        
+
         // mantiene el objeto como singleton
         DontDestroyOnLoad(gameObject);
 
@@ -39,17 +38,12 @@ public class GameManager : NetworkBehaviour
         playerColors.Add(new Color32(108, 36, 175, 255));
         playerColors.Add(new Color32(165, 88, 24, 255));
         playerColors.Add(new Color32(255, 109, 0, 255));
-        /*
-        prueba de color sobre los paises
-        for (int i = 0; i < playerColors.Count; i++)
-        {
-            GameObject.Find("GameObject ("+(i+1)+")").GetComponent<SpriteRenderer>().color = playerColors[i];
 
-
-        }*/
-        // @TODO: hacer animacion de pintar pais
+        Debug.Log("soy server");
 
         int contadorTurno = Random.Range(0, NetworkServer.connections.Count);
+
+        Debug.Log("contador turno: "+contadorTurno);
 
         // crea el orden de la lista
         for (int turn = 0; turn < NetworkServer.connections.Count; turn++)
@@ -60,8 +54,9 @@ public class GameManager : NetworkBehaviour
             if (++contadorTurno > NetworkServer.connections.Count - 1) { contadorTurno = 0; }
         }
 
-        List<GameObject> listaPaisesEnMapa = GameObject.FindGameObjectsWithTag("pais").ToList();
+        List<GameObject> listaPaisesEnMapa = GameObject.FindGameObjectsWithTag("Country").ToList();
         int cantPaises = listaPaisesEnMapa.Count;
+        Debug.Log("cant paises: "+cantPaises);
         int numJugador = 0;
 
         for (int i = 0; i < cantPaises; i++)
@@ -74,20 +69,13 @@ public class GameManager : NetworkBehaviour
             // mueve al siguiente jugador en la lista
             if (++numJugador > NetworkServer.connections.Count - 1) { numJugador = 0; }
         }
-
-
     }
-    public void SetPlayerColor(Color newColor)
 
-    {
-        playerColor = newColor;
-    }
+    public void SetPlayerColor(Color newColor) => playerColor = newColor;
 
     public void AgregarPais(string pais)
     {
         misPaises.Add(pais);
-        ConnectionManager.instance.CmdPintarPais(pais, playerColor);
-
+        ConnectionManager.instance.CmdPaintCountry(pais, playerColor);
     }
-    
 }

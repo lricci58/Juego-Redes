@@ -18,7 +18,7 @@ public class UnitButtonManager : MonoBehaviour
     private void AddUnitButton()
     {
         // lista que guarda los tipos de cada unidad en el ejercito
-        List<int> unitList = GameManager.instance.armyToBattle;
+        List<int> unitList = GameManager.instance.playerReserveUnits;
         for (int i = 0; i < unitList.Count; i++)
         {
             int unitType = unitList[i];

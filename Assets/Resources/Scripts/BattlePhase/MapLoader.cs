@@ -90,7 +90,7 @@ public class MapLoader : MonoBehaviour
 
     private void InstantiateUnits()
     {
-        unitTypesList = GameManager.instance.armyToBattle;
+        unitTypesList = GameManager.instance.playerReserveUnits;
         
         unitContainer = new GameObject("UnitContainer").transform;
         allyUnitContainer = new GameObject("AlliedUnitsContainer").transform;

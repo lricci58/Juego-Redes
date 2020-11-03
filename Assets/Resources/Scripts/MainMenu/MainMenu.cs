@@ -15,6 +15,8 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private InputField nameInputField = null;
     [NonSerialized] public string playerName = null;
+    [NonSerialized] public Image playerImage = null;
+    [NonSerialized] public Image playerColor = null;
 
     private void Start() => instance = this;
 

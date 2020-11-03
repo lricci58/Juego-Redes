@@ -11,6 +11,9 @@ public class LobbyScript : MonoBehaviour
 
     public Text[] playerNames = null;
     public Image[] playerReadyIcons = null;
+    public Image[] playerImages = null;
+    public Image[] playerColors = null;
+
     public Button startGameButton = null;
 
     public Sprite notReadyIcon = null;

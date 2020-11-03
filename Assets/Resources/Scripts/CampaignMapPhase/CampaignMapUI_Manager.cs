@@ -1,116 +1,148 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CampaignMapUI_Manager : MonoBehaviour
 {
-    private static GameObject cancelAttackButton;
+    [Header("UI Panels")]
+    [SerializeField] private GameObject generalMapUI = null;
+    [SerializeField] private GameObject attackMenuPanel = null;
 
-    private static GameObject garrisonPanel;
-    private static GameObject toBattlePanel;
+    [Header("Attack Menu")]
+    [SerializeField] private Image playerImage = null;
+    [SerializeField] private Image enemyImage = null;
+    [SerializeField] private Text playerCountry = null;
+    [SerializeField] private Text enemyCountry = null;
 
-    private static GameObject vsFramesPanel;
-    private static GameObject playerIcon;
-    private static GameObject enemyIcon;
-    private static GameObject playerText;
-    private static GameObject enemyText;
-    private static GameObject attackerButton;
-    private static GameObject defenderButton;
+    [Header("UI Buttons")]
+    [SerializeField] private Button endTurnButton = null;
+    [SerializeField] private Button cancelButton = null;
+    [SerializeField] private GameObject attackerButton = null;
+    [SerializeField] private GameObject defenderButton = null;
 
-    private static GameObject endTurnButton;
-    private static GameObject endPhaseButton;
+    [Header("Turn UI")]
+    [SerializeField] private Image player1Image = null;
+    [SerializeField] private Image player2Image = null;
+    [SerializeField] private Image player3Image = null;
+    [SerializeField] private Image player4Image = null;
 
-    void Awake()
+    [SerializeField] private Image player1Color = null;
+    [SerializeField] private Image player2Color = null;
+    [SerializeField] private Image player3Color = null;
+    [SerializeField] private Image player4Color = null;
+
+    [Header("General UI")]
+    [SerializeField] private Text coins = null;
+    [SerializeField] private Text playerNameText = null;
+
+    public void SetPlayerNameText(string playerName) => playerNameText.text = playerName;
+
+    public void BuyUnit(int unitType)
     {
-        cancelAttackButton = GameObject.Find("CancelAttackButton");
-
-        garrisonPanel = GameObject.Find("GarrisonPanel");
-        toBattlePanel = GameObject.Find("ToBattlePanel");
-
-        vsFramesPanel = GameObject.Find("VsFramesPanel");
-        playerIcon = GameObject.Find("PlayerImage");
-        enemyIcon = GameObject.Find("EnemyImage");
-        playerText = GameObject.Find("PlayerCountryNameText");
-        enemyText = GameObject.Find("EnemyCountryNameText");
-        attackerButton = GameObject.Find("AttackerButton");
-        defenderButton = GameObject.Find("DefenderButton");
-
-        endTurnButton = GameObject.Find("EndTurnButton");
-        endPhaseButton = GameObject.Find("EndPhaseButton");
-    }
-
-    public void ShowCancelAttackButton(bool state)
-    {
-        if (cancelAttackButton.activeSelf != state)
-            cancelAttackButton.SetActive(state);
-    }
-
-    public void ChangePlayerImage(Sprite newImage)
-    {
-        if (newImage == null) { return; }
+        int playerCoins = int.Parse(coins.text);
         
-        playerIcon.GetComponent<Image>().sprite = newImage;
+        // obtiene los precios de las unidades segun su tipo
+        int unitPrice = 0;
+        switch (unitType)
+        {
+            case 0:
+                unitPrice = 185;
+                break;
+            case 1:
+                unitPrice = 225;
+                break;
+            case 2:
+                unitPrice = 385;
+                break;
+        }
+
+        if ((playerCoins - unitPrice) < 0) { return; }
+
+        playerCoins -= unitPrice;
+        coins.text = playerCoins.ToString();
+
+        GameManager.instance.playerReserveUnits.Add(unitType);
+        ReserveUnitScritp.instance.ResetReserveList();
     }
 
-    public void ChangeEnemyImage(Sprite newImage)
+    public void ChangeImageInTurnFrame(List<Image> playerImages, List<Image> playerColors)
     {
-        if (newImage == null) { return; }
+        player1Image.sprite = playerImages[0].sprite;
+        player2Image.sprite = playerImages[1].sprite;
+        player3Image.sprite = playerImages[2].sprite;
+        player4Image.sprite = playerImages[3].sprite;
 
-        enemyIcon.GetComponent<Image>().sprite = newImage;
-    }
+        player1Color.color = playerColors[0].color;
+        player2Color.color = playerColors[1].color;
+        player3Color.color = playerColors[2].color;
+        player4Color.color = playerColors[3].color;
 
-    public void ChangePlayerCountry(string newText)
-    {
-        if (newText == null) { newText = "null"; }
-
-        playerText.GetComponent<Text>().text = newText;
-    }
-
-    public void ChangeEnemyCountry(string newText)
-    {
-        if (newText == null) { newText = "null"; }
-
-        enemyText.GetComponent<Text>().text = newText;
-    }
-
-    public void ShowGarrisonPanel(bool state)
-    {
-        if (garrisonPanel.activeSelf != state)
-            garrisonPanel.SetActive(state);
-    }
-
-    public void ShowToBattlePanel(bool state)
-    {
-        if (toBattlePanel.activeSelf != state)
-            toBattlePanel.SetActive(state);
-    }
-
-    public void ShowVsFramesPanel(bool state)
-    {
-        if (vsFramesPanel.activeSelf != state)
-            vsFramesPanel.SetActive(state);
-    }
-
-    public void ShowAttackerButton(bool state)
-    {
-        if (attackerButton.activeSelf != state)
-            attackerButton.SetActive(state);
-    }
-
-    public void ShowDefenderButton(bool state)
-    {
-        if (defenderButton.activeSelf != state)
-            defenderButton.SetActive(state);
+        if (player3Image == null) { player3Image.gameObject.SetActive(false); }
+        if (player4Image == null) { player4Image.gameObject.SetActive(false); }
+        if (player3Color == null) { player3Color.gameObject.SetActive(false); }
+        if (player4Color == null) { player4Color.gameObject.SetActive(false); }
     }
 
     public void ShowEndTurnButton(bool state)
     {
-        if (endTurnButton.activeSelf != state)
-            endTurnButton.SetActive(state);
+        if (endTurnButton.gameObject.activeSelf != state)
+            endTurnButton.gameObject.SetActive(state);
     }
 
-    public void ShowEndPhaseButton(bool state)
+    public void CancelAttack()
     {
-        if (endPhaseButton.activeSelf != state)
-            endPhaseButton.SetActive(state);
+        ConnectionManager.instance.CmdPlayerStoppedAttacking();
+    }
+
+    public void EndTurn()
+    {
+        // revisar si se merece tarjeta y darsela
+        Debug.Log("here");
+
+        ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
+    }
+
+    public void ShowAttackMenu(Sprite playerSprite, Sprite enemySprite, string playerCounrtyName, string enemyCounrtyName)
+    {
+        ShowEndTurnButton(false);
+        attackMenuPanel.SetActive(true);
+
+        // setea las imagenes y nombres de los paises en cuestion
+        playerImage.sprite = playerSprite;
+        enemyImage.sprite = enemySprite;
+        playerCountry.text = playerCounrtyName;
+        enemyCountry.text = enemyCounrtyName;
+    }
+
+    public void HideAttackMenu()
+    {
+        ShowEndTurnButton(true);
+        attackMenuPanel.SetActive(false);
+    }
+
+    public void ShowReadyButton(int playerType, bool state)
+    {
+        GameObject buttonType = null;
+
+        if(playerType == 0)
+            buttonType = attackerButton;
+        else if (playerType == 1)
+            buttonType = defenderButton;
+
+        if (buttonType == null) { return; }
+
+        if (buttonType.activeSelf == state) { return; }
+
+        buttonType.SetActive(state);
+    }
+
+    public void ShowCancelButton(int playerType, bool state)
+    {
+        if (playerType != 1) { return; }
+
+        if (cancelButton.gameObject.activeSelf == state) { return; }
+
+        cancelButton.gameObject.SetActive(state);
     }
 }

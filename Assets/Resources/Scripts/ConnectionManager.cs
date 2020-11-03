@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.UI;
 
 public class ConnectionManager : NetworkBehaviour
 {
@@ -11,6 +12,9 @@ public class ConnectionManager : NetworkBehaviour
     [NonSerialized] public bool isReady = false;
     [SyncVar(hook = nameof(HandleDisplayNameChanged))]
     [NonSerialized] public string playerDisplayName = "Cargando...";
+
+    [NonSerialized] public Image playerDisplayImage = null;
+    [NonSerialized] public Image playerDisplayColor = null;
 
     private NetworkManagerLobby room;
     public NetworkManagerLobby Room
@@ -33,7 +37,6 @@ public class ConnectionManager : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
-        // @TODO: crear una interfaz con inputField para el nombre
         CmdSetDisplayName(MainMenu.instance.playerName);
     }
 
@@ -72,13 +75,16 @@ public class ConnectionManager : NetworkBehaviour
             return;
         }
 
-        // actualiza el estado de los jugadores en la UI propia
+        // reinicia el estado de todos los jugadores en la sala
         for (int i = 0; i < LobbyScript.instance.playerNames.GetLength(0); i++)
         {
             LobbyScript.instance.playerNames[0].text = "Esperando...";
             LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(false);
+            //LobbyScript.instance.playerImages[i].gameObject.SetActive(false);
+            //LobbyScript.instance.playerColors[i].gameObject.SetActive(false);
         }
 
+        // actualiza el estado de los jugadores en la UI propia
         for (int i = 0; i < Room.RoomPlayers.Count; i++)
         {
             LobbyScript.instance.playerNames[i].text = Room.RoomPlayers[i].playerDisplayName;
@@ -89,7 +95,11 @@ public class ConnectionManager : NetworkBehaviour
                 LobbyScript.instance.playerReadyIcons[i].sprite = Room.RoomPlayers[i].isReady ? LobbyScript.instance.readyIcon : LobbyScript.instance.notReadyIcon;
             }
             else
+            {
                 LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(false);
+                //LobbyScript.instance.playerImages[i].gameObject.SetActive(false);
+                //LobbyScript.instance.playerColors[i].gameObject.SetActive(false);
+            }
         }
     }
 
@@ -101,10 +111,7 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSetDisplayName(string newDisplayName)
-    {
-        playerDisplayName = newDisplayName;
-    }
+    public void CmdSetDisplayName(string newDisplayName) => playerDisplayName = newDisplayName;
 
     [Command]
     public void CmdReadyUp()
@@ -174,7 +181,10 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdEndTurn(int playerBattleSide) => RpcPlayerEndedTurn(playerBattleSide, NetworkServer.connections.Count - 1);
+    public void CmdEndTurn(int playerBattleSide)
+    {
+        RpcPlayerEndedTurn(playerBattleSide, NetworkServer.connections.Count - 1);
+    }
 
     [ClientRpc]
     public void RpcPlayerEndedTurn(int playerBattleSide, int amountPlayers)
@@ -189,9 +199,16 @@ public class ConnectionManager : NetworkBehaviour
 
             // muestra el boton de terminar de turno en su turno
             if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
-                MapManager.instancia.canvas.ShowEndPhaseButton(true);
+                MapManager.instancia.canvas.ShowEndTurnButton(true);
             else
-                MapManager.instancia.canvas.ShowEndPhaseButton(false);
+                MapManager.instancia.canvas.ShowEndTurnButton(false);
+
+            for (int i = 0; i < MapManager.instancia.turnList.Count - 1; i++)
+                MapManager.instancia.turnList[i] = MapManager.instancia.turnList[i + 1];
+
+            MapManager.instancia.turnList[MapManager.instancia.turnList.Count - 1] = 0;
+
+            // MapManager.instancia.UpdateVisualTurnOrder(MapManager.instancia.turnList);
         }
         else if (SceneManager.GetActiveScene().name == "BattleScene")
         {
@@ -231,40 +248,16 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdPlayerStoppedAttacking()
-    {
-        RpcCloseAttackMenues();
-    }
+    public void CmdPlayerStoppedAttacking() => RpcCloseAttackMenu();
 
     [ClientRpc]
-    public void RpcCloseAttackMenues()
-    {
-        MapManager.instancia.OcultarMenuAtaque();
-    }
+    public void RpcCloseAttackMenu() => MapManager.instancia.OcultarMenuAtaque();
 
     [ClientRpc]
     public void RpcChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
     [TargetRpc]
-    public void TargetAddCountry(NetworkConnection conn, string nombrePais)
-    {
-        GameManager.instance.AgregarPais(nombrePais);
-
-    }
-
-    [Command]
-    public void CmdPintarPais(string pais, Color color)
-    {
-
-        RpcPintarPais(pais, color);
-    }
-
-    [ClientRpc]
-    public void RpcPintarPais(string pais, Color color)
-    {
-        GameObject.Find(pais).GetComponent<Pais>().CambiarColorOriginal(color);
-
-    }
+    public void TargetAddCountry(NetworkConnection conn, string nombrePais) => GameManager.instance.AgregarPais(nombrePais);
 
     [TargetRpc]
     public void TargetSetYourTurnNumber(NetworkConnection conn, int turnNumber)
@@ -273,13 +266,21 @@ public class ConnectionManager : NetworkBehaviour
 
         // muestra el boton de terminar de turno en su turno
         if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
-            MapManager.instancia.canvas.ShowEndPhaseButton(true);
+            MapManager.instancia.canvas.ShowEndTurnButton(true);
     }
+
     [TargetRpc]
-    public void TargetSetYourColor(NetworkConnection conn, Color playerColor)
+    public void TargetSetYourColor(NetworkConnection conn, Color playerColor) => GameManager.instance.SetPlayerColor(playerColor);
+
+    [Command]
+    public void CmdPaintCountry(string pais, Color color) => RpcPaintCountry(pais, color);
+
+    [ClientRpc]
+    public void RpcPaintCountry(string pais, Color color)
     {
-
-        GameManager.instance.SetPlayerColor(playerColor);
-
+        GameObject.Find(pais).GetComponent<Pais>().ChangeOriginalColor(color);
     }
+
+    [ClientRpc]
+    public void RpcUpdateTurnList(int turnNumber) => MapManager.instancia.turnList.Add(turnNumber);
 }

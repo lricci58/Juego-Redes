@@ -1,44 +1,27 @@
 ﻿using System;
 using UnityEngine;
 using Mirror;
-using UnityEngine.UIElements;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class MapManager : NetworkBehaviour
 {
     public static MapManager instancia = null;
 
-    [SerializeField] private GameObject textNumUnidades;
-
-    [SerializeField] private GameObject canvasObject;
-    [NonSerialized] public CampaignMapUI_Manager canvas;
+    public CampaignMapUI_Manager canvas;
 
     [NonSerialized] public int miTurno;
     [NonSerialized] [SyncVar] public int turnoActual = 0;
-
-    private Color colorOriginal;
+    [NonSerialized] public List<int> turnList = new List<int>();
+    
     private Color colorSeleccionado = new Color(0.3f, 0.3f, 0.3f);
     private Color colorLimitrofe = new Color(0.3f, 0.3f, 0.3f);
-    private Color colorNeutral = new Color(.96f, .96f, .96f);
 
-    GameObject []paises;
-
-    void Start()
+    void Start() 
     {
         instancia = this;
 
-        Instantiate(canvasObject);
-        canvas = canvasObject.GetComponent<CampaignMapUI_Manager>();
-        canvas.ShowCancelAttackButton(false);
-        canvas.ShowGarrisonPanel(false);
-        canvas.ShowToBattlePanel(false);
-        canvas.ShowVsFramesPanel(false);
-        canvas.ShowAttackerButton(false);
-        canvas.ShowDefenderButton(false);
-        
-        canvas.ShowEndPhaseButton(false);
-        canvas.ShowEndTurnButton(false);
-
-
+        canvas.SetPlayerNameText(ConnectionManager.instance.playerDisplayName);
     }
 
     void Update()
@@ -46,44 +29,38 @@ public class MapManager : NetworkBehaviour
         if (miTurno != turnoActual) { return; }
     }
 
+    public void UpdateVisualTurnOrder(List<int> turnList)
+    {
+        List<Image> playerImages = new List<Image>();
+        List<Image> playerColors = new List<Image>();
+
+        foreach (ConnectionManager player in ConnectionManager.instance.Room.RoomPlayers)
+        {
+            playerImages.Add(player.playerDisplayImage);
+            playerColors.Add(player.playerDisplayColor);
+        }
+
+        canvas.ChangeImageInTurnFrame(playerImages, playerColors);
+    }
+
     public void DesplegarMenuAtaque(Sprite imagenJugador, Sprite imagenEnemigo, string paisJugador, string paisEnemigo, int tipoJugador)
     {
-        canvas.ShowEndPhaseButton(false);
+        // muestra el panel de ataque
+        canvas.ShowAttackMenu(imagenJugador, imagenEnemigo, paisJugador, paisEnemigo);
+
+        // instanciar boton defensor o atacante segun el tipo de jugador
+        canvas.ShowReadyButton(tipoJugador, true);
 
         // instanciar boton cancelar ataque en caso de ser atacante
-        if (tipoJugador == 1)
-            canvas.ShowCancelAttackButton(true);
-
-        canvas.ShowGarrisonPanel(true);
-        canvas.ShowToBattlePanel(true);
-
-        canvas.ShowVsFramesPanel(true);
-
-        canvas.ChangePlayerImage(imagenJugador);
-        canvas.ChangeEnemyImage(imagenEnemigo);
-
-        canvas.ChangePlayerCountry(paisJugador);
-        canvas.ChangeEnemyCountry(paisEnemigo);
-
-        // instanciar boton defensor
-        if (tipoJugador == 0)
-            canvas.ShowDefenderButton(true);
-        // instanciar boton atacante
-        else if (tipoJugador == 1)
-            canvas.ShowAttackerButton(true);
+        canvas.ShowCancelButton(tipoJugador, true);
     }
 
     public void OcultarMenuAtaque()
     {
-        canvas.ShowCancelAttackButton(false);
-        canvas.ShowGarrisonPanel(false);
-        canvas.ShowToBattlePanel(false);
-        canvas.ShowVsFramesPanel(false);
-        canvas.ShowAttackerButton(false);
-        canvas.ShowDefenderButton(false);
+        canvas.HideAttackMenu();
 
         if (miTurno == turnoActual)
-            canvas.ShowEndPhaseButton(true);
+            canvas.ShowEndTurnButton(true);
     }
 
     public void ActualizarEstadoPaises(string nombrePaisSeleccionado, string[] nombrePaisesLimitrofes)
@@ -111,19 +88,18 @@ public class MapManager : NetworkBehaviour
         if (posibleSeleccionado == null) { return false; }
 
         // deselecciona al pais
-        posibleSeleccionado.GetComponent<Pais>().CambiarAOriginal();
-        posibleSeleccionado.tag = "pais";
+        posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
+        posibleSeleccionado.tag = "Country";
 
         // y a sus limitrofes
         foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
         {
             if (posibleLimitrofe == null) { continue; }
 
-            posibleLimitrofe.GetComponent<Pais>().CambiarAOriginal();
-            posibleLimitrofe.tag = "pais";
+            posibleLimitrofe.GetComponent<Pais>().ChangeColorToOriginal();
+            posibleLimitrofe.tag = "Country";
         }
 
         return true;
     }
-
 }
