@@ -6,8 +6,6 @@
 **/obj
 **/Packages
 **/ProjectSettings
-/Library/ArtifactDB
-Unity Packages
 **/Build
 **/Library/PlayerDataCache
-/Library/ArtifactDB
+Unity Packages

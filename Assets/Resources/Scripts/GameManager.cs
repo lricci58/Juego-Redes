@@ -39,11 +39,7 @@ public class GameManager : NetworkBehaviour
         playerColors.Add(new Color32(165, 88, 24, 255));
         playerColors.Add(new Color32(255, 109, 0, 255));
 
-        Debug.Log("soy server");
-
         int contadorTurno = Random.Range(0, NetworkServer.connections.Count);
-
-        Debug.Log("contador turno: "+contadorTurno);
 
         // crea el orden de la lista
         for (int turn = 0; turn < NetworkServer.connections.Count; turn++)
@@ -56,7 +52,6 @@ public class GameManager : NetworkBehaviour
 
         List<GameObject> listaPaisesEnMapa = GameObject.FindGameObjectsWithTag("Country").ToList();
         int cantPaises = listaPaisesEnMapa.Count;
-        Debug.Log("cant paises: "+cantPaises);
         int numJugador = 0;
 
         for (int i = 0; i < cantPaises; i++)
@@ -73,7 +68,7 @@ public class GameManager : NetworkBehaviour
 
     public void SetPlayerColor(Color newColor) => playerColor = newColor;
 
-    public void AgregarPais(string pais)
+    public void AddCountry(string pais)
     {
         misPaises.Add(pais);
         ConnectionManager.instance.CmdPaintCountry(pais, playerColor);

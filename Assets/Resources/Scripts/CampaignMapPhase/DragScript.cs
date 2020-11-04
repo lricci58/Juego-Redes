@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragScript : MonoBehaviour, IDragHandler
+public class DragScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 {
-    [SerializeField] private RectTransform reserveUnitsPanel;
+    [SerializeField] private RectTransform dragRectPanel;
+    [SerializeField] private Canvas canvas;
 
-    public void OnDrag(PointerEventData eventData) => reserveUnitsPanel.anchoredPosition += eventData.delta;
+    public void OnDrag(PointerEventData eventData) => dragRectPanel.anchoredPosition += eventData.delta / canvas.scaleFactor;
+
+    public void OnPointerDown(PointerEventData eventData) => dragRectPanel.SetAsLastSibling();
 }

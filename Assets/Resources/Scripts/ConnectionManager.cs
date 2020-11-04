@@ -242,7 +242,7 @@ public class ConnectionManager : NetworkBehaviour
             // deselecciona al pais seleccionado y sus limitrofes
             MapManager.instancia.HayPaisSeleccionado();
 
-            // despliega el menu de ataque
+            // despliega el menu de ataque en modo defensor
             MapManager.instancia.DesplegarMenuAtaque(null, null, paisAtacado, paisAtacante, 0);
         }
     }
@@ -257,12 +257,13 @@ public class ConnectionManager : NetworkBehaviour
     public void RpcChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
     [TargetRpc]
-    public void TargetAddCountry(NetworkConnection conn, string nombrePais) => GameManager.instance.AgregarPais(nombrePais);
+    public void TargetAddCountry(NetworkConnection conn, string nombrePais) => GameManager.instance.AddCountry(nombrePais);
 
     [TargetRpc]
     public void TargetSetYourTurnNumber(NetworkConnection conn, int turnNumber)
     {
-        MapManager.instancia.miTurno = turnNumber;
+        MapManager.instancia.miTurno = turnNumber;  
+        RpcUpdateTurnList(turnNumber);
 
         // muestra el boton de terminar de turno en su turno
         if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
@@ -283,4 +284,10 @@ public class ConnectionManager : NetworkBehaviour
 
     [ClientRpc]
     public void RpcUpdateTurnList(int turnNumber) => MapManager.instancia.turnList.Add(turnNumber);
+
+    [Command]
+    public void CmdPlayerIsReadyToBattle()
+    {
+
+    }
 }

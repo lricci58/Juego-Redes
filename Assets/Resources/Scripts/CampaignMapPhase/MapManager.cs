@@ -31,16 +31,19 @@ public class MapManager : NetworkBehaviour
 
     public void UpdateVisualTurnOrder(List<int> turnList)
     {
-        List<Image> playerImages = new List<Image>();
-        List<Image> playerColors = new List<Image>();
+        List<Sprite> playerImages = new List<Sprite>();
+        List<Color> playerColors = new List<Color>();
 
+        // crea las listas de 
         foreach (ConnectionManager player in ConnectionManager.instance.Room.RoomPlayers)
         {
-            playerImages.Add(player.playerDisplayImage);
-            playerColors.Add(player.playerDisplayColor);
+            playerImages.Add(player.playerDisplayImage.sprite);
+            playerColors.Add(player.playerDisplayColor.color);
         }
 
-        canvas.ChangeImageInTurnFrame(playerImages, playerColors);
+        // ordenar las imagenes segun la turnList
+
+        canvas.ChangeImageInTurnFrame(playerImages, playerColors, ConnectionManager.instance.Room.RoomPlayers.Count);
     }
 
     public void DesplegarMenuAtaque(Sprite imagenJugador, Sprite imagenEnemigo, string paisJugador, string paisEnemigo, int tipoJugador)
@@ -58,7 +61,6 @@ public class MapManager : NetworkBehaviour
     public void OcultarMenuAtaque()
     {
         canvas.HideAttackMenu();
-
         if (miTurno == turnoActual)
             canvas.ShowEndTurnButton(true);
     }
@@ -85,13 +87,14 @@ public class MapManager : NetworkBehaviour
         GameObject posibleSeleccionado = GameObject.FindGameObjectWithTag("Selected");
         GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
 
-        if (posibleSeleccionado == null) { return false; }
+        // comprueba si existe algun pais seleccionado
+        if (!posibleSeleccionado) { return false; }
 
-        // deselecciona al pais
+        // deselecciona al pais seleccionado
         posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
         posibleSeleccionado.tag = "Country";
 
-        // y a sus limitrofes
+        // deselecciona a sus limitrofes
         foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
         {
             if (posibleLimitrofe == null) { continue; }
@@ -100,6 +103,31 @@ public class MapManager : NetworkBehaviour
             posibleLimitrofe.tag = "Country";
         }
 
+        posibleSeleccionado.GetComponent<Pais>().Unselect();
+
         return true;
+    }
+
+    public void DeseleccionarPais()
+    {
+        GameObject posibleSeleccionado = GameObject.FindGameObjectWithTag("Selected");
+        GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
+        
+        if (!posibleSeleccionado) { return; }
+
+        // deselecciona al pais seleccionado
+        posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
+        posibleSeleccionado.tag = "Country";
+
+        // deselecciona a sus limitrofes
+        foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
+        {
+            if (posibleLimitrofe == null) { continue; }
+
+            posibleLimitrofe.GetComponent<Pais>().ChangeColorToOriginal();
+            posibleLimitrofe.tag = "Country";
+        }
+
+        posibleSeleccionado.GetComponent<Pais>().Unselect();
     }
 }

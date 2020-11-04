@@ -8,47 +8,23 @@ public class ReserveUnitScritp : MonoBehaviour
 
     [SerializeField] private Text[] ammountOfUnits;
 
-    void Start()
-    {
-        instance = this;
-    }
+    void Start() => instance = this;
 
     void OnEnable() => ResetReserveList();
 
     public void ResetReserveList()
     {
-        // destruye todos los posibles botones existentes
-        for (int i = 0; i < 3; i++)
-        {
-            GameObject buttonPrefab = GameObject.Find("UnitFrameImage(Clone)");
-            if (buttonPrefab)
-                Destroy(buttonPrefab);
-        }
-
         List<int> unitList = GameManager.instance.playerReserveUnits;
 
-        int paladinCounter = 0;
-        int archerCounter = 0;
-        int huskarlCounter = 0;
-
+        // busca la cantidad de cada tipo de soldado en las reservas
+        int[] unitsCounter = new int[5];
         foreach (int unitType in unitList)
-        {
-            switch (unitType)
-            {
-                case 0:
-                    paladinCounter++;
-                    break;
-                case 1:
-                    archerCounter++;
-                    break;
-                case 2:
-                    huskarlCounter++;
-                    break;
-            }
-        }
+            unitsCounter[unitType]++;
 
-        ammountOfUnits[0].text = paladinCounter.ToString();
-        ammountOfUnits[1].text = archerCounter.ToString();
-        ammountOfUnits[2].text = huskarlCounter.ToString();
+        // actualiza los textos de los botones con la cantidad de cada tipo de soldado
+        for (int i = 0; i < ammountOfUnits.GetLength(0); i++)
+            ammountOfUnits[i].text = unitsCounter[i].ToString();
     }
+
+    public bool IsActive() => gameObject.activeSelf;
 }

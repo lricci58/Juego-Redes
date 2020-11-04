@@ -5,36 +5,27 @@ using UnityEngine.UI;
 
 public class CampaignMapUI_Manager : MonoBehaviour
 {
-    [Header("UI Panels")]
-    [SerializeField] private GameObject generalMapUI = null;
-    [SerializeField] private GameObject attackMenuPanel = null;
+    [Header("General UI Objects")]
+    [SerializeField] private Text coins = null;
+    [SerializeField] private Text playerNameText = null;
+    [SerializeField] private Button endTurnButton = null;
 
-    [Header("Attack Menu")]
+    [Header("Attack Menu UI Objects")]
+    [SerializeField] private GameObject attackMenuPanel = null;
+    [SerializeField] private Button cancelAttackButton = null;
+    [SerializeField] private GameObject attackerButton = null;
+    [SerializeField] private GameObject defenderButton = null;
     [SerializeField] private Image playerImage = null;
     [SerializeField] private Image enemyImage = null;
     [SerializeField] private Text playerCountry = null;
     [SerializeField] private Text enemyCountry = null;
 
-    [Header("UI Buttons")]
-    [SerializeField] private Button endTurnButton = null;
-    [SerializeField] private Button cancelButton = null;
-    [SerializeField] private GameObject attackerButton = null;
-    [SerializeField] private GameObject defenderButton = null;
+    [Header("Turn UI Objects")]
+    [SerializeField] private Image[] playerImagesInTurnPanel = null;
+    [SerializeField] private Image[] playerColorsInTurnPanel = null;
 
-    [Header("Turn UI")]
-    [SerializeField] private Image player1Image = null;
-    [SerializeField] private Image player2Image = null;
-    [SerializeField] private Image player3Image = null;
-    [SerializeField] private Image player4Image = null;
-
-    [SerializeField] private Image player1Color = null;
-    [SerializeField] private Image player2Color = null;
-    [SerializeField] private Image player3Color = null;
-    [SerializeField] private Image player4Color = null;
-
-    [Header("General UI")]
-    [SerializeField] private Text coins = null;
-    [SerializeField] private Text playerNameText = null;
+    [Header("BuyUnitsPanel")]
+    [SerializeField] private Text[] unitPrices = null;
 
     public void SetPlayerNameText(string playerName) => playerNameText.text = playerName;
 
@@ -42,20 +33,8 @@ public class CampaignMapUI_Manager : MonoBehaviour
     {
         int playerCoins = int.Parse(coins.text);
         
-        // obtiene los precios de las unidades segun su tipo
-        int unitPrice = 0;
-        switch (unitType)
-        {
-            case 0:
-                unitPrice = 185;
-                break;
-            case 1:
-                unitPrice = 225;
-                break;
-            case 2:
-                unitPrice = 385;
-                break;
-        }
+        // obtiene el precio de las unidad seleccionada
+        int unitPrice = int.Parse(unitPrices[unitType].text);
 
         if ((playerCoins - unitPrice) < 0) { return; }
 
@@ -66,39 +45,34 @@ public class CampaignMapUI_Manager : MonoBehaviour
         ReserveUnitScritp.instance.ResetReserveList();
     }
 
-    public void ChangeImageInTurnFrame(List<Image> playerImages, List<Image> playerColors)
+    public void ChangeImageInTurnFrame(List<Sprite> playerImages, List<Color> playerColors, int ammountOfPlayer)
     {
-        player1Image.sprite = playerImages[0].sprite;
-        player2Image.sprite = playerImages[1].sprite;
-        player3Image.sprite = playerImages[2].sprite;
-        player4Image.sprite = playerImages[3].sprite;
+        for (int i = 0; i < playerImages.Count; i++)
+        {
+            // comprueba si el jugador existe
+            if(i > ammountOfPlayer)
+            {
+                playerImagesInTurnPanel[i].gameObject.SetActive(false);
+                continue;
+            }
 
-        player1Color.color = playerColors[0].color;
-        player2Color.color = playerColors[1].color;
-        player3Color.color = playerColors[2].color;
-        player4Color.color = playerColors[3].color;
-
-        if (player3Image == null) { player3Image.gameObject.SetActive(false); }
-        if (player4Image == null) { player4Image.gameObject.SetActive(false); }
-        if (player3Color == null) { player3Color.gameObject.SetActive(false); }
-        if (player4Color == null) { player4Color.gameObject.SetActive(false); }
+            playerImagesInTurnPanel[i].sprite = playerImages[i];
+            playerColorsInTurnPanel[i].color = playerColors[i];
+        }
     }
 
     public void ShowEndTurnButton(bool state)
     {
-        if (endTurnButton.gameObject.activeSelf != state)
-            endTurnButton.gameObject.SetActive(state);
+        if (endTurnButton.gameObject.activeSelf == state) { return; }
+
+        endTurnButton.gameObject.SetActive(state);
     }
 
-    public void CancelAttack()
-    {
-        ConnectionManager.instance.CmdPlayerStoppedAttacking();
-    }
+    public void CancelAttack() => ConnectionManager.instance.CmdPlayerStoppedAttacking();
 
     public void EndTurn()
     {
         // revisar si se merece tarjeta y darsela
-        Debug.Log("here");
 
         ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
     }
@@ -117,7 +91,6 @@ public class CampaignMapUI_Manager : MonoBehaviour
 
     public void HideAttackMenu()
     {
-        ShowEndTurnButton(true);
         attackMenuPanel.SetActive(false);
     }
 
@@ -126,11 +99,11 @@ public class CampaignMapUI_Manager : MonoBehaviour
         GameObject buttonType = null;
 
         if(playerType == 0)
-            buttonType = attackerButton;
-        else if (playerType == 1)
             buttonType = defenderButton;
+        else if (playerType == 1)
+            buttonType = attackerButton;
 
-        if (buttonType == null) { return; }
+        if (!buttonType) { return; }
 
         if (buttonType.activeSelf == state) { return; }
 
@@ -141,8 +114,10 @@ public class CampaignMapUI_Manager : MonoBehaviour
     {
         if (playerType != 1) { return; }
 
-        if (cancelButton.gameObject.activeSelf == state) { return; }
+        if (cancelAttackButton.gameObject.activeSelf == state) { return; }
 
-        cancelButton.gameObject.SetActive(state);
+        cancelAttackButton.gameObject.SetActive(state);
     }
+
+    public void PlayerIsReadyToBattle() => ConnectionManager.instance.CmdPlayerIsReadyToBattle();
 }
