@@ -28,7 +28,7 @@ public class JoinLobbyMenu : MonoBehaviour
 
     public void JoinLobby()
     {
-        if (MainMenu.instance.playerName == null)
+        if (MainMenu.instance.playerName == "")
         {
             inputNamePanel.SetActive(true);
             return;
