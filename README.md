@@ -6,9 +6,11 @@ _Wars Of Titania: Total Conquest (WoT: TC)_ es un juego de estrategia por turnos
 - El juego tiene un mapa de campaña y una fase de batalla por turnos, todo en 2D
 
 Ejemplo de un mapa de batalla:
+
 ![Ejemplo mapa de batalla]()
 
 Ejemplo de unidad en la batalla:
+
 ![Gif de ejemplo de unidad](https://media.giphy.com/media/BujWeAL8y1AGz7GD0N/giphy.gif)
 
 ## Instalación
