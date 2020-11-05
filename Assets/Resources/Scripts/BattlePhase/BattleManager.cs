@@ -9,10 +9,6 @@ public class BattleManager : NetworkBehaviour
 {
     public static BattleManager instance = null;
 
-    public MapLoader map;
-    [SerializeField] private GameObject canvasObject;
-    [NonSerialized] public BattleUI_Manager canvas;
-
     [NonSerialized] public List<UnitScript> army;
     private List<UnitScript> deployUnitList;
     private List<UnitScript> enemyArmy;
@@ -27,6 +23,10 @@ public class BattleManager : NetworkBehaviour
     [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
     [NonSerialized] [SyncVar] public int currentTurn = 0;
     [NonSerialized] public int myTurnNumber;
+
+    [Header("Other Scripts")]
+    public MapLoader map;
+    public BattleUI_Manager canvas;
 
     void Start()
     {
@@ -44,8 +44,6 @@ public class BattleManager : NetworkBehaviour
 
     private void InitGame()
     {
-        Instantiate(canvasObject);
-        canvas = canvasObject.GetComponent<BattleUI_Manager>();
         canvas.ShowDeploymentPanel(true);
         canvas.ShowStartBattleButton(true);
         canvas.ShowEndTurnButton(false);
@@ -143,7 +141,13 @@ public class BattleManager : NetworkBehaviour
                 selectedUnit.Attack(targetUnit);
 
                 if (targetUnit.IsDead())
+                {
                     enemyArmy.Remove(targetUnit);
+
+                    // si al enemigo no le quedan mas unidades
+                    if (enemyArmy.Count == 0)
+                        PlayerWonBattle();
+                }
 
                 targetUnit = null;
             }
@@ -151,11 +155,11 @@ public class BattleManager : NetworkBehaviour
             // comprueba si la unidad deja de estar seleccionada
             if (!selectedUnit.IsSelected() && !selectedUnit.IsMoving()) { selectedUnit = null; }
         }
+    }
 
-        if (army.Count == 0)
-        {
-            // you lost, bitch
-        }
+    private void PlayerWonBattle()
+    {
+        // @TODO: call cmd that calls rpc that returns survivors to map and changes scene
     }
 
     private void DeployPhaseManager()

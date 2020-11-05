@@ -55,37 +55,29 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\UnitsPanelScript.cs" />
     <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\MapManager.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitButtonScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitButtonManager.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\EndTurnInMapButtonScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\UI_Manager.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\ReserveUnitButton.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\HealthBarScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitScript.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\CancelButtonScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleManager.cs" />
     <Compile Include="Assets\Resources\Scripts\ConnectionManager.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\EndTurnInBattleButtonScript.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu\JoinLobbyMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\CameraManager.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu\MainMenu.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\EmpezarScript.cs" />
     <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\DragScript.cs" />
     <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\Pais.cs" />
     <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\CampaignMapUI_Manager.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\AttackScript.cs" />
     <Compile Include="Assets\Resources\Scripts\GameMngLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleUI_Manager.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu\LobbyScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\MapLoader.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\AttackMenu.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\ReserveUnitScritp.cs" />
     <Compile Include="Assets\Resources\Scripts\NetworkManagerLobby.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\StartBattleButtonScript.cs" />
-    <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleLoader.cs" />
-    <Compile Include="Assets\Resources\Scripts\CampaignMapPhase\CountryGarrisonPanel.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />

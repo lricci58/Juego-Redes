@@ -18,7 +18,12 @@ public class MainMenu : MonoBehaviour
     [NonSerialized] public Image playerImage = null;
     [NonSerialized] public Image playerColor = null;
 
-    private void Start() => instance = this;
+    void Start() => instance = this;
+
+    void OnEnable()
+    {
+        // ver si existe txt, y si hay un nombre
+    }
 
     public void HostLobby()
     {
@@ -42,8 +47,5 @@ public class MainMenu : MonoBehaviour
         // save name on txt or something
     }
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
+    public void QuitGame() => Application.Quit();
 }

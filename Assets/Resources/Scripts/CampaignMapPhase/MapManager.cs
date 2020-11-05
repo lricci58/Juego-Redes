@@ -48,14 +48,30 @@ public class MapManager : NetworkBehaviour
 
     public void DesplegarMenuAtaque(Sprite imagenJugador, Sprite imagenEnemigo, string paisJugador, string paisEnemigo, int tipoJugador)
     {
+        if(tipoJugador == 0)
+        {
+            // si el defensor no tiene unidades es un auto conquest
+            if (GameObject.Find(paisJugador).GetComponent<Pais>().countryGarrison.Count <= 0)
+            {
+                // hace el swap de paises entre los incolucrados
+                GameManager.instance.misPaises.Remove(paisJugador);
+                ConnectionManager.instance.CmdChangeCountryOwners(paisJugador, paisEnemigo);
+
+                // desactiva la ventana de ataque en los involucrados
+                ConnectionManager.instance.CmdPlayerStoppedAttacking();
+                
+                return;
+            }
+        }
+
         // muestra el panel de ataque
         canvas.ShowAttackMenu(imagenJugador, imagenEnemigo, paisJugador, paisEnemigo);
 
-        // instanciar boton defensor o atacante segun el tipo de jugador
-        canvas.ShowReadyButton(tipoJugador, true);
-
         // instanciar boton cancelar ataque en caso de ser atacante
         canvas.ShowCancelButton(tipoJugador, true);
+
+        // setea el tipo de jugador (atacante o defensor)
+        GameManager.instance.playerBattleSide = tipoJugador;
     }
 
     public void OcultarMenuAtaque()
@@ -63,6 +79,9 @@ public class MapManager : NetworkBehaviour
         canvas.HideAttackMenu();
         if (miTurno == turnoActual)
             canvas.ShowEndTurnButton(true);
+
+        // devuelve el tipo de jugador en batalla a espectador
+        GameManager.instance.playerBattleSide = 2;
     }
 
     public void ActualizarEstadoPaises(string nombrePaisSeleccionado, string[] nombrePaisesLimitrofes)
@@ -108,26 +127,5 @@ public class MapManager : NetworkBehaviour
         return true;
     }
 
-    public void DeseleccionarPais()
-    {
-        GameObject posibleSeleccionado = GameObject.FindGameObjectWithTag("Selected");
-        GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
-        
-        if (!posibleSeleccionado) { return; }
-
-        // deselecciona al pais seleccionado
-        posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
-        posibleSeleccionado.tag = "Country";
-
-        // deselecciona a sus limitrofes
-        foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
-        {
-            if (posibleLimitrofe == null) { continue; }
-
-            posibleLimitrofe.GetComponent<Pais>().ChangeColorToOriginal();
-            posibleLimitrofe.tag = "Country";
-        }
-
-        posibleSeleccionado.GetComponent<Pais>().Unselect();
-    }
+    public void UnselectCountry() => HayPaisSeleccionado();
 }

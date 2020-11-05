@@ -359,7 +359,11 @@ public class UnitScript : NetworkBehaviour
             return false;
     }
 
-    public void DestroyUnit() => Destroy(gameObject);
+    public void DestroyUnit()
+    {
+        BattleManager.instance.army.Remove(this); 
+        Destroy(gameObject);
+    }
 
     public Vector3 GetPosition()  => transform.position - new Vector3(offsetPosicionX, offsetPosicionY, 0f);
     

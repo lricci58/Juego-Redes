@@ -12,7 +12,8 @@ public class Pais : MonoBehaviour
     [NonSerialized] public List<int> countryGarrison = new List<int>();
     [NonSerialized] public Color originalCountryColor;
 
-    [SerializeField] private GameObject countryUIPanel = null;
+    [SerializeField] private GameObject countryGarrisonPanel = null;
+    [SerializeField] private GameObject otherCountryGarrisonPanel = null;
 
     private void OnMouseDown()
     {
@@ -25,89 +26,54 @@ public class Pais : MonoBehaviour
             string atacante = GameObject.FindGameObjectWithTag("Selected").name;
             string atacado = gameObject.name;
 
-            // deselecciona al pais seleccionado y sus limitrofes
-            MapManager.instancia.HayPaisSeleccionado();
-
-            // abre el menu de ataque en modo atacante
-            MapManager.instancia.DesplegarMenuAtaque(null, null, atacante, atacado, 1);
-
             // avisa al jugador atacado
             ConnectionManager.instance.CmdPlayerAttacked(atacado, atacante);
         }
         // comprueba si el pais sea del jugador
         else if (GameManager.instance.misPaises.Contains(gameObject.name))
         {
-            // actualiza y muestra el panel de unidades
-            countryUIPanel.SetActive(true);
-            countryUIPanel.GetComponent<CountryGarrisonPanel>().ShowCountryPanel(gameObject.name, countryGarrison);
-
-            List<int> originList = null;
+            // busca por un pais seleccionado
             GameObject selectedCountry = GameObject.FindGameObjectWithTag("Selected");
+            GameObject countryPanel = null;
 
-            // indica de donde a donde se transladan las unidades (de las reservas o la guarnicion del pais seleccionado)
-            if (selectedCountry)
-                originList = selectedCountry.GetComponent<Pais>().countryGarrison;
-            else
-                originList = GameManager.instance.playerReserveUnits;
-
-            /* @NOTE: problemas con el sistema de seleccion: 
-             * hay un solo panel de guarnicion. 
-             * la forma de revisar si un boton fue seleccionado es ineficiente
-             */
-
-            if (originList != null)
-                if (IsPlayerAddingUnitsToCountry(originList)) { return; }
-
-            List<string> limitrofesAtacables = new List<string>();
-            foreach (string limitrofe in borderingCountries)
+            // si no hay pais seleccionado, se selecciona el pais
+            if (!selectedCountry)
             {
-                // si el pais limitrofe es propio, no lo añade
-                if (GameManager.instance.misPaises.Contains(limitrofe)) { continue; }
+                countryPanel = countryGarrisonPanel;
 
-                limitrofesAtacables.Add(limitrofe);
+                // si el pais no tiene unidades no puede ser seleccionado
+                if (countryGarrison.Count > 0) 
+                {
+                    List<string> limitrofesAtacables = new List<string>();
+                    foreach (string limitrofe in borderingCountries)
+                    {
+                        // si el pais limitrofe es propio, no lo añade
+                        if (GameManager.instance.misPaises.Contains(limitrofe)) { continue; }
+
+                        limitrofesAtacables.Add(limitrofe);
+                    }
+
+                    // al seleccionar el pais le avisa a los clientes
+                    ConnectionManager.instance.CmdCountryWasSelected(gameObject.name, limitrofesAtacables.ToArray());
+                }
             }
+            // si lo hay, es que se esta seleccionando un limitrofe para pasar unidades
+            else if (borderingCountries.ToList().Contains(selectedCountry.name))
+                countryPanel = otherCountryGarrisonPanel;
 
-            // al seleccionar el pais le avisa a los clientes
-            ConnectionManager.instance.CmdCountryWasSelected(gameObject.name, limitrofesAtacables.ToArray());
+            if (!countryPanel) { return; }
+
+            countryPanel.SetActive(true);
+            countryPanel.GetComponent<UnitsPanelScript>().SetPanelHeader("Guarnicion de " + gameObject.name);
+            countryPanel.GetComponent<UnitsPanelScript>().UpdateUnitsPanel(countryGarrison);
         }
     }
 
-    private bool IsPlayerAddingUnitsToCountry(List<int> originList)
+    public void Unselect()
     {
-        for (int i = 1; i <= 5; i++)
-        {
-            GameObject boton = GameObject.Find("UnitFrameImage (" + i + ")");
-
-            if (!boton) { continue; }
-
-            // comprueba que haya algun boton seleccionado
-            if (!boton.GetComponent<ReserveUnitButton>().selected) { continue; }
-
-            int unitType = i - 1;
-
-            // comprueba si hay unidades suficientes para agregar
-            if(originList.Contains(unitType))
-            {
-                originList.Remove(unitType);
-                countryGarrison.Add(unitType);
-            }
-
-            // actualiza el panel de unidades 
-            countryUIPanel.GetComponent<CountryGarrisonPanel>().ShowCountryPanel(gameObject.name, countryGarrison);
-
-            // esto se deberia hacer solo al cerrar la ventana
-            boton.GetComponent<ReserveUnitButton>().UnselectReserveUnit();
-
-            // actualiza la UI de las unidades de reserva
-            ReserveUnitScritp.instance.ResetReserveList();
-
-            return true;
-        }
-
-        return false;
+        countryGarrisonPanel.SetActive(false);
+        otherCountryGarrisonPanel.SetActive(false);
     }
-
-    public void Unselect() => countryUIPanel.SetActive(false);
 
     public void ChangeOriginalColor(Color nuevoColor)
     {

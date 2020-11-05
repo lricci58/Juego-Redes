@@ -13,19 +13,21 @@ public class MapLoader : MonoBehaviour
     [NonSerialized] public Transform allyUnitContainer;
     [NonSerialized] public Transform enemyUnitContainer;
 
-    [SerializeField] private GameObject movementTile;
-    [SerializeField] private GameObject attackTile;
-    private List<GameObject> movementTilesList;
-    private List<GameObject> attackTilesList;
-
     public LayerMask unitsLayer;
 
-    // almacenan las listas de prefabs
+    [Header("Prefabs")]
     public GameObject[] unitPrefabs;
+
     public GameObject[] smallMapPrefabs;
     public GameObject[] mediumMapPrefabs;
     public GameObject[] bigMapPrefabs;
     public GameObject[] largeMapPrefabs;
+
+    [Header("Unit Tile Prefabs")]
+    [SerializeField] private GameObject movementTile;
+    [SerializeField] private GameObject attackTile;
+    private List<GameObject> movementTilesList;
+    private List<GameObject> attackTilesList;
 
     [NonSerialized] public Tilemap ground;
     [NonSerialized] public Tilemap collision;
@@ -71,26 +73,26 @@ public class MapLoader : MonoBehaviour
         // obtiene cada capa del tilemap
         ground = GameObject.Find("AvailableGround").GetComponent<Tilemap>();
         collision = GameObject.Find("Collision").GetComponent<Tilemap>();
-        string deployZone1 = "";
-        string deployZone2 = "";
+        string playerDeployZone = "";
+        string enemyDeployZone = "";
         if (GameManager.instance.playerBattleSide == 0)
         {
-            deployZone1 = "DeployZone1";
-            deployZone2 = "DeployZone2";
+            playerDeployZone = "DeployZone1";
+            enemyDeployZone = "DeployZone2";
         }
         if (GameManager.instance.playerBattleSide == 1)
         {
-            deployZone1 = "DeployZone2";
-            deployZone2 = "DeployZone1";
+            playerDeployZone = "DeployZone2";
+            enemyDeployZone = "DeployZone1";
         }
 
-        deployZone = GameObject.Find(deployZone1).GetComponent<Tilemap>();
-        GameObject.Find(deployZone2).SetActive(false);
+        deployZone = GameObject.Find(playerDeployZone).GetComponent<Tilemap>();
+        GameObject.Find(enemyDeployZone).SetActive(false);
     }
 
     private void InstantiateUnits()
     {
-        unitTypesList = GameManager.instance.playerReserveUnits;
+        unitTypesList = GameManager.instance.unitsToBattle;
         
         unitContainer = new GameObject("UnitContainer").transform;
         allyUnitContainer = new GameObject("AlliedUnitsContainer").transform;

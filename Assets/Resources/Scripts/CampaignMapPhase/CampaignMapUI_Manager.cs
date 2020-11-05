@@ -10,15 +10,22 @@ public class CampaignMapUI_Manager : MonoBehaviour
     [SerializeField] private Text playerNameText = null;
     [SerializeField] private Button endTurnButton = null;
 
+    [SerializeField] private GameObject reserveUnitsPanel = null;
+
     [Header("Attack Menu UI Objects")]
     [SerializeField] private GameObject attackMenuPanel = null;
     [SerializeField] private Button cancelAttackButton = null;
-    [SerializeField] private GameObject attackerButton = null;
-    [SerializeField] private GameObject defenderButton = null;
+    [SerializeField] private GameObject readyButton = null;
+
+    [SerializeField] private GameObject garrisonPanel = null;
+    [SerializeField] private GameObject toBattlePanel = null;
+
     [SerializeField] private Image playerImage = null;
     [SerializeField] private Image enemyImage = null;
     [SerializeField] private Text playerCountry = null;
     [SerializeField] private Text enemyCountry = null;
+    [SerializeField] private Text playerName = null;
+    [SerializeField] private Text enemyName = null;
 
     [Header("Turn UI Objects")]
     [SerializeField] private Image[] playerImagesInTurnPanel = null;
@@ -32,8 +39,6 @@ public class CampaignMapUI_Manager : MonoBehaviour
     public void BuyUnit(int unitType)
     {
         int playerCoins = int.Parse(coins.text);
-        
-        // obtiene el precio de las unidad seleccionada
         int unitPrice = int.Parse(unitPrices[unitType].text);
 
         if ((playerCoins - unitPrice) < 0) { return; }
@@ -42,7 +47,17 @@ public class CampaignMapUI_Manager : MonoBehaviour
         coins.text = playerCoins.ToString();
 
         GameManager.instance.playerReserveUnits.Add(unitType);
-        ReserveUnitScritp.instance.ResetReserveList();
+        ShowReserveUnitsPanel(true);
+    }
+
+    public void ShowReserveUnitsPanel(bool state)
+    {
+        if(reserveUnitsPanel.activeSelf != state)
+            reserveUnitsPanel.SetActive(state);
+
+        // actualiza la lista del panel de reservas
+        reserveUnitsPanel.GetComponent<UnitsPanelScript>().SetPanelHeader("Unidades de Reserva");
+        reserveUnitsPanel.GetComponent<UnitsPanelScript>().UpdateUnitsPanel(GameManager.instance.playerReserveUnits);
     }
 
     public void ChangeImageInTurnFrame(List<Sprite> playerImages, List<Color> playerColors, int ammountOfPlayer)
@@ -77,37 +92,37 @@ public class CampaignMapUI_Manager : MonoBehaviour
         ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
     }
 
-    public void ShowAttackMenu(Sprite playerSprite, Sprite enemySprite, string playerCounrtyName, string enemyCounrtyName)
+    public void ShowAttackMenu(Sprite playerSprite, Sprite enemySprite, string playerCountryName, string enemyCounrtyName)
     {
         ShowEndTurnButton(false);
         attackMenuPanel.SetActive(true);
 
+        string panelHeaderText = "Guarnicion de " + playerCountryName;
+        List<int> garrisonList = GameObject.Find(playerCountryName).GetComponent<Pais>().countryGarrison;
+        
+        garrisonPanel.GetComponent<UnitsPanelScript>().SetPanelHeader(panelHeaderText);
+        garrisonPanel.GetComponent<UnitsPanelScript>().UpdateUnitsPanel(garrisonList);
+
         // setea las imagenes y nombres de los paises en cuestion
         playerImage.sprite = playerSprite;
         enemyImage.sprite = enemySprite;
-        playerCountry.text = playerCounrtyName;
+        playerCountry.text = playerCountryName;
         enemyCountry.text = enemyCounrtyName;
+        playerName.text = playerNameText.text;
     }
 
     public void HideAttackMenu()
     {
         attackMenuPanel.SetActive(false);
+        GameManager.instance.unitsToBattle.Clear();
     }
 
-    public void ShowReadyButton(int playerType, bool state)
+    public void CheckIfPlayerCanGoToBattle()
     {
-        GameObject buttonType = null;
+        // comprueba que el panel de "al combate" tenga al menos una unidad
+        if (GameManager.instance.unitsToBattle.Count <= 0) { return; }
 
-        if(playerType == 0)
-            buttonType = defenderButton;
-        else if (playerType == 1)
-            buttonType = attackerButton;
-
-        if (!buttonType) { return; }
-
-        if (buttonType.activeSelf == state) { return; }
-
-        buttonType.SetActive(state);
+        readyButton.GetComponent<Button>().interactable = true;
     }
 
     public void ShowCancelButton(int playerType, bool state)
@@ -119,5 +134,7 @@ public class CampaignMapUI_Manager : MonoBehaviour
         cancelAttackButton.gameObject.SetActive(state);
     }
 
-    public void PlayerIsReadyToBattle() => ConnectionManager.instance.CmdPlayerIsReadyToBattle();
+    public void PlayerIsReadyToBattle() => ConnectionManager.instance.CmdReadyUp();
+
+    public void PlayerIsRequestingAutoBattle() => ConnectionManager.instance.CmdRequestingAutoBattle();
 }

@@ -10,9 +10,10 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance = null;
     List<Color32> playerColors = new List<Color32>();
 
-    /* [NonSerialized] */
-    public int playerBattleSide = 2;
-    /* [NonSerialized] */ public List<int> playerReserveUnits;
+    [NonSerialized] public int playerBattleSide = 2;
+    [NonSerialized] public List<int> playerReserveUnits = new List<int>();
+    [NonSerialized] public List<int> unitsToBattle = new List<int>();
+
     [NonSerialized] public List<string> misPaises = new List<string>();
     private Color playerColor;
 
