@@ -26,7 +26,9 @@ public class MapManager : NetworkBehaviour
 
     void Update()
     {
-        if (miTurno != turnoActual) { return; }
+        if (miTurno != turnoActual) { canvas.CanBuyUnits(false); return; }
+
+        canvas.CanBuyUnits(true);
     }
 
     public void UpdateVisualTurnOrder(List<int> turnList)
@@ -50,19 +52,21 @@ public class MapManager : NetworkBehaviour
     {
         if(tipoJugador == 0)
         {
-            // si el defensor no tiene unidades es un auto conquest
+            // si el defensor no tiene unidades en el pais es un auto-conquest
             if (GameObject.Find(paisJugador).GetComponent<Pais>().countryGarrison.Count <= 0)
             {
-                // hace el swap de paises entre los incolucrados
+                // hace el swap de color y dueño de pais entre los involucrados
                 GameManager.instance.misPaises.Remove(paisJugador);
                 ConnectionManager.instance.CmdChangeCountryOwners(paisJugador, paisEnemigo);
 
-                // desactiva la ventana de ataque en los involucrados
+                // desactiva la ventana de ataque
                 ConnectionManager.instance.CmdPlayerStoppedAttacking();
                 
                 return;
             }
         }
+
+        GameManager.instance.countryInvolvedInBattle = paisJugador;
 
         // muestra el panel de ataque
         canvas.ShowAttackMenu(imagenJugador, imagenEnemigo, paisJugador, paisEnemigo);
@@ -77,11 +81,13 @@ public class MapManager : NetworkBehaviour
     public void OcultarMenuAtaque()
     {
         canvas.HideAttackMenu();
+
         if (miTurno == turnoActual)
             canvas.ShowEndTurnButton(true);
 
         // devuelve el tipo de jugador en batalla a espectador
         GameManager.instance.playerBattleSide = 2;
+        GameManager.instance.countryInvolvedInBattle = "";
     }
 
     public void ActualizarEstadoPaises(string nombrePaisSeleccionado, string[] nombrePaisesLimitrofes)
@@ -90,7 +96,7 @@ public class MapManager : NetworkBehaviour
         if (HayPaisSeleccionado()) { return; }
 
         GameObject paisSeleccionado = GameObject.Find(nombrePaisSeleccionado);
-        paisSeleccionado.GetComponent<SpriteRenderer>().color -= colorSeleccionado;
+        // paisSeleccionado.GetComponent<SpriteRenderer>().color -= colorSeleccionado;
         paisSeleccionado.tag = "Selected";
 
         foreach (string nombrePaisLimitrofe in nombrePaisesLimitrofes)
@@ -104,19 +110,19 @@ public class MapManager : NetworkBehaviour
     public bool HayPaisSeleccionado()
     {
         GameObject posibleSeleccionado = GameObject.FindGameObjectWithTag("Selected");
-        GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
 
         // comprueba si existe algun pais seleccionado
         if (!posibleSeleccionado) { return false; }
 
         // deselecciona al pais seleccionado
-        posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
+        // posibleSeleccionado.GetComponent<Pais>().ChangeColorToOriginal();
         posibleSeleccionado.tag = "Country";
 
+        GameObject[] posiblesLimitrofes = GameObject.FindGameObjectsWithTag("Bordering");
         // deselecciona a sus limitrofes
         foreach (GameObject posibleLimitrofe in posiblesLimitrofes)
         {
-            if (posibleLimitrofe == null) { continue; }
+            if (!posibleLimitrofe) { continue; }
 
             posibleLimitrofe.GetComponent<Pais>().ChangeColorToOriginal();
             posibleLimitrofe.tag = "Country";
@@ -128,4 +134,15 @@ public class MapManager : NetworkBehaviour
     }
 
     public void UnselectCountry() => HayPaisSeleccionado();
+
+    public void CheckIfPlayerCanGoToBattle()
+    {
+        bool canGoToBattle = false;
+
+        // comprueba que el panel de "al combate" tenga al menos una unidad
+        if (GameManager.instance.unitsToBattle.Count > 0)
+            canGoToBattle = true;
+
+        canvas.CanBeReadyToBattle(canGoToBattle);
+    }
 }

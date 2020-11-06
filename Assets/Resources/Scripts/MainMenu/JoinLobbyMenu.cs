@@ -5,10 +5,15 @@ public class JoinLobbyMenu : MonoBehaviour
 {
     [SerializeField] private NetworkManagerLobby networkManager = null;
 
+    [Header("Main Menu Panels")]
     [SerializeField] private GameObject optionsMenuPanel = null;
     [SerializeField] private GameObject lobbyPanel = null;
+
+    [Header("Change Name UI")]
     [SerializeField] private GameObject changeNameButton = null;
     [SerializeField] private GameObject inputNamePanel = null;
+
+    [Header("Input Ip UI")]
     [SerializeField] private GameObject inputIpPanel = null;
     [SerializeField] private GameObject startButton = null;
     [SerializeField] private InputField ipAddressInputField = null;

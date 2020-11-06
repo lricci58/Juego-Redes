@@ -16,11 +16,11 @@ public class NetworkManagerLobby : NetworkManager
 
     public List<ConnectionManager> RoomPlayers { get; } = new List<ConnectionManager>();
 
-    public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("Prefabs/SpawneablePrefabs").ToList();
+    public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawneablePrefabs").ToList();
 
     public override void OnStartClient()
     {
-        GameObject[] spawneablePrefabs = Resources.LoadAll<GameObject>("Prefabs/SpawneablePrefabs");
+        GameObject[] spawneablePrefabs = Resources.LoadAll<GameObject>("SpawneablePrefabs");
 
         foreach (GameObject prefab in spawneablePrefabs)
             ClientScene.RegisterPrefab(prefab);
@@ -44,6 +44,12 @@ public class NetworkManagerLobby : NetworkManager
         OnClientDisconnected?.Invoke();
     }
 
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        conn.Disconnect();
+        base.OnClientError(conn, errorCode);
+    }
+
     public override void OnServerConnect(NetworkConnection conn)
     {
         // comprueba si entran mas clientes o si estamos en la escena adecuada
@@ -51,21 +57,12 @@ public class NetworkManagerLobby : NetworkManager
         {
             // se desconecta el cliente que esta intentando entrar
             conn.Disconnect();
-            LobbyScript.instance.LeaveRoom();
-
             return;
         }
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        if(conn.identity != null)
-        {
-            ConnectionManager player = conn.identity.GetComponent<ConnectionManager>();
-
-            RoomPlayers.Remove(player);
-        }
-
         NotifyPlayersOfReadyState();
         base.OnServerDisconnect(conn);
     }
@@ -77,15 +74,14 @@ public class NetworkManagerLobby : NetworkManager
             // instancia el prefab de jugador
             ConnectionManager connectionManagerInstance = Instantiate(connectionManagerPrefab);
 
-            if(connectionManagerInstance.isServer)
-                LobbyScript.instance.startGameButton.gameObject.SetActive(true);
-
             // se añade a la conexion para que identifique a su instancia de ventana
             NetworkServer.AddPlayerForConnection(conn, connectionManagerInstance.gameObject);
         }
     }
 
     public override void OnStopServer() => RoomPlayers.Clear();
+
+    public override void OnStopClient() => RoomPlayers.Clear();
 
     public void NotifyPlayersOfReadyState()
     {

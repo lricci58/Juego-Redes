@@ -9,13 +9,13 @@ public class CampaignMapUI_Manager : MonoBehaviour
     [SerializeField] private Text coins = null;
     [SerializeField] private Text playerNameText = null;
     [SerializeField] private Button endTurnButton = null;
-
+    [SerializeField] private Button buyUnitsButton = null;
     [SerializeField] private GameObject reserveUnitsPanel = null;
 
     [Header("Attack Menu UI Objects")]
     [SerializeField] private GameObject attackMenuPanel = null;
     [SerializeField] private Button cancelAttackButton = null;
-    [SerializeField] private GameObject readyButton = null;
+    [SerializeField] private Button readyButton = null;
 
     [SerializeField] private GameObject garrisonPanel = null;
     [SerializeField] private GameObject toBattlePanel = null;
@@ -92,7 +92,7 @@ public class CampaignMapUI_Manager : MonoBehaviour
         ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
     }
 
-    public void ShowAttackMenu(Sprite playerSprite, Sprite enemySprite, string playerCountryName, string enemyCounrtyName)
+    public void ShowAttackMenu(Sprite playerSprite, Sprite enemySprite, string playerCountryName, string enemyCountryName)
     {
         ShowEndTurnButton(false);
         attackMenuPanel.SetActive(true);
@@ -107,26 +107,35 @@ public class CampaignMapUI_Manager : MonoBehaviour
         playerImage.sprite = playerSprite;
         enemyImage.sprite = enemySprite;
         playerCountry.text = playerCountryName;
-        enemyCountry.text = enemyCounrtyName;
+        enemyCountry.text = enemyCountryName;
         playerName.text = playerNameText.text;
+        // enemyName.text = ;
     }
 
     public void HideAttackMenu()
     {
         attackMenuPanel.SetActive(false);
+        cancelAttackButton.gameObject.SetActive(false);
         GameManager.instance.unitsToBattle.Clear();
     }
 
-    public void CheckIfPlayerCanGoToBattle()
+    public void CanBeReadyToBattle(bool state)
     {
-        // comprueba que el panel de "al combate" tenga al menos una unidad
-        if (GameManager.instance.unitsToBattle.Count <= 0) { return; }
+        if (readyButton.interactable == state) { return; }
 
-        readyButton.GetComponent<Button>().interactable = true;
+        readyButton.interactable = state;
+    }
+
+    public void CanBuyUnits(bool state)
+    {
+        if (buyUnitsButton.interactable == state) { return; }
+
+        buyUnitsButton.interactable = state;
     }
 
     public void ShowCancelButton(int playerType, bool state)
     {
+        // solo debe mostrarselo al atacante
         if (playerType != 1) { return; }
 
         if (cancelAttackButton.gameObject.activeSelf == state) { return; }

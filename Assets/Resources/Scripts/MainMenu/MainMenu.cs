@@ -10,12 +10,16 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private NetworkManagerLobby networkManager = null;
 
+    [Header("Main Menu Panels")]
     [SerializeField] private GameObject optionsMenuPanel = null;
     [SerializeField] private GameObject lobbyPanel = null;
+
+    [Header("Change Name UI")]
     [SerializeField] private GameObject changeNameButton = null;
     [SerializeField] private GameObject inputNamePanel = null;
 
     [SerializeField] private InputField nameInputField = null;
+    [SerializeField] private Text mainMenuName = null;
     [NonSerialized] public string playerName = "";
     [NonSerialized] public Image playerImage = null;
     [NonSerialized] public Image playerColor = null;
@@ -25,6 +29,7 @@ public class MainMenu : MonoBehaviour
     void OnEnable()
     {
         playerName = ReadFromTxt();
+        mainMenuName.text = playerName;
 
         if (playerName == "")
             inputNamePanel.SetActive(true);
@@ -48,6 +53,7 @@ public class MainMenu : MonoBehaviour
     public void SaveName()
     {
         playerName = nameInputField.text;
+        mainMenuName.text = playerName;
 
         // guarda el nombre en un txt
         WriteToTxt(playerName);

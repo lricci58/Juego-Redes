@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 
 public class MapLoader : MonoBehaviour
 {
-    // se usa para contener a todos los objetos del juego y dejar limpia la hierarchy
     private Transform mapContainer;
     private Transform tileContainer;
     [NonSerialized] public Transform unitContainer;
@@ -93,7 +92,7 @@ public class MapLoader : MonoBehaviour
     private void InstantiateUnits()
     {
         unitTypesList = GameManager.instance.unitsToBattle;
-        
+
         unitContainer = new GameObject("UnitContainer").transform;
         allyUnitContainer = new GameObject("AlliedUnitsContainer").transform;
         enemyUnitContainer = new GameObject("EnemyUnitsContainer").transform;

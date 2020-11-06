@@ -15,7 +15,7 @@ public class StartBattleButtonScript : MonoBehaviour
     {
         // oculta la UI de despliegue
         BattleManager.instance.canvas.ShowDeploymentPanel(false);
-        BattleManager.instance.canvas.ShowStartBattleButton(false);
+        BattleManager.instance.canvas.ShowReadyButton(false);
         BattleManager.instance.canvas.ShowWaitingText(true);
 
         ConnectionManager.instance.CmdEndedDeployFase();

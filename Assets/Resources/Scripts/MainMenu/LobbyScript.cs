@@ -7,7 +7,7 @@ public class LobbyScript : MonoBehaviour
 {
     public static LobbyScript instance = null;
 
-    [SerializeField] private GameObject optionsMenuPanel = null;
+    public GameObject optionsMenuPanel = null;
 
     public Text[] playerNames = null;
     public Image[] playerReadyIcons = null;
@@ -23,24 +23,23 @@ public class LobbyScript : MonoBehaviour
     {
         instance = this;
 
-        if (startGameButton.gameObject.activeSelf)
-            startGameButton.interactable = false;
+        try
+        {
+            if (ConnectionManager.instance.isServer)
+            {
+                startGameButton.gameObject.SetActive(true);
+                startGameButton.interactable = false;
+            }
+            else
+                startGameButton.gameObject.SetActive(false);
+        }
+        catch (NullReferenceException)
+        {
+            Debug.Log("Nothing happened here... see? no errors :)");
+        }
     }
 
     public void ClickedOnReady() => ConnectionManager.instance.CmdReadyUp();
 
     public void ClickedOnStartGame() => ConnectionManager.instance.CmdStartGame();
-
-    public void LeaveRoom()
-    {
-        // desconecta al jugador
-        if (ConnectionManager.instance.isServer)
-            ConnectionManager.instance.Room.StopServer();
-        else
-            ConnectionManager.instance.Room.StopClient();
-
-        // cambia de menu
-        optionsMenuPanel.SetActive(true);
-        gameObject.SetActive(false);
-    }
 }

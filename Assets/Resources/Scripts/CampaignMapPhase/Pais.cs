@@ -41,7 +41,7 @@ public class Pais : MonoBehaviour
             {
                 countryPanel = countryGarrisonPanel;
 
-                // si el pais no tiene unidades no puede ser seleccionado
+                // si el pais no tiene unidades no puede ser "seleccionado" para atacar
                 if (countryGarrison.Count > 0) 
                 {
                     List<string> limitrofesAtacables = new List<string>();

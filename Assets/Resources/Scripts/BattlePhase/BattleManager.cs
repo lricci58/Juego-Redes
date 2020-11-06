@@ -9,15 +9,15 @@ public class BattleManager : NetworkBehaviour
 {
     public static BattleManager instance = null;
 
-    [NonSerialized] public List<UnitScript> army;
-    private List<UnitScript> deployUnitList;
-    private List<UnitScript> enemyArmy;
+    [NonSerialized] public List<UnitScript> army = new List<UnitScript>();
+    private List<UnitScript> deployUnitList = new List<UnitScript>();
+    private List<UnitScript> enemyArmy = new List<UnitScript>();
     private Vector3 worldPos;
     private UnitScript selectedUnit;
     private UnitScript targetUnit;
     private bool selectingTile = false;
 
-    private int deployUnitIndex = -1;
+    [NonSerialized] public int deployUnitType = -1;
     [NonSerialized] public bool deployFase = true;
     private bool battleFase = false;
     [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
@@ -26,30 +26,26 @@ public class BattleManager : NetworkBehaviour
 
     [Header("Other Scripts")]
     public MapLoader map;
-    public BattleUI_Manager canvas;
+    [SerializeField] private GameObject canvasObject = null;
+    [NonSerialized] public BattleUI_Manager canvas;
 
     void Start()
     {
         instance = this;
 
-        myTurnNumber = GameManager.instance.playerBattleSide;
-
-        army = new List<UnitScript>();
-        deployUnitList = new List<UnitScript>();
-        // lista para todas las unidades, aliadas y enemigas
-        enemyArmy = new List<UnitScript>();
-
+        // sets map and units
         InitGame();
     }
 
     private void InitGame()
     {
+        myTurnNumber = GameManager.instance.playerBattleSide;
+
+        canvas = Instantiate(canvasObject).GetComponent<BattleUI_Manager>();
+
         canvas.ShowDeploymentPanel(true);
-        canvas.ShowStartBattleButton(true);
-        canvas.ShowEndTurnButton(false);
-        canvas.ShowWaitingText(false);
+        canvas.ShowReadyButton(true);
         
-        map = GetComponent<MapLoader>();
         map.SetScene();
     }
 
@@ -159,7 +155,21 @@ public class BattleManager : NetworkBehaviour
 
     private void PlayerWonBattle()
     {
-        // @TODO: call cmd that calls rpc that returns survivors to map and changes scene
+        GameObject playerCountry = GameObject.Find(GameManager.instance.countryInvolvedInBattle);
+
+        foreach (UnitScript unit in army)
+            playerCountry.GetComponent<Pais>().countryGarrison.Add(unit.unitType);
+
+        ConnectionManager.instance.CmdPlayerWon(playerCountry.name);
+
+        // devuelve al ganador a modo normal
+        GameManager.instance.playerBattleSide = 2;
+        GameManager.instance.countryInvolvedInBattle = "";
+    }
+
+    public void PlayerRetreated() 
+    {
+        // @TODO: devolver los sobrevivientes a los paises
     }
 
     private void DeployPhaseManager()
@@ -167,17 +177,16 @@ public class BattleManager : NetworkBehaviour
         // comprueba que estemos en la fase de despliegue
         if (!deployFase) { return; }
 
-        if (deployUnitIndex != -1)
+        // comprueba que se haya seleccionado una unidad para desplegar
+        if (deployUnitType != -1)
         {
-            DeployUnit(deployUnitList[deployUnitIndex]);
+            DeployUnit(deployUnitList[deployUnitType]);
 
             deployFase = false;
             foreach (UnitScript unit in deployUnitList)
                 if (!unit.gameObject.activeSelf)
                     deployFase = true;
         }
-        else
-            deployUnitIndex = SetDeployUnitIndex();
     }
 
     private void DeployPhaseEnded()
@@ -330,32 +339,8 @@ public class BattleManager : NetworkBehaviour
 
     #region Despliegue
 
-    private int SetDeployUnitIndex()
-    {
-        // obtiene botones activos (visibles)
-        List<GameObject> unitButtons = GameObject.FindGameObjectsWithTag("Boton").ToList();
-
-        for (int i = 0; i < unitButtons.Count; i++)
-        {
-            try
-            {
-                if (unitButtons[i].GetComponent<UnitButtonScript>().selected)
-                    return i;
-            }
-            catch (NullReferenceException)
-            {
-                return -1;
-            }
-        }
-
-        return -1;
-    }
-
     private void DeployUnit(UnitScript unit)
     {
-        // obtiene botones activos (visibles)
-        List<GameObject> unitButtons = GameObject.FindGameObjectsWithTag("Boton").ToList();
-
         Vector3Int gridClickPos;
 
         // obtiene el tile en el que se hizo click
@@ -372,22 +357,24 @@ public class BattleManager : NetworkBehaviour
             // comprueba si la posicion de despleigue conincide con la de otra unidad ya desplegada
             if (gridUnitPos.x == gridClickPos.x && gridUnitPos.y == gridClickPos.y)
             {
-                // 'deselecciona' el boton
-                unitButtons[deployUnitIndex].GetComponent<UnitButtonScript>().Deseleccionar();
-                deployUnitIndex = -1;
-
+                // deselecciona el boton
+                deployUnitType = -1;
                 return;
             }
         }
 
-        // oculta el boton
-        unitButtons[deployUnitIndex].SetActive(false);
-
         Vector3 desplyPosition = map.GetWorldPos(gridClickPos);
         unit.Deploy(desplyPosition);
-        if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
+
+        if (GameManager.instance.playerBattleSide == 1)
+            unit.flipUnit();
         unit.gameObject.SetActive(true);
-        deployUnitIndex = -1;
+
+        GameManager.instance.unitsToBattle.Remove(deployUnitType);
+        canvas.UpdateDeploymentPanel();
+
+        // deselecciona el boton
+        deployUnitType = -1;
     }
 
     private bool EveryoneDeployed()
