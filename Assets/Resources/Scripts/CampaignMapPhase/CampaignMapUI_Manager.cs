@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class CampaignMapUI_Manager : MonoBehaviour
     [SerializeField] private Button endTurnButton = null;
     [SerializeField] private Button buyUnitsButton = null;
     [SerializeField] private GameObject reserveUnitsPanel = null;
+    [SerializeField] private GameObject[] greenArrowButtons = null;
 
     [Header("Attack Menu UI Objects")]
     [SerializeField] private GameObject attackMenuPanel = null;
@@ -26,6 +28,7 @@ public class CampaignMapUI_Manager : MonoBehaviour
     [SerializeField] private Text enemyCountry = null;
     [SerializeField] private Text playerName = null;
     [SerializeField] private Text enemyName = null;
+    [SerializeField] private Image[] playerIcons = null;
 
     [Header("Turn UI Objects")]
     [SerializeField] private Image[] playerImagesInTurnPanel = null;
@@ -87,7 +90,11 @@ public class CampaignMapUI_Manager : MonoBehaviour
 
     public void EndTurn()
     {
-        // revisar si se merece tarjeta y darsela
+        // @TODO: revisar si se merece tarjeta y darsela
+
+        ShowEndTurnButton(false);
+        CanUseGreenArrowButtons(false);
+        CanBuyUnits(false);
 
         ConnectionManager.instance.CmdEndTurn(GameManager.instance.playerBattleSide);
     }
@@ -110,6 +117,11 @@ public class CampaignMapUI_Manager : MonoBehaviour
         enemyCountry.text = enemyCountryName;
         playerName.text = playerNameText.text;
         // enemyName.text = ;
+    }
+
+    public void UpdateAttackMenuDisplay(int playerToUpdate, Sprite newReadyIcon)
+    {
+        playerIcons[playerToUpdate].sprite = newReadyIcon;
     }
 
     public void HideAttackMenu()
@@ -146,4 +158,11 @@ public class CampaignMapUI_Manager : MonoBehaviour
     public void PlayerIsReadyToBattle() => ConnectionManager.instance.CmdReadyUp();
 
     public void PlayerIsRequestingAutoBattle() => ConnectionManager.instance.CmdRequestingAutoBattle();
+
+    public void CanUseGreenArrowButtons(bool state)
+    {
+        // cambia el estado interactibilidad de los botones
+        foreach (GameObject button in greenArrowButtons)
+            button.SetActive(state);
+    }
 }

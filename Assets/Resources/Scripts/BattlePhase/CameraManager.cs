@@ -3,8 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private BattleManager battleManager = null;
-
     public static CameraManager instance = null;
 
     [SerializeField] private float movementVelocity = 500f;
@@ -25,7 +23,8 @@ public class CameraManager : MonoBehaviour
     private Vector2 mapLimit;
     private float mapBorder = 10f;
 
-    void Awake() => Instantiate(battleManager.gameObject);
+    public GameObject battleManager = null;
+    void Awake() => Instantiate(battleManager);
 
     void Start()
     {

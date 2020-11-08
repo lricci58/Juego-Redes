@@ -3062,8 +3062,8 @@ RectTransform:
   m_Father: {fileID: 884387108}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.08800001, y: 0.21312687}
-  m_AnchorMax: {x: 0.85300004, y: 0.78687316}
+  m_AnchorMin: {x: 0.09579546, y: 0.21312687}
+  m_AnchorMax: {x: 0.86859095, y: 0.79985344}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4727,10 +4727,10 @@ RectTransform:
   m_Father: {fileID: 1387115277}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 409.4, y: 333.86}
-  m_SizeDelta: {x: 255.68896, y: 52.282486}
+  m_AnchorMin: {x: 0.7047813, y: 0.89300007}
+  m_AnchorMax: {x: 0.9052188, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884387109
 MonoBehaviour:
@@ -9799,10 +9799,16 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 6468911151410959836, guid: b21a079e22158ff4881a7bfb041bb70b, type: 3}
+  playerPrefab: {fileID: 624331000899524214, guid: bc65f9cab28d84641a7d98e8df4ecac1, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 5273356549032410262, guid: a510c39859b9ad74ba87f8c5185d20ff, type: 3}
+  - {fileID: 2771696176038650347, guid: a1957e087029e544796aedd48ee8d514, type: 3}
+  - {fileID: 2305111831985959421, guid: fdd1b208e49e19e40aa9207644c4a9df, type: 3}
+  - {fileID: 4267574077897573557, guid: 5a65d56599a6ab946a676ca1536ba787, type: 3}
+  - {fileID: 605202498537585269, guid: 7ba1e78f4abd2ec48a9cfe4fc626d732, type: 3}
+  - {fileID: 624331000899524214, guid: bc65f9cab28d84641a7d98e8df4ecac1, type: 3}
   minPlayers: 2
   connectionManagerPrefab: {fileID: 2177284797714789290, guid: bc65f9cab28d84641a7d98e8df4ecac1, type: 3}
 --- !u!114 &1987326589

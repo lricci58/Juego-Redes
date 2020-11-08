@@ -62,7 +62,6 @@
     <Compile Include="Assets\Resources\Scripts\BattlePhase\UnitScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\BattleManager.cs" />
     <Compile Include="Assets\Resources\Scripts\ConnectionManager.cs" />
-    <Compile Include="Assets\Resources\Scripts\BattlePhase\EndTurnInBattleButtonScript.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu\JoinLobbyMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\CameraManager.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu\MainMenu.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Assets\Resources\Scripts\MainMenu\LobbyScript.cs" />
     <Compile Include="Assets\Resources\Scripts\BattlePhase\MapLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\NetworkManagerLobby.cs" />
-    <Compile Include="Assets\Resources\Scripts\BattlePhase\StartBattleButtonScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />

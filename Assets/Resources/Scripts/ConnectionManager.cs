@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class ConnectionManager : NetworkBehaviour
 {
@@ -25,6 +26,8 @@ public class ConnectionManager : NetworkBehaviour
             return room = NetworkManager.singleton as NetworkManagerLobby;
         }
     }
+
+    [NonSerialized] public GameManager gameManager = null;
 
     void Start()
     {
@@ -67,6 +70,7 @@ public class ConnectionManager : NetworkBehaviour
 
     public void UpdateDisplay()
     {
+        // busca al jugador con autoridad en la instancia actual, para que el actualice
         if (!hasAuthority)
         {
             foreach (ConnectionManager player in Room.RoomPlayers)
@@ -80,33 +84,54 @@ public class ConnectionManager : NetworkBehaviour
 
             return;
         }
-
-        // reinicia el estado de todos los jugadores en la sala
-        for (int i = 0; i < LobbyScript.instance.playerNames.GetLength(0); i++)
+        
+        if (SceneManager.GetActiveScene().name == "MainMenuScene")
         {
-            LobbyScript.instance.playerNames[i].text = "Esperando...";
-            LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(false);
-            //LobbyScript.instance.playerImages[i].gameObject.SetActive(false);
-            //LobbyScript.instance.playerColors[i].gameObject.SetActive(false);
-        }
-
-        // actualiza el estado de los jugadores en la UI propia
-        for (int i = 0; i < Room.RoomPlayers.Count; i++)
-        {
-            LobbyScript.instance.playerNames[i].text = Room.RoomPlayers[i].playerDisplayName;
-
-            if (!LobbyScript.instance.playerNames[i].text.Equals("Esperando..."))
+            // reinicia el estado de todos los jugadores en la sala
+            for (int i = 0; i < LobbyScript.instance.playerNames.GetLength(0); i++)
             {
-                LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(true);
-                LobbyScript.instance.playerReadyIcons[i].sprite = Room.RoomPlayers[i].isReady ? LobbyScript.instance.readyIcon : LobbyScript.instance.notReadyIcon;
-                //LobbyScript.instance.playerImages[i].gameObject.SetActive(true);
-                //LobbyScript.instance.playerColors[i].gameObject.SetActive(true);
-            }
-            else
-            {
+                LobbyScript.instance.playerNames[i].text = "Esperando...";
                 LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(false);
                 //LobbyScript.instance.playerImages[i].gameObject.SetActive(false);
                 //LobbyScript.instance.playerColors[i].gameObject.SetActive(false);
+            }
+
+            // actualiza el estado de los jugadores en la UI propia
+            for (int i = 0; i < Room.RoomPlayers.Count; i++)
+            {
+                LobbyScript.instance.playerNames[i].text = Room.RoomPlayers[i].playerDisplayName;
+
+                if (!LobbyScript.instance.playerNames[i].text.Equals("Esperando..."))
+                {
+                    LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(true);
+                    LobbyScript.instance.playerReadyIcons[i].sprite = Room.RoomPlayers[i].isReady ? LobbyScript.instance.readyIcon : LobbyScript.instance.notReadyIcon;
+                    //LobbyScript.instance.playerImages[i].gameObject.SetActive(true);
+                    //LobbyScript.instance.playerColors[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    LobbyScript.instance.playerReadyIcons[i].gameObject.SetActive(false);
+                    //LobbyScript.instance.playerImages[i].gameObject.SetActive(false);
+                    //LobbyScript.instance.playerColors[i].gameObject.SetActive(false);
+                }
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "CampaignMapScene")
+        {
+            // reinicia los iconos de estado de los jugadores involucrados en batalla
+            for (int i = 0; i < Room.RoomPlayers.Count; i++)
+            {
+                if (Room.RoomPlayers[i].gameManager.playerBattleSide == 2) { continue; }
+
+                MapManager.instancia.canvas.UpdateAttackMenuDisplay(i, LobbyScript.instance.notReadyIcon);
+            }
+
+            // actualiza el estado de los jugadores involucrados en batalla
+            for (int i = 0; i < Room.RoomPlayers.Count; i++)
+            {
+                if (Room.RoomPlayers[i].gameManager.playerBattleSide == 2) { continue; }
+
+                MapManager.instancia.canvas.UpdateAttackMenuDisplay(i, Room.RoomPlayers[i].isReady ? LobbyScript.instance.readyIcon : LobbyScript.instance.notReadyIcon);
             }
         }
     }
@@ -122,8 +147,6 @@ public class ConnectionManager : NetworkBehaviour
 
     public void LeaveRoom()
     {
-        // @TODO: comprobar si es un server (porque "isServer" no funciona :/), y hacer Room.StopServer();
-        
         // desconecta al jugador
         Room.StopClient();
 
@@ -143,13 +166,14 @@ public class ConnectionManager : NetworkBehaviour
         if (SceneManager.GetActiveScene().name == "MainMenuScene")
             Room.NotifyPlayersOfReadyState();
         else if (SceneManager.GetActiveScene().name == "CampaignMapScene")
-            if (IsEveryOneReady())
-            {
-                foreach (ConnectionManager player in Room.RoomPlayers)
-                    player.isReady = false;
+        {
+            if (!IsEveryOneReady()) { return; }
+            
+            foreach (ConnectionManager player in Room.RoomPlayers)
+                player.isReady = false;
 
-                RpcChangeScene("BattleScene");
-            }
+            RpcChangeScene("BattleScene");
+        }
     }
 
     private bool IsEveryOneReady()
@@ -183,16 +207,19 @@ public class ConnectionManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnObject(int index, Vector3 unitLocalPosition)
+    public void CmdSpawnObject(List<int> unitTypesList, List<Vector3> unitPositionsList)
     {
-        GameObject originalPrefab = BattleManager.instance.map.unitPrefabs[index];
-        GameObject instance = Instantiate(originalPrefab, unitLocalPosition, Quaternion.identity);
-        instance.transform.position = unitLocalPosition;
+        Debug.Log("connectionToClient: " + connectionToClient + " ||| Ammount of Units to Redeploy: " + unitTypesList.Count);
 
-        // @NOTE: cuando cliente isReady primero spawnea mas unidades
+        GameObject originalPrefab = null;
+        GameObject instance = null;
+        for (int i = 0; i < unitTypesList.Count; i++)
+        {
+            originalPrefab = BattleManager.instance.map.unitPrefabs[unitTypesList[i]];
+            instance = Instantiate(originalPrefab, unitPositionsList[i], Quaternion.identity);
 
-        // spawnea la unidad y otorga la autoridad del objeto al cliente del parametro
-        NetworkServer.Spawn(instance, connectionToClient);
+            NetworkServer.Spawn(instance, connectionToClient);
+        }
     }
 
     [Command]
@@ -204,14 +231,23 @@ public class ConnectionManager : NetworkBehaviour
     [Command]
     public void CmdCheckUnitOwner(NetworkIdentity unitIdentity)
     {
+        // comprueba si la unidad pertenece al jugador o al enemigo
         if (connectionToClient.clientOwnedObjects.Contains(unitIdentity))
             TargetUpdateArmy(connectionToClient, unitIdentity);
+        else
+            TargetUpdateEnemyArmy(connectionToClient, unitIdentity);
     }
 
     [TargetRpc]
-    public void TargetUpdateArmy(NetworkConnection conn, NetworkIdentity unitIdentity)
+    private void TargetUpdateArmy(NetworkConnection conn, NetworkIdentity unitIdentity)
     {
         BattleManager.instance.AddUnitToArmy(unitIdentity.GetComponent<UnitScript>());
+    }
+
+    [TargetRpc]
+    private void TargetUpdateEnemyArmy(NetworkConnection conn, NetworkIdentity unitIdentity)
+    {
+        BattleManager.instance.AddUnitToEnemyArmy(unitIdentity.GetComponent<UnitScript>());
     }
 
     [Command]
@@ -219,15 +255,25 @@ public class ConnectionManager : NetworkBehaviour
     {
         UnitScript unit = unitObject.GetComponent<UnitScript>();
 
-        if (unit.currentHealth > 0)
-            unit.currentHealth -= damage;
+        unit.currentHealth -= damage;
+
+        if (unit.currentHealth <= 0)
+            RpcUnitDied(unitObject);
+    }
+
+    [ClientRpc]
+    private void RpcUnitDied(GameObject unitObject)
+    {
+        if (ConnectionManager.instance.gameManager.playerBattleSide == 2) { return; }
+        
+        // execute DestroyUnit
     }
 
     [Command]
     public void CmdCountryWasSelected(string selectedName, string[] borderingNames) => RpcUpdateSelectedCountryOnClients(selectedName, borderingNames);
 
     [ClientRpc]
-    public void RpcUpdateSelectedCountryOnClients(string selectedName, string[] borderingNames)
+    private void RpcUpdateSelectedCountryOnClients(string selectedName, string[] borderingNames)
     {
         MapManager.instancia.ActualizarEstadoPaises(selectedName, borderingNames);
     }
@@ -236,7 +282,7 @@ public class ConnectionManager : NetworkBehaviour
     public void CmdEndTurn(int playerBattleSide) => RpcPlayerEndedTurn(playerBattleSide, NetworkServer.connections.Count - 1);
 
     [ClientRpc]
-    public void RpcPlayerEndedTurn(int playerBattleSide, int amountPlayers)
+    private void RpcPlayerEndedTurn(int playerBattleSide, int amountPlayers)
     {
         if (SceneManager.GetActiveScene().name == "CampaignMapScene")
         {
@@ -248,9 +294,11 @@ public class ConnectionManager : NetworkBehaviour
 
             // muestra el boton de terminar de turno en su turno
             if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
+            {
                 MapManager.instancia.canvas.ShowEndTurnButton(true);
-            else
-                MapManager.instancia.canvas.ShowEndTurnButton(false);
+                MapManager.instancia.canvas.CanUseGreenArrowButtons(true);
+                MapManager.instancia.canvas.CanBuyUnits(true);
+            }
 
             for (int i = 0; i < MapManager.instancia.turnList.Count - 1; i++)
                 MapManager.instancia.turnList[i] = MapManager.instancia.turnList[i + 1];
@@ -279,20 +327,20 @@ public class ConnectionManager : NetworkBehaviour
     public void CmdPlayerAttacked(string attackedCountry, string attackerCountry) => RpcSearchPlayersInvolvedInAttack(attackedCountry, attackerCountry);
 
     [ClientRpc]
-    public void RpcSearchPlayersInvolvedInAttack(string attackedCountry, string attackerCountry)
+    private void RpcSearchPlayersInvolvedInAttack(string attackedCountry, string attackerCountry)
     {
         int playerType = 2;
         string playerCountry = "";
         string enemyCountry = "";
 
         // busca al dueño del pais atacado y al del atacante y setea sus valores correctamente para el menu de ataque
-        if (GameManager.instance.misPaises.Contains(attackedCountry))
+        if (ConnectionManager.instance.gameManager.misPaises.Contains(attackedCountry))
         {
             playerType = 0;
             playerCountry = attackedCountry;
             enemyCountry = attackerCountry;
         }   
-        else if (GameManager.instance.misPaises.Contains(attackerCountry))
+        else if (ConnectionManager.instance.gameManager.misPaises.Contains(attackerCountry))
         {
             playerType = 1;
             playerCountry = attackerCountry;
@@ -312,74 +360,71 @@ public class ConnectionManager : NetworkBehaviour
     public void CmdChangeCountryOwners(string conqueredCountry, string winnerCountry) => RpcSearchNewCountryOwner(conqueredCountry, winnerCountry);
 
     [ClientRpc]
-    public void RpcSearchNewCountryOwner(string conqueredCountry, string winnerCountry)
+    private void RpcSearchNewCountryOwner(string conqueredCountry, string winnerCountry)
     {
-        if (!GameManager.instance.misPaises.Contains(winnerCountry)) { return; }
+        if (!ConnectionManager.instance.gameManager.misPaises.Contains(winnerCountry)) { return; }
 
-        GameManager.instance.AddCountry(conqueredCountry);
+        ConnectionManager.instance.gameManager.AddCountry(conqueredCountry);
     }
 
     [Command]
     public void CmdPlayerStoppedAttacking() => RpcCloseAttackMenu();
 
     [ClientRpc]
-    public void RpcCloseAttackMenu() => MapManager.instancia.OcultarMenuAtaque();
+    private void RpcCloseAttackMenu() => MapManager.instancia.OcultarMenuAtaque();
 
     [ClientRpc]
-    public void RpcChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
+    private void RpcChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
     [TargetRpc]
-    public void TargetAddCountry(NetworkConnection conn, string nombrePais) => GameManager.instance.AddCountry(nombrePais);
+    public void TargetAddCountry(NetworkConnection conn, string nombrePais) => ConnectionManager.instance.gameManager.AddCountry(nombrePais);
 
     [TargetRpc]
     public void TargetSetYourTurnNumber(NetworkConnection conn, int turnNumber)
     {
         MapManager.instancia.miTurno = turnNumber;  
-        RpcUpdateTurnList(turnNumber);
 
         // muestra el boton de terminar de turno en su turno
         if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
+        {
             MapManager.instancia.canvas.ShowEndTurnButton(true);
-    }
-
-    [TargetRpc]
-    public void TargetSetYourColor(NetworkConnection conn, Color playerColor) => GameManager.instance.SetPlayerColor(playerColor);
-
-    [Command]
-    public void CmdPaintCountry(string pais, Color color) => RpcPaintCountry(pais, color);
-
-    [ClientRpc]
-    public void RpcPaintCountry(string pais, Color color)
-    {
-        GameObject.Find(pais).GetComponent<Pais>().ChangeOriginalColor(color);
+            MapManager.instancia.canvas.CanUseGreenArrowButtons(true);
+            MapManager.instancia.canvas.CanBuyUnits(true);
+        }
     }
 
     [ClientRpc]
     public void RpcUpdateTurnList(int turnNumber) => MapManager.instancia.turnList.Add(turnNumber);
 
+    [TargetRpc]
+    public void TargetSetYourColor(NetworkConnection conn, Color playerColor) => ConnectionManager.instance.gameManager.SetPlayerColor(playerColor);
+
     [Command]
-    public void CmdPlayerWon(string winnerCountry)
+    public void CmdPaintCountry(string pais, Color color) => RpcPaintCountry(pais, color);
+
+    [ClientRpc]
+    private void RpcPaintCountry(string pais, Color color) => GameObject.Find(pais).GetComponent<Pais>().ChangeOriginalColor(color);
+
+    [Command]
+    public void CmdPlayerWon(string winnerCountryName)
     {
-        RpcSearchForLooser(winnerCountry);
+        RpcResetPlayersToMap(winnerCountryName);
         RpcChangeScene("CampaignMapScene");
     }
 
     [ClientRpc]
-    public void RpcSearchForLooser(string winnerCountry)
+    private void RpcResetPlayersToMap(string winnerCountryName)
     {
-        if(GameManager.instance.playerBattleSide == 2) { return; }
+        if (ConnectionManager.instance.gameManager.playerBattleSide == 2) { return; }
 
-        // solo hace el swap si el perdedor era defensor
-        if (GameManager.instance.playerBattleSide == 0)
-        {
-            string conqueredCountry = GameObject.Find(GameManager.instance.countryInvolvedInBattle).name;
+        string conqueredCountryName = GameObject.Find(gameManager.countryInvolvedInBattle).name;
 
-            GameManager.instance.misPaises.Remove(conqueredCountry);
-            CmdChangeCountryOwners(conqueredCountry, winnerCountry);
-        }
+        // hace el swap de paises
+        ConnectionManager.instance.gameManager.misPaises.Remove(conqueredCountryName);
+        CmdChangeCountryOwners(conqueredCountryName, winnerCountryName);
 
-        // devuelve al perdedor a modo normal
-        GameManager.instance.playerBattleSide = 2;
-        GameManager.instance.countryInvolvedInBattle = "";
+        // devuelve al jugador a modo normal
+        ConnectionManager.instance.gameManager.playerBattleSide = 2;
+        ConnectionManager.instance.gameManager.countryInvolvedInBattle = "";
     }
 }

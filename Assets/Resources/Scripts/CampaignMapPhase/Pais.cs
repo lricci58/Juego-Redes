@@ -15,22 +15,13 @@ public class Pais : MonoBehaviour
     [SerializeField] private GameObject countryGarrisonPanel = null;
     [SerializeField] private GameObject otherCountryGarrisonPanel = null;
 
-    private void OnMouseDown()
+    void OnMouseDown()
     {
-        if (MapManager.instancia.miTurno != MapManager.instancia.turnoActual) { return; }
+        // if (MapManager.instancia.miTurno != MapManager.instancia.turnoActual) { return; }
         if (EventSystem.current.IsPointerOverGameObject()) { return; }
 
-        // comprueba si el pais clickeado es limitrofe (es un ataque)
-        if (tag == "Bordering")
-        {
-            string atacante = GameObject.FindGameObjectWithTag("Selected").name;
-            string atacado = gameObject.name;
-
-            // avisa al jugador atacado
-            ConnectionManager.instance.CmdPlayerAttacked(atacado, atacante);
-        }
-        // comprueba si el pais sea del jugador
-        else if (GameManager.instance.misPaises.Contains(gameObject.name))
+        // comprueba que el pais sea del jugador
+        if (GameManager.instance.misPaises.Contains(gameObject.name))
         {
             // busca por un pais seleccionado
             GameObject selectedCountry = GameObject.FindGameObjectWithTag("Selected");
@@ -41,23 +32,27 @@ public class Pais : MonoBehaviour
             {
                 countryPanel = countryGarrisonPanel;
 
-                // si el pais no tiene unidades no puede ser "seleccionado" para atacar
-                if (countryGarrison.Count > 0) 
+                // comprueba que sea el turno del jugador
+                if (MapManager.instancia.miTurno == MapManager.instancia.turnoActual)
                 {
-                    List<string> limitrofesAtacables = new List<string>();
-                    foreach (string limitrofe in borderingCountries)
+                    // comprueba que el pais tenga unidades para ser seleccionado para atacar
+                    if (countryGarrison.Count > 0)
                     {
-                        // si el pais limitrofe es propio, no lo añade
-                        if (GameManager.instance.misPaises.Contains(limitrofe)) { continue; }
+                        List<string> limitrofesAtacables = new List<string>();
+                        foreach (string limitrofe in borderingCountries)
+                        {
+                            // si el pais limitrofe es propio, no lo añade
+                            if (GameManager.instance.misPaises.Contains(limitrofe)) { continue; }
 
-                        limitrofesAtacables.Add(limitrofe);
+                            limitrofesAtacables.Add(limitrofe);
+                        }
+
+                        // al seleccionar el pais le avisa a los clientes
+                        ConnectionManager.instance.CmdCountryWasSelected(gameObject.name, limitrofesAtacables.ToArray());
                     }
-
-                    // al seleccionar el pais le avisa a los clientes
-                    ConnectionManager.instance.CmdCountryWasSelected(gameObject.name, limitrofesAtacables.ToArray());
                 }
             }
-            // si lo hay, es que se esta seleccionando un limitrofe para pasar unidades
+            // si lo hay, es que se esta seleccionando un limitrofe aliado para pasar unidades
             else if (borderingCountries.ToList().Contains(selectedCountry.name))
                 countryPanel = otherCountryGarrisonPanel;
 
@@ -66,6 +61,15 @@ public class Pais : MonoBehaviour
             countryPanel.SetActive(true);
             countryPanel.GetComponent<UnitsPanelScript>().SetPanelHeader("Guarnicion de " + gameObject.name);
             countryPanel.GetComponent<UnitsPanelScript>().UpdateUnitsPanel(countryGarrison);
+        }
+        // comprueba si el pais clickeado es limitrofe enemigo
+        else if (tag == "Bordering")
+        {
+            string atacante = GameObject.FindGameObjectWithTag("Selected").name;
+            string atacado = gameObject.name;
+
+            // avisa al resto de jugadores atacado
+            ConnectionManager.instance.CmdPlayerAttacked(atacado, atacante);
         }
     }
 

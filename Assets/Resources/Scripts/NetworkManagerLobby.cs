@@ -16,16 +16,6 @@ public class NetworkManagerLobby : NetworkManager
 
     public List<ConnectionManager> RoomPlayers { get; } = new List<ConnectionManager>();
 
-    public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawneablePrefabs").ToList();
-
-    public override void OnStartClient()
-    {
-        GameObject[] spawneablePrefabs = Resources.LoadAll<GameObject>("SpawneablePrefabs");
-
-        foreach (GameObject prefab in spawneablePrefabs)
-            ClientScene.RegisterPrefab(prefab);
-    }
-
     public override void OnClientConnect(NetworkConnection conn)
     {
         // hace la logica base

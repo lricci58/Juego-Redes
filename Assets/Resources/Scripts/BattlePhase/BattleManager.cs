@@ -1,28 +1,29 @@
 ﻿using Mirror;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class BattleManager : NetworkBehaviour
 {
-    public static BattleManager instance = null;
+    public static BattleManager instance;
 
     [NonSerialized] public List<UnitScript> army = new List<UnitScript>();
+    [NonSerialized] public List<UnitScript> enemyArmy = new List<UnitScript>();
     private List<UnitScript> deployUnitList = new List<UnitScript>();
-    private List<UnitScript> enemyArmy = new List<UnitScript>();
+    private List<int> unitTypesList = new List<int>();
+    private List<Vector3> unitPositionsList = new List<Vector3>();
     private Vector3 worldPos;
-    private UnitScript selectedUnit;
-    private UnitScript targetUnit;
+    private UnitScript selectedUnit = null;
+    private UnitScript targetUnit = null;
     private bool selectingTile = false;
 
-    [NonSerialized] public int deployUnitType = -1;
+    [NonSerialized] public int deployUnitIndex = -1;
     [NonSerialized] public bool deployFase = true;
     private bool battleFase = false;
     [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
     [NonSerialized] [SyncVar] public int currentTurn = 0;
-    [NonSerialized] public int myTurnNumber;
+    [NonSerialized] public int myTurnNumber = -1;
 
     [Header("Other Scripts")]
     public MapLoader map;
@@ -54,14 +55,11 @@ public class BattleManager : NetworkBehaviour
         if (battleFase)
         {
             // agrega todas las unidades instanciadas al ejercito enemigo local
-            enemyArmy.Add(unit);
+            // enemyArmy.Add(unit);
+            // unit.transform.SetParent(map.enemyUnitContainer);
 
-            // setea el contenedor padre de las unidades
-            unit.transform.SetParent(map.unitContainer);
-            unit.transform.SetParent(map.enemyUnitContainer);
 
-            // gira la unidad ya que es enemiga
-            if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
+            // if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
 
             // comprueba si el cliente local es dueño de la unidad instanciada
             ConnectionManager.instance.CmdCheckUnitOwner(unit.GetComponent<NetworkIdentity>());
@@ -78,10 +76,21 @@ public class BattleManager : NetworkBehaviour
     public void AddUnitToArmy(UnitScript unit)
     {
         // si la unidad resultaba ser aliada se la remueve del ejercito enemigo
-        enemyArmy.Remove(unit);
+        // enemyArmy.Remove(unit);
         army.Add(unit);
+        // si la unidad es mia y soy atacante (lado derecho) hace flip
+        if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
 
         unit.transform.SetParent(map.allyUnitContainer);
+    }
+
+    public void AddUnitToEnemyArmy(UnitScript unit)
+    {
+        enemyArmy.Add(unit);
+        // si la unidad es enemiga y soy defensor (lado izquierdo) hace flip
+        if (GameManager.instance.playerBattleSide == 0) { unit.flipUnit(); }
+
+        unit.transform.SetParent(map.enemyUnitContainer);
     }
 
     void Update()
@@ -96,7 +105,7 @@ public class BattleManager : NetworkBehaviour
 
         DeployPhaseManager();
 
-        DeployPhaseEnded();
+        DeployPhaseEnded(unitTypesList, unitPositionsList);
     }
 
     #region ControlJuego
@@ -126,7 +135,7 @@ public class BattleManager : NetworkBehaviour
         if (selectedUnit != null)
         {
             if (!selectedUnit.IsMoving())
-                SelectTile(selectedUnit);
+                SelectTileToMove(selectedUnit);
 
             // mueve la unidad si debe hacerlo
             selectedUnit.Move(worldPos);
@@ -134,16 +143,8 @@ public class BattleManager : NetworkBehaviour
             // ejecuta el ataque si existe un objetivo
             if (targetUnit != null)
             {
+                // ejecuta el ataque sobre la unidad
                 selectedUnit.Attack(targetUnit);
-
-                if (targetUnit.IsDead())
-                {
-                    enemyArmy.Remove(targetUnit);
-
-                    // si al enemigo no le quedan mas unidades
-                    if (enemyArmy.Count == 0)
-                        PlayerWonBattle();
-                }
 
                 targetUnit = null;
             }
@@ -153,18 +154,23 @@ public class BattleManager : NetworkBehaviour
         }
     }
 
-    private void PlayerWonBattle()
+    public void PlayerWonBattle()
     {
-        GameObject playerCountry = GameObject.Find(GameManager.instance.countryInvolvedInBattle);
+        List<int> unitTypesList = new List<int>();
 
         foreach (UnitScript unit in army)
-            playerCountry.GetComponent<Pais>().countryGarrison.Add(unit.unitType);
+            unitTypesList.Add(unit.unitType);
 
-        ConnectionManager.instance.CmdPlayerWon(playerCountry.name);
+        GameObject winnerCountry = GameObject.Find(GameManager.instance.countryInvolvedInBattle);
 
-        // devuelve al ganador a modo normal
+        // devuelve a los sobrevivientes
+        winnerCountry.GetComponent<Pais>().countryGarrison.AddRange(unitTypesList);
+
+        // devuelve al jugador a modo normal
         GameManager.instance.playerBattleSide = 2;
         GameManager.instance.countryInvolvedInBattle = "";
+
+        ConnectionManager.instance.CmdPlayerWon(GameManager.instance.countryInvolvedInBattle);
     }
 
     public void PlayerRetreated() 
@@ -178,18 +184,26 @@ public class BattleManager : NetworkBehaviour
         if (!deployFase) { return; }
 
         // comprueba que se haya seleccionado una unidad para desplegar
-        if (deployUnitType != -1)
+        if (deployUnitIndex != -1)
         {
-            DeployUnit(deployUnitList[deployUnitType]);
+            DeployUnit(deployUnitList[deployUnitIndex]);
 
             deployFase = false;
             foreach (UnitScript unit in deployUnitList)
                 if (!unit.gameObject.activeSelf)
                     deployFase = true;
         }
+
+        if (deployFase) { return; }
+
+        foreach (UnitScript unit in deployUnitList)
+        {
+            unitTypesList.Add(unit.unitType);
+            unitPositionsList.Add(unit.transform.position);
+        }
     }
 
-    private void DeployPhaseEnded()
+    private void DeployPhaseEnded(List<int> unitTypesList, List<Vector3> unitPositionsList)
     {
         // comprueba que los 2 jugadores hayan desplegado
         if (!EveryoneDeployed() || battleFase) { return; }
@@ -207,23 +221,20 @@ public class BattleManager : NetworkBehaviour
         // CameraManager.instance.SmoothZoomTo(.3f);
         // CameraManager.instance.SmoothMovementTo(new Vector3(0, 0, 0));
 
-        for (int i = 0; i < deployUnitList.Count; i++)
-        {
-            UnitScript unitToReespawn = deployUnitList[i];
+        // crea las unidades networked
+        ConnectionManager.instance.CmdSpawnObject(unitTypesList, unitPositionsList);
 
-            // re-spawnea (reemplaza) las unidades instanciadas pero en la red
-            ConnectionManager.instance.CmdSpawnObject(unitToReespawn.unitType, unitToReespawn.transform.position);
-
-            // destruye las unidades que fueron reemplazadas
-            Destroy(unitToReespawn.gameObject);
-        }
+        // destruye las unidades reemplazadas
+        foreach (UnitScript unit in deployUnitList)
+            Destroy(unit.gameObject);
+        deployUnitList.Clear();
     }
 
     #endregion
 
     #region Control Unidades
 
-    private void SelectTile(UnitScript unit)
+    private void SelectTileToMove(UnitScript unit)
     {
         Vector3Int gridClickPos;
 
@@ -358,23 +369,24 @@ public class BattleManager : NetworkBehaviour
             if (gridUnitPos.x == gridClickPos.x && gridUnitPos.y == gridClickPos.y)
             {
                 // deselecciona el boton
-                deployUnitType = -1;
+                deployUnitIndex = -1;
                 return;
             }
         }
 
+        // setea la unidad en la posicion y direccion adecuada
         Vector3 desplyPosition = map.GetWorldPos(gridClickPos);
         unit.Deploy(desplyPosition);
-
         if (GameManager.instance.playerBattleSide == 1)
             unit.flipUnit();
         unit.gameObject.SetActive(true);
 
-        GameManager.instance.unitsToBattle.Remove(deployUnitType);
+        // actualiza la lista para desplegar y el panel
+        GameManager.instance.unitsToBattle.Remove(unit.unitType);
         canvas.UpdateDeploymentPanel();
 
         // deselecciona el boton
-        deployUnitType = -1;
+        deployUnitIndex = -1;
     }
 
     private bool EveryoneDeployed()

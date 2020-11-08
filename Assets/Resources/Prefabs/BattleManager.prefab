@@ -48,7 +48,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   map: {fileID: 5231707629580110898}
-  canvasObject: {fileID: 2638122519414719222, guid: dc446196711067c4abaab43904632de8, type: 3}
+  canvasObject: {fileID: 5975930081405049726, guid: dc446196711067c4abaab43904632de8, type: 3}
 --- !u!114 &5231707629580110898
 MonoBehaviour:
   m_ObjectHideFlags: 0

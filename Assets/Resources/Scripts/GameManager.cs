@@ -7,8 +7,8 @@ using Random = UnityEngine.Random;
 
 public class GameManager : NetworkBehaviour
 {
-    public static GameManager instance = null;
-    
+    public static GameManager instance;
+
     // esto luego estara en la MainMenuScene
     private List<Color32> playerColors = new List<Color32>();
     private Color playerColor;
@@ -28,11 +28,10 @@ public class GameManager : NetworkBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-        // mantiene el objeto como singleton
+        // mantiene al GameManager intacto entre escenas
         DontDestroyOnLoad(gameObject);
 
-        // comprueba si la instancia de ventana esta en un host
-        if (!ConnectionManager.instance.isServer) { return; }
+        ConnectionManager.instance.gameManager = this;
 
         playerColors.Add(new Color32(76, 116, 255, 255));
         playerColors.Add(new Color32(200, 0, 0, 255));
@@ -43,12 +42,16 @@ public class GameManager : NetworkBehaviour
         playerColors.Add(new Color32(165, 88, 24, 255));
         playerColors.Add(new Color32(255, 109, 0, 255));
 
+        // comprueba si la instancia de ventana esta en un host
+        if (!ConnectionManager.instance.isServer) { return; }
+
         int contadorTurno = Random.Range(0, NetworkServer.connections.Count);
 
         // crea el orden de la lista
         for (int turn = 0; turn < NetworkServer.connections.Count; turn++)
         {
             ConnectionManager.instance.TargetSetYourTurnNumber(NetworkServer.connections[contadorTurno], turn);
+            ConnectionManager.instance.RpcUpdateTurnList(turn);
             ConnectionManager.instance.TargetSetYourColor(NetworkServer.connections[contadorTurno], playerColors[turn]);
 
             if (++contadorTurno > NetworkServer.connections.Count - 1) { contadorTurno = 0; }

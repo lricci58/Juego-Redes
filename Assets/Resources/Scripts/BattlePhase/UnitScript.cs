@@ -361,7 +361,20 @@ public class UnitScript : NetworkBehaviour
 
     public void DestroyUnit()
     {
-        BattleManager.instance.army.Remove(this); 
+        Debug.Log("hasAuthority: " + GetComponent<NetworkIdentity>().hasAuthority);
+
+        // comprueba de quien es la unidad (no funciona)
+        if(GetComponent<NetworkIdentity>().hasAuthority)
+            BattleManager.instance.army.Remove(this);
+        else
+        {
+            BattleManager.instance.enemyArmy.Remove(this);
+
+            // si al enemigo no le quedan mas unidades el jugador gano
+            if (BattleManager.instance.enemyArmy.Count == 0)
+                BattleManager.instance.PlayerWonBattle();
+        }
+
         Destroy(gameObject);
     }
 

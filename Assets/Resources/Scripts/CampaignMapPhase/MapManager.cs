@@ -13,8 +13,7 @@ public class MapManager : NetworkBehaviour
     [NonSerialized] public int miTurno;
     [NonSerialized] [SyncVar] public int turnoActual = 0;
     [NonSerialized] public List<int> turnList = new List<int>();
-    
-    private Color colorSeleccionado = new Color(0.3f, 0.3f, 0.3f);
+
     private Color colorLimitrofe = new Color(0.3f, 0.3f, 0.3f);
 
     void Start() 
@@ -26,9 +25,7 @@ public class MapManager : NetworkBehaviour
 
     void Update()
     {
-        if (miTurno != turnoActual) { canvas.CanBuyUnits(false); return; }
-
-        canvas.CanBuyUnits(true);
+        if (miTurno != turnoActual) { return; }
     }
 
     public void UpdateVisualTurnOrder(List<int> turnList)
@@ -66,24 +63,27 @@ public class MapManager : NetworkBehaviour
             }
         }
 
+        
+        // setea el tipo de jugador (atacante o defensor)
+        GameManager.instance.playerBattleSide = tipoJugador;
         GameManager.instance.countryInvolvedInBattle = paisJugador;
 
         // muestra el panel de ataque
         canvas.ShowAttackMenu(imagenJugador, imagenEnemigo, paisJugador, paisEnemigo);
-
-        // instanciar boton cancelar ataque en caso de ser atacante
+        // instancia boton cancelar ataque en caso de ser atacante
         canvas.ShowCancelButton(tipoJugador, true);
-
-        // setea el tipo de jugador (atacante o defensor)
-        GameManager.instance.playerBattleSide = tipoJugador;
+        canvas.CanUseGreenArrowButtons(true);
     }
 
     public void OcultarMenuAtaque()
     {
         canvas.HideAttackMenu();
-
+        canvas.CanUseGreenArrowButtons(false);
         if (miTurno == turnoActual)
+        {
             canvas.ShowEndTurnButton(true);
+            canvas.CanUseGreenArrowButtons(true);
+        } 
 
         // devuelve el tipo de jugador en batalla a espectador
         GameManager.instance.playerBattleSide = 2;

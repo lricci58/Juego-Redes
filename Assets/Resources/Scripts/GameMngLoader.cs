@@ -2,12 +2,13 @@
 
 public class GameMngLoader : MonoBehaviour
 {
-    public GameManager gameManager;
+    [SerializeField] private GameManager gameManager = null;
 
     void Awake()
     {
         // instancia el GameManager si no existe
-        if (GameManager.instance == null)
-            Instantiate(gameManager);
+        if (GameManager.instance != null) { return; }
+
+        Instantiate(gameManager);
     }
 }

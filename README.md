@@ -30,5 +30,5 @@ Ejemplo de unidad en la batalla:
 - Luiz Melo _(por proveer algunos de los sprites con libre licencia)_
 
 ## Estado del Proyecto
-- **Alpha 1.0.8**
+- **Alpha 1.0.12**
 - El proyecto esta en una versión temprana, con cierta cantidad de bugs y una interfaz gráfica temporal, no definitiva. Tiene, ademas, algunas features que, si bien no estan implementadas por el momento, se preparó todo el terreno para implementarlas en un futuro cercano.

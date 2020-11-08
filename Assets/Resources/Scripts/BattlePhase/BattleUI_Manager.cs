@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleUI_Manager : MonoBehaviour
 {
@@ -42,20 +43,9 @@ public class BattleUI_Manager : MonoBehaviour
         waitingText.SetActive(state);
     }
 
-    // |  useless for now
-    // V 
+    public void PlayerIsReady() => ConnectionManager.instance.CmdEndedDeployFase(); // ConnectionManager.instance.CmdReadyUp();
 
-    private void PlayerIsReady()
-    {
-        // oculta la UI de despliegue
-        BattleManager.instance.canvas.ShowDeploymentPanel(false);
-        BattleManager.instance.canvas.ShowReadyButton(false);
-        BattleManager.instance.canvas.ShowWaitingText(true);
-
-        ConnectionManager.instance.CmdReadyUp();
-    }
-
-    private void EndTurn()
+    public void EndTurn()
     {
         // resetea las unidades luego de terminar el turno
         foreach (UnitScript unit in BattleManager.instance.army)
