@@ -174,7 +174,19 @@ public class ConnectionManager : NetworkBehaviour
 
             RpcChangeScene("BattleScene");
         }
+        else if (SceneManager.GetActiveScene().name == "BattleScene")
+        {
+            if (!IsEveryOneReady()) { return; }
+
+            foreach (ConnectionManager player in Room.RoomPlayers)
+                player.isReady = false;
+
+            RpcEveryoneIsReady();
+        }
     }
+
+    [ClientRpc]
+    public void RpcEveryoneIsReady() => BattleManager.instance.everyoneDeployed = true;
 
     private bool IsEveryOneReady()
     {
@@ -209,8 +221,6 @@ public class ConnectionManager : NetworkBehaviour
     [Command]
     public void CmdSpawnObject(List<int> unitTypesList, List<Vector3> unitPositionsList)
     {
-        Debug.Log("connectionToClient: " + connectionToClient + " ||| Ammount of Units to Redeploy: " + unitTypesList.Count);
-
         GameObject originalPrefab = null;
         GameObject instance = null;
         for (int i = 0; i < unitTypesList.Count; i++)
@@ -221,12 +231,6 @@ public class ConnectionManager : NetworkBehaviour
             NetworkServer.Spawn(instance, connectionToClient);
         }
     }
-
-    [Command]
-    public void CmdEndedDeployFase() => RpcUpdateDesployCount();
-
-    [ClientRpc]
-    public void RpcUpdateDesployCount() => BattleManager.instance.endedDeployFaseCount++;
 
     [Command]
     public void CmdCheckUnitOwner(NetworkIdentity unitIdentity)

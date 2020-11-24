@@ -18,10 +18,10 @@ public class BattleManager : NetworkBehaviour
     private UnitScript targetUnit = null;
     private bool selectingTile = false;
 
-    [NonSerialized] public int deployUnitIndex = -1;
+    [NonSerialized] public int deployUnitType = -1;
     [NonSerialized] public bool deployFase = true;
     private bool battleFase = false;
-    [NonSerialized] [SyncVar] public int endedDeployFaseCount = 0;
+    public bool everyoneDeployed = false;
     [NonSerialized] [SyncVar] public int currentTurn = 0;
     [NonSerialized] public int myTurnNumber = -1;
 
@@ -54,13 +54,6 @@ public class BattleManager : NetworkBehaviour
     {
         if (battleFase)
         {
-            // agrega todas las unidades instanciadas al ejercito enemigo local
-            // enemyArmy.Add(unit);
-            // unit.transform.SetParent(map.enemyUnitContainer);
-
-
-            // if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
-
             // comprueba si el cliente local es dueño de la unidad instanciada
             ConnectionManager.instance.CmdCheckUnitOwner(unit.GetComponent<NetworkIdentity>());
         }
@@ -76,7 +69,6 @@ public class BattleManager : NetworkBehaviour
     public void AddUnitToArmy(UnitScript unit)
     {
         // si la unidad resultaba ser aliada se la remueve del ejercito enemigo
-        // enemyArmy.Remove(unit);
         army.Add(unit);
         // si la unidad es mia y soy atacante (lado derecho) hace flip
         if (GameManager.instance.playerBattleSide == 1) { unit.flipUnit(); }
@@ -184,29 +176,28 @@ public class BattleManager : NetworkBehaviour
         if (!deployFase) { return; }
 
         // comprueba que se haya seleccionado una unidad para desplegar
-        if (deployUnitIndex != -1)
+        if (deployUnitType != -1)
         {
-            DeployUnit(deployUnitList[deployUnitIndex]);
+            // recorre la lista para ver que tipo de unidad se quiere desplegar
+            foreach (UnitScript deployUnit in deployUnitList)
+            {
+                if (deployUnit.gameObject.activeSelf || deployUnit.unitType != deployUnitType) { continue; }
+                
+                DeployUnit(deployUnit);
+                break;
+            }
 
             deployFase = false;
             foreach (UnitScript unit in deployUnitList)
                 if (!unit.gameObject.activeSelf)
                     deployFase = true;
         }
-
-        if (deployFase) { return; }
-
-        foreach (UnitScript unit in deployUnitList)
-        {
-            unitTypesList.Add(unit.unitType);
-            unitPositionsList.Add(unit.transform.position);
-        }
     }
 
     private void DeployPhaseEnded(List<int> unitTypesList, List<Vector3> unitPositionsList)
     {
         // comprueba que los 2 jugadores hayan desplegado
-        if (!EveryoneDeployed() || battleFase) { return; }
+        if (!everyoneDeployed || battleFase) { return; }
 
         battleFase = true;
 
@@ -221,7 +212,7 @@ public class BattleManager : NetworkBehaviour
         // CameraManager.instance.SmoothZoomTo(.3f);
         // CameraManager.instance.SmoothMovementTo(new Vector3(0, 0, 0));
 
-        // crea las unidades networked
+        // crea las unidades conectadas en todos los clientes
         ConnectionManager.instance.CmdSpawnObject(unitTypesList, unitPositionsList);
 
         // destruye las unidades reemplazadas
@@ -360,7 +351,7 @@ public class BattleManager : NetworkBehaviour
         // comprueba si hizo click sobre la zona de despliegue
         if (!map.CanDeployInPos(gridClickPos)) { return; }
 
-        // comprueba que el click no haya sido sobre otra unidad
+        // comprueba que el click de posicionamiento no haya sido sobre otra unidad
         foreach (UnitScript otherUnit in army)
         {
             Vector3Int gridUnitPos = map.GetGridTile(otherUnit.GetPosition());
@@ -369,7 +360,7 @@ public class BattleManager : NetworkBehaviour
             if (gridUnitPos.x == gridClickPos.x && gridUnitPos.y == gridClickPos.y)
             {
                 // deselecciona el boton
-                deployUnitIndex = -1;
+                deployUnitType = -1;
                 return;
             }
         }
@@ -386,15 +377,10 @@ public class BattleManager : NetworkBehaviour
         canvas.UpdateDeploymentPanel();
 
         // deselecciona el boton
-        deployUnitIndex = -1;
-    }
+        deployUnitType = -1;
 
-    private bool EveryoneDeployed()
-    {
-        if (endedDeployFaseCount == 2)
-            return true;
-        else
-            return false;
+        unitTypesList.Add(unit.unitType);
+        unitPositionsList.Add(unit.transform.position);
     }
 
     #endregion

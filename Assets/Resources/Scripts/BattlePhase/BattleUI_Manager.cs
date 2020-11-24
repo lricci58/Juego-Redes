@@ -43,7 +43,7 @@ public class BattleUI_Manager : MonoBehaviour
         waitingText.SetActive(state);
     }
 
-    public void PlayerIsReady() => ConnectionManager.instance.CmdEndedDeployFase(); // ConnectionManager.instance.CmdReadyUp();
+    public void PlayerIsReady() => ConnectionManager.instance.CmdReadyUp();
 
     public void EndTurn()
     {

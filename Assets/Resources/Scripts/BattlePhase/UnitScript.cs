@@ -361,21 +361,29 @@ public class UnitScript : NetworkBehaviour
 
     public void DestroyUnit()
     {
-        Debug.Log("hasAuthority: " + GetComponent<NetworkIdentity>().hasAuthority);
-
         // comprueba de quien es la unidad (no funciona)
-        if(GetComponent<NetworkIdentity>().hasAuthority)
+        if (GetComponent<NetworkIdentity>().hasAuthority)
+        {
             BattleManager.instance.army.Remove(this);
+            Destroy(gameObject);
+        }
         else
         {
             BattleManager.instance.enemyArmy.Remove(this);
+            Destroy(gameObject);
 
             // si al enemigo no le quedan mas unidades el jugador gano
             if (BattleManager.instance.enemyArmy.Count == 0)
                 BattleManager.instance.PlayerWonBattle();
         }
 
-        Destroy(gameObject);
+        //BattleManager.instance.army.Remove(this);
+        //Destroy(gameObject);
+
+        //if (!GetComponent<NetworkIdentity>().hasAuthority) { return; }
+
+        //if (BattleManager.instance.enemyArmy.Count == 0)
+        //    BattleManager.instance.PlayerWonBattle();
     }
 
     public Vector3 GetPosition()  => transform.position - new Vector3(offsetPosicionX, offsetPosicionY, 0f);

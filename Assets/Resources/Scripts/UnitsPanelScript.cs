@@ -82,6 +82,6 @@ public class UnitsPanelScript : MonoBehaviour
     public void SelectUnitForDeployment(int unitType)
     {
         // vacia la lista de arriba a abajo
-        BattleManager.instance.deployUnitIndex = int.Parse(ammountOfUnits[unitType].text) - 1;
+        BattleManager.instance.deployUnitType = unitType;
     }
 }
