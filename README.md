@@ -13,6 +13,9 @@ Ejemplo de unidad en la batalla:
 
 ![Gif de ejemplo de unidad](https://media.giphy.com/media/BujWeAL8y1AGz7GD0N/giphy.gif)
 
+## Trailer
+- https://www.youtube.com/watch?v=igNebc5wgnc
+
 ## Instalación
 - 
 
