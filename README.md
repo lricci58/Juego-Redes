@@ -23,7 +23,7 @@ Ejemplo de unidad en la batalla:
 - Lucas Ricci
 - Lucas Castagna
 - Ivan Vázquez Frino
-- Federico Gómez
+- Fede Gómez
 - Joaquín García Silvarredonda
 - Lautaro Prieto
 - Fausto Castrilli
